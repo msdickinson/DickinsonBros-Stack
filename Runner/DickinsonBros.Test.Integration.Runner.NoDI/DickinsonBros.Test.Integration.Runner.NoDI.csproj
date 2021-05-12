@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Source\DickinsonBros.Core.Correlation\DickinsonBros.Core.Correlation.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Core.DateTime\DickinsonBros.Core.DateTime.csproj" />
+    <ProjectReference Include="..\..\Source\Dickinsonbros.Core.Guid\Dickinsonbros.Core.Guid.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Core.Stopwatch\DickinsonBros.Core.Stopwatch.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Test.Integration\DickinsonBros.Test.Integration.csproj" />
+  </ItemGroup>
+
+</Project>

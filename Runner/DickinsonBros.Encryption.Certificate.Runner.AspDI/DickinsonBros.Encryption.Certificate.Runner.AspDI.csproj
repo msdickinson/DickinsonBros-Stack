@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <LangVersion>latest</LangVersion>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Source\DickinsonBros.Encryption.Certificate.Adapter.AspDI\DickinsonBros.Encryption.Certificate.Adapter.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Encryption.Certificate\DickinsonBros.Encryption.Certificate.csproj" />
+    <ProjectReference Include="..\BaseRunner\BaseRunner.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="appsettings.DEBUG.json">
+      <DependentUpon>appsettings.json</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

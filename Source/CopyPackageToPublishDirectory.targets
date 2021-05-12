@@ -1,0 +1,13 @@
+<Project>
+  <!-- Copy package to publish folder -->
+  <Target Name="CopyPackageToPublishDirectory" AfterTargets="Pack" Condition="$(Configuration)' == 'Publish-Debug' Or '$(Configuration)' == 'Publish-Release'">
+    <Copy SourceFiles=".\bin\$(Configuration)\$(PackageId).$(PackageVersion).nupkg"
+          DestinationFiles="..\publish\$(PackageId).$(PackageVersion).nupkg" />
+  </Target>
+
+  <!-- Copy package to local package folder -->
+  <Target Name="CopyPackageToPublishDirectory" AfterTargets="Pack" Condition="'$(Configuration)' == 'Local-Debug' Or '$(Configuration)' == 'Local-Release'">
+    <Copy SourceFiles=".\bin\$(Configuration)\$(PackageId).$(PackageVersion).nupkg"
+          DestinationFiles="C:\Packages\$(PackageId).$(PackageVersion).nupkg" />
+  </Target>
+</Project>

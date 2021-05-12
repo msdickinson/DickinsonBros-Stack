@@ -1,0 +1,21 @@
+<Project>
+   <PropertyGroup Condition="'$(Configuration)'=='Publish-Release' Or '$(Configuration)'=='Local-Release'">
+    <Optimize>true</Optimize>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)'=='Publish-Debug'">
+    <VersionSuffix>-alpha</VersionSuffix>
+    <Optimize>false</Optimize>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+    
+   <PropertyGroup Condition="'$(Configuration)'=='Local-Debug'">
+    <VersionSuffix>-alpha$([System.DateTime]::UtcNow.ToString("yyyyMMdd-HHmmss"))</VersionSuffix>
+    <Optimize>false</Optimize>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+</Project>

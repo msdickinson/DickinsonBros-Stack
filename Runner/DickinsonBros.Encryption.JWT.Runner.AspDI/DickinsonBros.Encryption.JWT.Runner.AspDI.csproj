@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <LangVersion>latest</LangVersion>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Source\DickinsonBros.Core.Correlation.Adapter.AspDI\DickinsonBros.Core.Correlation.Adapter.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Core.Correlation\DickinsonBros.Core.Correlation.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Core.DateTime.Adapter.AspDI\DickinsonBros.Core.DateTime.Adapter.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Core.DateTime\DickinsonBros.Core.DateTime.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Core.Logger.Adapter.AspDI\DickinsonBros.Core.Logger.Adapter.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Core.Logger\DickinsonBros.Core.Logger.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Core.Redactor.Adapter.AspDI\DickinsonBros.Core.Redactor.Adapter.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Core.Redactor\DickinsonBros.Core.Redactor.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Encryption.Certificate.Adapter.AspDI\DickinsonBros.Encryption.Certificate.Adapter.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Encryption.Certificate\DickinsonBros.Encryption.Certificate.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Encryption.JWT.Adapter.AspDI\DickinsonBros.Encryption.JWT.Adapter.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Encryption.JWT\DickinsonBros.Encryption.JWT.csproj" />
+    <ProjectReference Include="..\BaseRunner\BaseRunner.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="appsettings.DEBUG.json">
+      <DependentUpon>appsettings.json</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

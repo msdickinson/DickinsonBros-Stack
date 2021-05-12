@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Configurations>Debug;Release;Local;Local-Release;Local-Debug;Publish-Debug;Publish-Release</Configurations>
+    <VersionPrefix>1.0.0</VersionPrefix>
+    <Authors>Mark Dickinson</Authors>
+    <Company>DickinsonBros</Company>
+    <RepositoryUrl>https://github.com/msdickinson/DickinsonBros.Logger.git</RepositoryUrl>
+    <Description>
+      A logging service that redacts all logs
+
+      Features
+
+      * Redacts all logs
+      * Allows for dictionary of variables to be past in that all become first class propertys in the log.
+      * Ability to add a correlation id with scopes
+      * Allows for improved testability
+    </Description>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="[3.1.0,4.0.0)" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\DickinsonBros.Core.Correlation.Abstractions\DickinsonBros.Core.Correlation.Abstractions.csproj" />
+    <ProjectReference Include="..\DickinsonBros.Core.Logger.Abstractions\DickinsonBros.Core.Logger.Abstractions.csproj" />
+    <ProjectReference Include="..\DickinsonBros.Core.Redactor.Abstractions\DickinsonBros.Core.Redactor.Abstractions.csproj" />
+  </ItemGroup>
+
+  <Import Project="..\Packaging.targets" />
+  <Import Project="..\CopyPackageToPublishDirectory.targets" />
+  <Import Project="..\FixDistributedLockCoreDependencyVersion.targets" />
+</Project>
