@@ -34,17 +34,17 @@ namespace DickinsonBros.Core.Logger.Logger.NoDI
             var message = "Generic Log Message";
             var exception = new Exception("Error");
 
-            loggingService.LogDebugRedacted(message);
-            loggingService.LogDebugRedacted(message, data);
+            loggingService.LogDebugRedacted(message, Abstractions.Models.LogGroup.Application);
+            loggingService.LogDebugRedacted(message, Abstractions.Models.LogGroup.Application, data);
 
-            loggingService.LogInformationRedacted(message);
-            loggingService.LogInformationRedacted(message, data);
+            loggingService.LogInformationRedacted(message, Abstractions.Models.LogGroup.Application);
+            loggingService.LogInformationRedacted(message, Abstractions.Models.LogGroup.Application, data);
 
-            loggingService.LogWarningRedacted(message);
-            loggingService.LogWarningRedacted(message, data);
+            loggingService.LogWarningRedacted(message, Abstractions.Models.LogGroup.Application);
+            loggingService.LogWarningRedacted(message, Abstractions.Models.LogGroup.Application, data);
 
-            loggingService.LogErrorRedacted(message, exception);
-            loggingService.LogErrorRedacted(message, exception, data);
+            loggingService.LogErrorRedacted(message, Abstractions.Models.LogGroup.Application, exception);
+            loggingService.LogErrorRedacted(message, Abstractions.Models.LogGroup.Application, exception, data);
 
             await Task.CompletedTask.ConfigureAwait(false);
 

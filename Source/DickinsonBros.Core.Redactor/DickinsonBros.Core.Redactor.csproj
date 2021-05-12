@@ -15,6 +15,7 @@
       * Configurable regular expressions to validate against
       * Sperate abstractions library to reduce coupling of packages
     </Description>
+    <OutputType>Library</OutputType>
   </PropertyGroup>
   
   <ItemGroup>

@@ -14,8 +14,9 @@ namespace DickinsonBros.Core.Correlation.Runner.NoDI
         {
             var correlationService = new CorrelationService();
 
-            //This shows that if a async method changes the value, it will stay changed in that context, 
-            //but will not change the outer context value
+            Console.WriteLine($"This shows that if a async method changes the value, it will stay changed in that context");
+            Console.WriteLine($"but will not change the outer context value");
+            Console.WriteLine($"");
 
             correlationService.CorrelationId = "100";
             Console.WriteLine($"CorrelationId Before Run: {correlationService.CorrelationId}");

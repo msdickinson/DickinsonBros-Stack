@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using MoreLinq;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace DickinsonBros.Test.Unit
 {
+    [ExcludeFromCodeCoverage]
     public abstract class BaseTest
     {
         public void RunDependencyInjectedTest(Action<IServiceProvider> callback, params Action<IServiceCollection>[] serviceCollectionConfigurators)

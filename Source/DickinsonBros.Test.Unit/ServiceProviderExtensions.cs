@@ -4,10 +4,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 
 namespace DickinsonBros.Test.Unit
 {
+    [ExcludeFromCodeCoverage]
     public static class ServiceProviderExtensions
     {
         public static Mock<T> GetMock<T>(this IServiceProvider serviceProvider)

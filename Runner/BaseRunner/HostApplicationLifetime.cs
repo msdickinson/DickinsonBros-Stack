@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.Hosting;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 
 namespace BaseRunner
 {
+    [ExcludeFromCodeCoverage]
     public class HostApplicationLifetime : IHostApplicationLifetime, IDisposable
     {
         internal readonly CancellationTokenSource _ctsStart = new CancellationTokenSource();
