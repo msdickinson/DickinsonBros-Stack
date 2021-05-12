@@ -1,4 +1,5 @@
-﻿using DickinsonBros.Encryption.JWT.Abstractions.Models;
+﻿using DickinsonBros.Encryption.Certificate.Abstractions.Models;
+using DickinsonBros.Encryption.JWT.Abstractions.Models;
 using DickinsonBros.Encryption.JWT.Adapter.AspDI.Configurators;
 using DickinsonBros.Encryption.JWT.Models;
 using DickinsonBros.Test.Unit;
@@ -17,10 +18,14 @@ namespace DickinsonBros.Encryption.JWT.Adapter.AspDI.Tests.Configurators
         {
         }
 
+        public class TestCertificateEncryptionServiceOptionsType : CertificateEncryptionServiceOptionsType
+        {
+        }
+
         [TestMethod]
         public async Task Configure_Runs_OptionsReturned()
         {
-            var jwtServiceOptions = new JWTEncryptionServiceOptions<TestJWTEncryptionServiceOptionsType>
+            var jwtServiceOptions = new JWTEncryptionServiceOptions<TestJWTEncryptionServiceOptionsType, TestCertificateEncryptionServiceOptionsType>
             {
                 AccessExpiresAfterMinutes = 1,
                 Audience = "SampleAudience",
@@ -36,7 +41,7 @@ namespace DickinsonBros.Encryption.JWT.Adapter.AspDI.Tests.Configurators
                     //Setup
 
                     //Act
-                    var options = serviceProvider.GetRequiredService<IOptions<JWTEncryptionServiceOptions<TestJWTEncryptionServiceOptionsType>>>().Value;
+                    var options = serviceProvider.GetRequiredService<IOptions<JWTEncryptionServiceOptions<TestJWTEncryptionServiceOptionsType, TestCertificateEncryptionServiceOptionsType>>>().Value;
 
                     //Assert
                     Assert.IsNotNull(options);
@@ -59,7 +64,7 @@ namespace DickinsonBros.Encryption.JWT.Adapter.AspDI.Tests.Configurators
         {
             serviceCollection.AddOptions();
             serviceCollection.AddSingleton<IConfiguration>(configuration);
-            serviceCollection.AddSingleton<IConfigureOptions<JWTEncryptionServiceOptions<TestJWTEncryptionServiceOptionsType>>, JWTServiceOptionsConfigurator<TestJWTEncryptionServiceOptionsType>>();
+            serviceCollection.AddSingleton<IConfigureOptions<JWTEncryptionServiceOptions<TestJWTEncryptionServiceOptionsType, TestCertificateEncryptionServiceOptionsType>>, JWTServiceOptionsConfigurator<TestJWTEncryptionServiceOptionsType, TestCertificateEncryptionServiceOptionsType>>();
 
             return serviceCollection;
         }

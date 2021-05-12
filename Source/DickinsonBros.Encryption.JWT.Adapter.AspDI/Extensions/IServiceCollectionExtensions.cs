@@ -16,7 +16,7 @@ namespace DickinsonBros.Encryption.JWT.Adapter.AspDI.Extensions
         where U : CertificateEncryptionServiceOptionsType
         {
             serviceCollection.TryAddSingleton(typeof(IJWTEncryptionService<T, U>), typeof(JWTEncryptionService<T, U>));
-            serviceCollection.TryAddSingleton(typeof(IConfigureOptions<JWTEncryptionServiceOptions<T, U>>), typeof(JWTServiceOptionsConfigurator<T>));
+            serviceCollection.TryAddSingleton(typeof(IConfigureOptions<JWTEncryptionServiceOptions<T, U>>), typeof(JWTServiceOptionsConfigurator<T, U>));
             return serviceCollection;
         }
     }

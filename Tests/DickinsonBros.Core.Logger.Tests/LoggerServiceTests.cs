@@ -46,7 +46,7 @@ namespace DickinsonBros.Core.Logger.Tests
                         new KeyValuePair<string, object>(CorrelationIdKeyExpected, correlationIdExpected)
                     };
                     var logStateExpected = new LogState(propertiesRedactedExpected);
-                    var formatterResultExpected = "LogMessage\r\nA: B\r\nCorrelationId: 123\r\n";
+                    var formatterResultExpected = "LogMessage\r\nA: B\r\nLogGroup: Application\r\nCorrelationId: 123\r\n";
 
                     var messageobserved = (string)null;
                     var propertiesRedactedObserved = (List<KeyValuePair<string, object>>)null;
@@ -156,7 +156,7 @@ namespace DickinsonBros.Core.Logger.Tests
                         new KeyValuePair<string, object>(CorrelationIdKeyExpected, correlationIdExpected)
                     };
                     var logStateExpected = new LogState(propertiesRedactedExpected);
-                    var formatterResultExpected = "LogMessage\r\nA: B\r\nCorrelationId: 123\r\n";
+                    var formatterResultExpected = "LogMessage\r\nA: B\r\nLogGroup: Application\r\nCorrelationId: 123\r\n";
 
                     var messageobserved = (string)null;
                     var propertiesRedactedObserved = (List<KeyValuePair<string, object>>)null;
@@ -266,7 +266,7 @@ namespace DickinsonBros.Core.Logger.Tests
                         new KeyValuePair<string, object>(CorrelationIdKeyExpected, correlationIdExpected)
                     };
                     var logStateExpected = new LogState(propertiesRedactedExpected);
-                    var formatterResultExpected = "LogMessage\r\nA: B\r\nCorrelationId: 123\r\n";
+                    var formatterResultExpected = "LogMessage\r\nA: B\r\nLogGroup: Application\r\nCorrelationId: 123\r\n";
 
                     var messageobserved = (string)null;
                     var propertiesRedactedObserved = (List<KeyValuePair<string, object>>)null;
@@ -378,7 +378,7 @@ namespace DickinsonBros.Core.Logger.Tests
                         new KeyValuePair<string, object>(CorrelationIdKeyExpected, correlationIdExpected)
                     };
                     var logStateExpected = new LogState(propertiesRedactedExpected);
-                    var formatterResultExpected = "LogMessage\r\nA: B\r\nCorrelationId: 123\r\n";
+                    var formatterResultExpected = "LogMessage\r\nA: B\r\nLogGroup: Application\r\nCorrelationId: 123\r\n";
 
                     var messageobserved = (string)null;
                     var propertiesRedactedObserved = (List<KeyValuePair<string, object>>)null;
@@ -487,7 +487,7 @@ namespace DickinsonBros.Core.Logger.Tests
                         new KeyValuePair<string, object>(CorrelationIdKeyExpected, correlationIdExpected)
                   };
                   var logStateExpected = new LogState(propertiesRedactedExpected);
-                  var formatterResultExpected = "LogMessage\r\nA: B\r\nCorrelationId: 123\r\n";
+                  var formatterResultExpected = "LogMessage\r\nA: B\r\nLogGroup: Application\r\nCorrelationId: 123\r\n";
                   var logLevelExpected = LogLevel.Information;
 
                   var messageobserved = (string)null;

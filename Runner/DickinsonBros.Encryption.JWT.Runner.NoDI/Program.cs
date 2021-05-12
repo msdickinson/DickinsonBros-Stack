@@ -98,9 +98,9 @@ namespace DickinsonBros.Encryption.JWT.Runner.NoDI
             return Options.Create(certificateEncryptionServiceOptions);
         }
 
-        public IOptions<JWTEncryptionServiceOptions<RunnerJWTEncryptionServiceOptions>> FetchRunnerJWTEncryptionServiceOptions()
+        public IOptions<JWTEncryptionServiceOptions<RunnerJWTEncryptionServiceOptions, Configuration>> FetchRunnerJWTEncryptionServiceOptions()
         {
-            var jwtEncryptionServiceOptions = new JWTEncryptionServiceOptions<RunnerJWTEncryptionServiceOptions>
+            var jwtEncryptionServiceOptions = new JWTEncryptionServiceOptions<RunnerJWTEncryptionServiceOptions, Configuration>
             {
                 AccessExpiresAfterMinutes = 30,
                 Audience = "Website",

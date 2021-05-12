@@ -22,7 +22,7 @@ namespace DickinsonBros.Encryption.JWT.Adapter.AspDI.Tests.Extensions
         }
 
         [TestMethod]
-        public void AddSQLService_Should_Succeed()
+        public void AddJWTEncryptionService_Should_Succeed()
         {
             // Arrange
             var serviceCollection = new ServiceCollection();
@@ -36,8 +36,8 @@ namespace DickinsonBros.Encryption.JWT.Adapter.AspDI.Tests.Extensions
                                serviceDefinition.ImplementationType == typeof(JWTEncryptionService<TestJWTServiceOptions, TestCertificateEncryptionServiceOptionsType>) &&
                                serviceDefinition.Lifetime == ServiceLifetime.Singleton));
 
-            Assert.IsTrue(serviceCollection.Any(serviceDefinition => serviceDefinition.ServiceType == typeof(IConfigureOptions<JWTEncryptionServiceOptions<TestJWTServiceOptions>>) &&
-                               serviceDefinition.ImplementationType == typeof(JWTServiceOptionsConfigurator<TestJWTServiceOptions>) &&
+            Assert.IsTrue(serviceCollection.Any(serviceDefinition => serviceDefinition.ServiceType == typeof(IConfigureOptions<JWTEncryptionServiceOptions<TestJWTServiceOptions, TestCertificateEncryptionServiceOptionsType>>) &&
+                               serviceDefinition.ImplementationType == typeof(JWTServiceOptionsConfigurator<TestJWTServiceOptions, TestCertificateEncryptionServiceOptionsType>) &&
                                serviceDefinition.Lifetime == ServiceLifetime.Singleton));
         }
     }
