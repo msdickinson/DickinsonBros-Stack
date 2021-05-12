@@ -51,52 +51,62 @@ namespace DickinsonBros.Test.Integration
             add => NewTestSummaryEventHandler += value;
             remove => NewTestSummaryEventHandler -= value;
         }
-
         public IEnumerable<Abstractions.Models.Test> SetupTests(object testClass)
         {
-            if (testClass == null)
+            return SetupTests(new List<object> { testClass });
+        }
+        public IEnumerable<Abstractions.Models.Test> SetupTests(IEnumerable<object> testClasses)
+        {
+            var allTests = new List<Abstractions.Models.Test>();
+
+            foreach (var testClass in testClasses)
             {
-                throw (new NullReferenceException(NULL_TEST_CLASS_ERROR_MESSAGE));
-            }
-
-            var tests = new List<Abstractions.Models.Test>();
-
-            var testAPIAttribute = (TestAPIAttribute)System.Attribute.GetCustomAttributes(testClass.GetType()).FirstOrDefault(e => e is TestAPIAttribute);
-
-            var methodInfos = testClass
-                 .GetType()
-                 .GetMethods(BindingFlags.Public | BindingFlags.Instance)
-                 .ToList();
-
-            foreach (Type interf in testClass.GetType().GetInterfaces())
-            {
-                foreach (MethodInfo method in interf.GetMethods(BindingFlags.Public | BindingFlags.Instance))
+                if (testClass == null)
                 {
-                    if (!methodInfos.Any(e => e.Name == method.Name))
+                    throw (new NullReferenceException(NULL_TEST_CLASS_ERROR_MESSAGE));
+                }
+
+                var tests = new List<Abstractions.Models.Test>();
+
+                var testAPIAttribute = (TestAPIAttribute)System.Attribute.GetCustomAttributes(testClass.GetType()).FirstOrDefault(e => e is TestAPIAttribute);
+
+                var methodInfos = testClass
+                     .GetType()
+                     .GetMethods(BindingFlags.Public | BindingFlags.Instance)
+                     .ToList();
+
+                foreach (Type interf in testClass.GetType().GetInterfaces())
+                {
+                    foreach (MethodInfo method in interf.GetMethods(BindingFlags.Public | BindingFlags.Instance))
                     {
-                        methodInfos.Add(method);
+                        if (!methodInfos.Any(e => e.Name == method.Name))
+                        {
+                            methodInfos.Add(method);
+                        }
                     }
                 }
+
+                var filteredList = methodInfos
+                    .Where
+                    (
+                        methodInfo =>
+                        methodInfo.GetParameters().Length == 1 &&
+                        methodInfo.GetParameters()[0].Name == SUCCESSLOG_PRAM_NAME &&
+                        methodInfo.GetParameters()[0].ParameterType == typeof(List<string>) &&
+                        methodInfo.ReturnType == typeof(Task)
+                    )
+                    .ToList();
+
+                allTests.AddRange(filteredList.Select(method => new Abstractions.Models.Test
+                {
+                    MethodInfo = method,
+                    TestClass = testClass,
+                    TestsName = testAPIAttribute?.Name,
+                    TestGroup = testAPIAttribute?.Group,
+                }).AsEnumerable());
             }
 
-            var filteredList = methodInfos
-                .Where
-                (
-                    methodInfo =>
-                    methodInfo.GetParameters().Length == 1 &&
-                    methodInfo.GetParameters()[0].Name == SUCCESSLOG_PRAM_NAME &&
-                    methodInfo.GetParameters()[0].ParameterType == typeof(List<string>) &&
-                    methodInfo.ReturnType == typeof(Task)
-                )
-                .ToList();
-
-            return filteredList.Select(method => new Abstractions.Models.Test
-            {
-                MethodInfo = method,
-                TestClass = testClass,
-                TestsName = testAPIAttribute?.Name,
-                TestGroup = testAPIAttribute?.Group,
-            }).AsEnumerable();
+            return allTests;
         }
 
         public async Task<TestSummary> RunTests(IEnumerable<Abstractions.Models.Test> tests)
