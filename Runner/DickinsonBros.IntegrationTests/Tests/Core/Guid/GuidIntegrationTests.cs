@@ -20,7 +20,7 @@ namespace DickinsonBros.IntegrationTests.Tests.Core.Guid
         {
             _guidService = guidService;
         }
-        public async Task NewGuid_Runs_AValueGuid(List<string> successLog)
+        public async Task NewGuid_Runs_IsNotNull(List<string> successLog)
         {
             var guid = _guidService.NewGuid();
             Assert.IsNotNull(guid, "Guid is null");

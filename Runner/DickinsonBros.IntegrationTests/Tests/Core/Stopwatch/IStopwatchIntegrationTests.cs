@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace DickinsonBros.IntegrationTests.Tests.Core.DateTime
+namespace DickinsonBros.IntegrationTests.Tests.Core.Logger
 {
-    public interface IDateTimeIntegrationTests : ITestsInterface
+    public interface IStopwatchIntegrationTests : ITestsInterface
     {
     }
 }

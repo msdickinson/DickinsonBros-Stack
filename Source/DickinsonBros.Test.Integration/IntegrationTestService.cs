@@ -20,17 +20,19 @@ namespace DickinsonBros.Test.Integration
         internal const string SUCCESSLOG_PRAM_NAME = "successLog";
         internal const string CORRELATIONID_EXPECTED_PRAM_NAME = "correlationId";
 
+        internal readonly IServiceProvider _serviceProvider;
         internal readonly ICorrelationService _correlationService;
         internal readonly ITRXReportService _trxReportService;
         internal readonly IGuidService _guidService;
         internal readonly IDateTimeService _dateTimeService;
         internal readonly IStopwatchFactory _stopwatchFactory;
 
-
         public delegate void NewTelemetryEventHandler(TestSummary testSummary);
         event IIntegrationTestService.NewTestSummaryEventHandler NewTestSummaryEventHandler;
+
         public IntegrationTestService
         (
+            IServiceProvider serviceProvider,
             ITRXReportService trxReportService,
             ICorrelationService correlationService,
             IGuidService guidService,
@@ -38,6 +40,7 @@ namespace DickinsonBros.Test.Integration
             IStopwatchFactory stopwatchFactory
         )
         {
+            _serviceProvider = serviceProvider;
             _trxReportService = trxReportService;
             _correlationService = correlationService;
             _guidService = guidService;
@@ -51,12 +54,29 @@ namespace DickinsonBros.Test.Integration
             add => NewTestSummaryEventHandler += value;
             remove => NewTestSummaryEventHandler -= value;
         }
-        public IEnumerable<Abstractions.Models.Test> SetupTests(object testClass)
+
+
+        public IEnumerable<Abstractions.Models.Test> FetchByGroup(string group)
         {
-            return SetupTests(new List<object> { testClass });
+            return FetchTests().Where(test => test.TestGroup == group);
         }
-        public IEnumerable<Abstractions.Models.Test> SetupTests(IEnumerable<object> testClasses)
+        public IEnumerable<Abstractions.Models.Test> FetchByName(string name)
         {
+            return FetchTests().Where(test => test.TestsName == name);
+        }
+        public IEnumerable<Abstractions.Models.Test> FetchByTestName(string testName)
+        {
+            return FetchTests().Where(test => test.MethodInfo.Name == testName);
+        }
+
+        public IEnumerable<Abstractions.Models.Test> FetchTests()
+        {
+            var types = AppDomain.CurrentDomain.GetAssemblies().SelectMany(x => x.GetTypes())
+             .Where(type => typeof(ITestsInterface).IsAssignableFrom(type) && type.IsInterface && type != typeof(ITestsInterface))
+             .ToList();
+
+            var testClasses = types.Select(type => _serviceProvider.GetService(type)).ToList();
+
             var allTests = new List<Abstractions.Models.Test>();
 
             foreach (var testClass in testClasses)
@@ -171,7 +191,7 @@ namespace DickinsonBros.Test.Integration
 
             };
         }
-
+      
         public string GenerateLog(TestSummary testSummary, bool showSuccessLogsOnSuccess)
         {
             var logs = new List<string>();

@@ -1,18 +1,29 @@
 ﻿using BaseRunner;
 using Dickinsonbros.Core.Guid.Adapter.AspDI.Extensions;
-using DickinsonBros.Core.Correlation.Abstractions;
 using DickinsonBros.Core.Correlation.Adapter.AspDI.Extensions;
 using DickinsonBros.Core.DateTime.Adapter.AspDI.Extensions;
 using DickinsonBros.Core.Logger.Adapter.AspDI.Extensions;
 using DickinsonBros.Core.Redactor.Adapter.AspDI.Extensions;
 using DickinsonBros.Core.Stopwatch.Adapter.AspDI.Extensions;
+using DickinsonBros.Encryption.AES.Abstractions;
+using DickinsonBros.Encryption.AES.Adapter.AspDI.Extensions;
+using DickinsonBros.Encryption.Certificate.Abstractions;
+using DickinsonBros.Encryption.Certificate.Abstractions.Models;
+using DickinsonBros.Encryption.Certificate.Adapter.AspDI.Extensions;
+using DickinsonBros.Encryption.JWT.Adapter.AspDI.Extensions;
+using DickinsonBros.IntegrationTests.Config;
+using DickinsonBros.IntegrationTests.Tests.Core.Correlation.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Core.DateTime.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Core.Guid.Extensions;
-using DickinsonBros.Test.Integration;
+using DickinsonBros.IntegrationTests.Tests.Core.Logger.Extensions;
+using DickinsonBros.IntegrationTests.Tests.Core.Redactor.Extensions;
+using DickinsonBros.IntegrationTests.Tests.Core.Stopwatch.Extensions;
+using DickinsonBros.IntegrationTests.Tests.Encryption.AES.Extensions;
+using DickinsonBros.IntegrationTests.Tests.Encryption.Certificate.Extensions;
+using DickinsonBros.IntegrationTests.Tests.Encryption.JWT.Extensions;
+using DickinsonBros.Test.Integration.Abstractions;
 using DickinsonBros.Test.Integration.Adapter.AspDI.Extensions;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading.Tasks;
 
@@ -29,17 +40,15 @@ namespace DickinsonBros.IntegrationTests
             try
             {
                 var serviceCollection = ConfigureServices();
-
                 using var provider = serviceCollection.BuildServiceProvider();
-                var runner = provider.GetRequiredService<IRunner>();
-                var hostApplicationLifetime = provider.GetService<IHostApplicationLifetime>();
+                provider.ConfigureAwait(true);
+                var integrationTestService = provider.GetRequiredService<IIntegrationTestService>();
 
                 //Run Tests
-                var result = await runner.RunAsync().ConfigureAwait(false);
-                Console.WriteLine(result);
-
-
-                provider.ConfigureAwait(true);
+                var tests               = integrationTestService.FetchByName("JWT");
+                var testSummary         = await integrationTestService.RunTests(tests).ConfigureAwait(false);
+                var testlog             = integrationTestService.GenerateLog(testSummary, true);
+                Console.WriteLine(testlog);
             }
             catch (Exception e)
             {
@@ -53,9 +62,6 @@ namespace DickinsonBros.IntegrationTests
             var configruation = BaseRunnerSetup.FetchConfiguration();
             var serviceCollection = BaseRunnerSetup.InitializeDependencyInjection(configruation);
 
-            //Local
-            serviceCollection.TryAddSingleton<IRunner, Runner>();
-
             //Add Services
             serviceCollection.AddGuidService();
             serviceCollection.AddDateTimeService();
@@ -65,10 +71,20 @@ namespace DickinsonBros.IntegrationTests
             serviceCollection.AddRedactorService();
             serviceCollection.AddLoggerService();
             serviceCollection.AddIntegrationTestService();
+            serviceCollection.AddAESEncryptionService<RunnerAESEncryptionServiceOptionsType>();
+            serviceCollection.AddCertificateEncryptionService<Configuration>();
+            serviceCollection.AddJWTEncryptionService<RunnerJWTEncryptionServiceOptionsType, Configuration>();
 
             //Add Integreation Tests
             serviceCollection.AddGuidIntegrationTests();
             serviceCollection.AddDateTimeIntegrationTests();
+            serviceCollection.AddCorrelationIntegrationTests();
+            serviceCollection.AddLoggerIntegrationTests();
+            serviceCollection.AddStopwatchIntegrationTests();
+            serviceCollection.AddRedactorIntegrationTests();
+            serviceCollection.AddAESIntegrationTests();
+            serviceCollection.AddCertificateIntegrationTests();
+            serviceCollection.AddJWTIntegrationTests();
 
             return serviceCollection;
         }

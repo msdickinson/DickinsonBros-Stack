@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DickinsonBros.IntegrationTests.Properties
-{
-    class launchSettings
-    {
+﻿{
+  "profiles": {
+    "DEBUG": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "BUILD_CONFIGURATION": "DEBUG"
+      }
     }
+  }
 }

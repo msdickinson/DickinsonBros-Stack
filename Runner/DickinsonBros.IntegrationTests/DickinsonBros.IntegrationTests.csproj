@@ -50,27 +50,15 @@
 
   <ItemGroup>
     <Folder Include="Tests\Application\Email\" />
-    <Folder Include="Tests\Core\Correlation\" />
-    <Folder Include="Tests\Core\Logger\" />
-    <Folder Include="Tests\Encryption\Certificate\" />
-    <Folder Include="Tests\Encryption\AES\" />
-    <Folder Include="Tests\Encryption\JWT\" />
-    <Folder Include="Tests\Core\Telemetry\" />
-    <Folder Include="Tests\Core\Redactor\" />
-    <Folder Include="Tests\Core\Stopwatch\" />
-    <Folder Include="Tests\Infrastructure\AzureTables\" />
-    <Folder Include="Tests\Infrastructure\Cosmos\" />
-    <Folder Include="Tests\Infrastructure\SQL\" />
-    <Folder Include="Tests\Infrastructure\File\" />
-    <Folder Include="Tests\Infrastructure\SMTP\" />
-    <Folder Include="Tests\Infrastructure\Rest\" />
-    <Folder Include="Tests\Middleware\ASP\" />
-    <Folder Include="Tests\Middleware\Function\" />
-    <Folder Include="Tests\Middleware\" />
-    <Folder Include="Tests\Infrastructure\" />
-    <Folder Include="Tests\Encryption\" />
-    <Folder Include="Tests\Sinks\" />
-    <Folder Include="Tests\Sinks\Telemetry.AzureTables\" />
+    <Folder Include="Tests\Infrastructure\AzureTables\Extensions\" />
+    <Folder Include="Tests\Infrastructure\Cosmos\Extensions\" />
+    <Folder Include="Tests\Infrastructure\File\Extensions\" />
+    <Folder Include="Tests\Infrastructure\Rest\Extensions\" />
+    <Folder Include="Tests\Infrastructure\SMTP\Extensions\" />
+    <Folder Include="Tests\Infrastructure\SQL\Extensions\" />
+    <Folder Include="Tests\Middleware\ASP\Extensions\" />
+    <Folder Include="Tests\Middleware\Function\Extensions\" />
+    <Folder Include="Tests\Sinks\Telemetry.AzureTables\Extensions\" />
   </ItemGroup>
 
   <ItemGroup>

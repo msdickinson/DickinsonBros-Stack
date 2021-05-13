@@ -22,117 +22,117 @@ namespace DickinsonBros.Test.Integration.Tests
     {
         #region SetupTests
 
-        [TestMethod]
-        [ExpectedException(typeof(NullReferenceException), IntegrationTestService.NULL_TEST_CLASS_ERROR_MESSAGE)]
-        public async Task SetupTests_NullInput_Throws()
-        {
-            await RunDependencyInjectedTestAsync
-            (
-                async (serviceProvider) =>
-                {
-                    //Setup
+        //[TestMethod]
+        //[ExpectedException(typeof(NullReferenceException), IntegrationTestService.NULL_TEST_CLASS_ERROR_MESSAGE)]
+        //public async Task SetupTests_NullInput_Throws()
+        //{
+        //    await RunDependencyInjectedTestAsync
+        //    (
+        //        async (serviceProvider) =>
+        //        {
+        //            //Setup
 
-                    var nullMixedClass = (MixedClass)null;
+        //            var nullMixedClass = (MixedClass)null;
 
-                    var uut = serviceProvider.GetRequiredService<IIntegrationTestService>();
-                    var uutConcrete = (IntegrationTestService)uut;
+        //            var uut = serviceProvider.GetRequiredService<IIntegrationTestService>();
+        //            var uutConcrete = (IntegrationTestService)uut;
 
-                    //Act
-                    var observed = uutConcrete.SetupTests(nullMixedClass);
+        //            //Act
+        //            var observed = uutConcrete.SetupTests(nullMixedClass);
 
-                    //Assert
+        //            //Assert
 
-                    await Task.CompletedTask.ConfigureAwait(false);
+        //            await Task.CompletedTask.ConfigureAwait(false);
 
-                },
-               serviceCollection => ConfigureServices(serviceCollection)
-           );
-        }
+        //        },
+        //       serviceCollection => ConfigureServices(serviceCollection)
+        //   );
+        //}
 
 
-        [TestMethod]
-        public async Task SetupTests_ExampleTestClass_NullTestsNameAndTestGroup()
-        {
-            await RunDependencyInjectedTestAsync
-            (
-                async (serviceProvider) =>
-                {
-                    //Setup
+        //[TestMethod]
+        //public async Task SetupTests_ExampleTestClass_NullTestsNameAndTestGroup()
+        //{
+        //    await RunDependencyInjectedTestAsync
+        //    (
+        //        async (serviceProvider) =>
+        //        {
+        //            //Setup
 
-                    var exampleTestClass = new ExampleTestClass();
+        //            var exampleTestClass = new ExampleTestClass();
 
-                    var uut = serviceProvider.GetRequiredService<IIntegrationTestService>();
-                    var uutConcrete = (IntegrationTestService)uut;
+        //            var uut = serviceProvider.GetRequiredService<IIntegrationTestService>();
+        //            var uutConcrete = (IntegrationTestService)uut;
 
-                    //Act
-                    var observed = uutConcrete.SetupTests(exampleTestClass);
+        //            //Act
+        //            var observed = uutConcrete.SetupTests(exampleTestClass);
 
-                    //Assert
-                    Assert.AreEqual(2, observed.Count());
+        //            //Assert
+        //            Assert.AreEqual(2, observed.Count());
 
-                    var observedList = observed.ToList();
+        //            var observedList = observed.ToList();
 
-                    Assert.AreEqual("Example_MethodOne_Async", observedList[0].MethodInfo.Name);
-                    Assert.AreEqual("Example_MethodTwo_Async", observedList[1].MethodInfo.Name);
+        //            Assert.AreEqual("Example_MethodOne_Async", observedList[0].MethodInfo.Name);
+        //            Assert.AreEqual("Example_MethodTwo_Async", observedList[1].MethodInfo.Name);
 
-                    Assert.IsNull(observedList[0].TestsName);
-                    Assert.IsNull(observedList[1].TestsName);
+        //            Assert.IsNull(observedList[0].TestsName);
+        //            Assert.IsNull(observedList[1].TestsName);
 
-                    Assert.IsNull(observedList[0].TestGroup);
-                    Assert.IsNull(observedList[1].TestGroup);
+        //            Assert.IsNull(observedList[0].TestGroup);
+        //            Assert.IsNull(observedList[1].TestGroup);
 
-                    await Task.CompletedTask.ConfigureAwait(false);
+        //            await Task.CompletedTask.ConfigureAwait(false);
 
-                },
-               serviceCollection => ConfigureServices(serviceCollection)
-           );
-        }
+        //        },
+        //       serviceCollection => ConfigureServices(serviceCollection)
+        //   );
+        //}
 
-        [TestMethod]
-        public async Task SetupTests_MixedClass_ReturnsExpectedResult()
-        {
-            await RunDependencyInjectedTestAsync
-            (
-                async (serviceProvider) =>
-                {
-                    //Setup
+        //[TestMethod]
+        //public async Task SetupTests_MixedClass_ReturnsExpectedResult()
+        //{
+        //    await RunDependencyInjectedTestAsync
+        //    (
+        //        async (serviceProvider) =>
+        //        {
+        //            //Setup
 
-                    var exampleMixedClass = new MixedClass();
-                    var expectedTestNames = "MixedTests";
-                    var expectedTestGroup = "TestGroup";
+        //            var exampleMixedClass = new MixedClass();
+        //            var expectedTestNames = "MixedTests";
+        //            var expectedTestGroup = "TestGroup";
 
-                    var uut = serviceProvider.GetRequiredService<IIntegrationTestService>();
-                    var uutConcrete = (IntegrationTestService)uut;
+        //            var uut = serviceProvider.GetRequiredService<IIntegrationTestService>();
+        //            var uutConcrete = (IntegrationTestService)uut;
 
-                    //Act
-                    var observed = uutConcrete.SetupTests(exampleMixedClass);
+        //            //Act
+        //            var observed = uutConcrete.SetupTests(exampleMixedClass);
 
-                    //Assert
-                    Assert.AreEqual(4, observed.Count());
+        //            //Assert
+        //            Assert.AreEqual(4, observed.Count());
 
-                    var observedList = observed.ToList();
+        //            var observedList = observed.ToList();
 
-                    Assert.AreEqual("MethodFive_Match", observedList[0].MethodInfo.Name);
-                    Assert.AreEqual("MethodSix_Matchs", observedList[1].MethodInfo.Name);
-                    Assert.AreEqual("MethodSeven_Matchs", observedList[2].MethodInfo.Name);
-                    Assert.AreEqual("MethodEight_Matchs", observedList[3].MethodInfo.Name);
+        //            Assert.AreEqual("MethodFive_Match", observedList[0].MethodInfo.Name);
+        //            Assert.AreEqual("MethodSix_Matchs", observedList[1].MethodInfo.Name);
+        //            Assert.AreEqual("MethodSeven_Matchs", observedList[2].MethodInfo.Name);
+        //            Assert.AreEqual("MethodEight_Matchs", observedList[3].MethodInfo.Name);
 
-                    Assert.AreEqual(expectedTestNames, observedList[0].TestsName);
-                    Assert.AreEqual(expectedTestNames, observedList[1].TestsName);
-                    Assert.AreEqual(expectedTestNames, observedList[2].TestsName);
-                    Assert.AreEqual(expectedTestNames, observedList[3].TestsName);
+        //            Assert.AreEqual(expectedTestNames, observedList[0].TestsName);
+        //            Assert.AreEqual(expectedTestNames, observedList[1].TestsName);
+        //            Assert.AreEqual(expectedTestNames, observedList[2].TestsName);
+        //            Assert.AreEqual(expectedTestNames, observedList[3].TestsName);
 
-                    Assert.AreEqual(expectedTestGroup, observedList[0].TestGroup);
-                    Assert.AreEqual(expectedTestGroup, observedList[1].TestGroup);
-                    Assert.AreEqual(expectedTestGroup, observedList[2].TestGroup);
-                    Assert.AreEqual(expectedTestGroup, observedList[3].TestGroup);
+        //            Assert.AreEqual(expectedTestGroup, observedList[0].TestGroup);
+        //            Assert.AreEqual(expectedTestGroup, observedList[1].TestGroup);
+        //            Assert.AreEqual(expectedTestGroup, observedList[2].TestGroup);
+        //            Assert.AreEqual(expectedTestGroup, observedList[3].TestGroup);
 
-                    await Task.CompletedTask.ConfigureAwait(false);
+        //            await Task.CompletedTask.ConfigureAwait(false);
 
-                },
-               serviceCollection => ConfigureServices(serviceCollection)
-           );
-        }
+        //        },
+        //       serviceCollection => ConfigureServices(serviceCollection)
+        //   );
+        //}
 
         #endregion
 

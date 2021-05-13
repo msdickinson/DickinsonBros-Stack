@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace DickinsonBros.IntegrationTests.Tests.Core.DateTime
+namespace DickinsonBros.IntegrationTests.Tests.Encryption.AES
 {
-    public interface IDateTimeIntegrationTests : ITestsInterface
+    public interface IAESIntegrationTests : ITestsInterface
     {
     }
 }
