@@ -105,7 +105,6 @@ namespace DickinsonBros.IntegrationTests.Tests.Encryption.JWT
             var principalFromRefreshTokenSerialized = JsonSerializer.Serialize(principalFromRefreshToken, new JsonSerializerOptions() { IgnoreReadOnlyProperties = true });
 
             successLog.Add($"JWT Created. \r\nClaimsInput:\r\n{claimsSerialized}\r\n\r\nGenerateTokensDescriptor:\r\n{generateTokensDescriptorSerialized}\r\n\r\nprincipalFromAccessToken:\r\n{principalFromAccessTokenSerialized}\r\n\r\nprincipalFromRefreshToken:\r\n{principalFromRefreshTokenSerialized}\r\n");
-
             await Task.CompletedTask.ConfigureAwait(false);
         }
         //public async Task GenerateTokensAndGetPrincipal_Runs_TBD(List<string> successLog)

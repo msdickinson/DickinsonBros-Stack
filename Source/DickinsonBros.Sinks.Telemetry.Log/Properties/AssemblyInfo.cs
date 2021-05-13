@@ -1,3 +1,3 @@
 ﻿using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("DickinsonBros.Core.Correlation.Tests")]
+[assembly: InternalsVisibleTo("DickinsonBros.Sinks.Telemetry.Log.Tests")]

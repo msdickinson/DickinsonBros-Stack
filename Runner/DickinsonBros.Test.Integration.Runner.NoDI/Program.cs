@@ -32,8 +32,7 @@ namespace DickinsonBros.Test.Integration.Runner.NoDI
             );
 
             //Setup Tests
-            var exampleTests = new ExampleTests();
-            var tests = integrationTestService.SetupTests(exampleTests);
+            var tests = integrationTestService.SetupTests();
 
             //Run Tests
             var testSummary = await integrationTestService.RunTests(tests).ConfigureAwait(false);

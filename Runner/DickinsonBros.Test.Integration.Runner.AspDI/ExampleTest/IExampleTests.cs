@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using DickinsonBros.Test.Integration.Abstractions;
 
 namespace DickinsonBros.Test.Integration.Runner.AspDI.ExampleTest
 {
-    public interface IExampleTests
+    public interface IExampleTests: ITestsInterface
     {
-        Task Example_MethodOne_Async(List<string> successLog);
-        Task Example_MethodTwo_Async(List<string> successLog);
     }
 }

@@ -17,6 +17,11 @@ namespace DickinsonBros.Sinks.Telemetry.Log
             _loggerService = loggerService;
         }
 
+        public async Task FlushAsync()
+        {
+            await Task.CompletedTask.ConfigureAwait(false);
+        }
+
         public async Task InsertAsync(InsertTelemetryRequest telemetryItem)
         {
             _loggerService.LogInformationRedacted

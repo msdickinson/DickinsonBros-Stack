@@ -56,15 +56,15 @@ namespace DickinsonBros.Test.Integration
         }
 
 
-        public IEnumerable<Abstractions.Models.Test> FetchByGroup(string group)
+        public IEnumerable<Abstractions.Models.Test> FetchTestsByGroup(string group)
         {
             return FetchTests().Where(test => test.TestGroup == group);
         }
-        public IEnumerable<Abstractions.Models.Test> FetchByName(string name)
+        public IEnumerable<Abstractions.Models.Test> FetchTestsByName(string name)
         {
             return FetchTests().Where(test => test.TestsName == name);
         }
-        public IEnumerable<Abstractions.Models.Test> FetchByTestName(string testName)
+        public IEnumerable<Abstractions.Models.Test> FetchTestsByTestName(string testName)
         {
             return FetchTests().Where(test => test.MethodInfo.Name == testName);
         }
@@ -195,6 +195,7 @@ namespace DickinsonBros.Test.Integration
         public string GenerateLog(TestSummary testSummary, bool showSuccessLogsOnSuccess)
         {
             var logs = new List<string>();
+            var failingTests = new List<string>();
 
             foreach (var testGroup in testSummary.TestResults.GroupBy(e => e.TestsName))
             {
@@ -217,6 +218,7 @@ namespace DickinsonBros.Test.Integration
                     }
                     if (!result.Pass)
                     {
+                        failingTests.Add($"{ result.TestName } - { result.CorrelationId } - {result.Exception.Message}");
                         logs.Add($"- {result.Exception.Message}");
                         logs.Add("");
                     }
@@ -230,6 +232,13 @@ namespace DickinsonBros.Test.Integration
                     }
                 }
                 logs.Add("");
+            }
+
+            logs.Add($"{testSummary.TestResults.Count()} tests successful");
+
+            if(failingTests.Any())
+            {
+                logs.Add($"{ failingTests.Count()} tests failed:"); 
             }
 
             return String.Join(Environment.NewLine, logs.ToArray());

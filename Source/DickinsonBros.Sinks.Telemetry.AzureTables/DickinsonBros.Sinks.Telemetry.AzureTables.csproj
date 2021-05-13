@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DickinsonBros.Core.Logger.Abstractions\DickinsonBros.Core.Logger.Abstractions.csproj" />
     <ProjectReference Include="..\DickinsonBros.Core.Telemetry.Abstractions\DickinsonBros.Core.Telemetry.Abstractions.csproj" />
-    <ProjectReference Include="..\DickinsonBros.Sinks.Telemetry.Log.Abstractions\DickinsonBros.Sinks.Telemetry.Log.Abstractions.csproj" />
+    <ProjectReference Include="..\DickinsonBros.Infrastructure.AzureTables.Abstractions\DickinsonBros.Infrastructure.AzureTables.Abstractions.csproj" />
+    <ProjectReference Include="..\DickinsonBros.Sinks.Telemetry.AzureTables.Abstractions\DickinsonBros.Sinks.Telemetry.AzureTables.Abstractions.csproj" />
   </ItemGroup>
 </Project>

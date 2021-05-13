@@ -58,7 +58,8 @@
     <Folder Include="Tests\Infrastructure\SQL\Extensions\" />
     <Folder Include="Tests\Middleware\ASP\Extensions\" />
     <Folder Include="Tests\Middleware\Function\Extensions\" />
-    <Folder Include="Tests\Sinks\Telemetry.AzureTables\Extensions\" />
+    <Folder Include="Tests\Sinks\Telemetry\AzureTables\Extensions\" />
+    <Folder Include="Tests\Sinks\Telemetry\AzureTables\" />
   </ItemGroup>
 
   <ItemGroup>

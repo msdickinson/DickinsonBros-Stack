@@ -30,8 +30,7 @@ namespace DickinsonBros.Test.Integration.Runner.AspDI
                 var hostApplicationLifetime = provider.GetService<IHostApplicationLifetime>();
 
                 //Setup Tests
-                var exampleTests = new ExampleTests();
-                var tests = integrationTestService.SetupTests(exampleTests);
+                var tests = integrationTestService.FetchTests();
 
                 //Run Tests
                 var testSummary = await integrationTestService.RunTests(tests).ConfigureAwait(false);
@@ -70,6 +69,7 @@ namespace DickinsonBros.Test.Integration.Runner.AspDI
             serviceCollection.AddIntegrationTestService();
 
             serviceCollection.AddStopwatchFactory();
+            serviceCollection.AddSingleton<IExampleTests, ExampleTests>();
 
             return serviceCollection;
         }

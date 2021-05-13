@@ -122,12 +122,12 @@ namespace DickinsonBros.Infrastructure.AzureTables
 
         #region InsertBulkAsync
 
-        public async Task<IEnumerable<TableResult<T>>> InsertBulkAsync<T>(IEnumerable<T> items, string tableName) where T : ITableEntity
+        public async Task<IEnumerable<TableResult<T>>> InsertBulkAsync<T>(IEnumerable<T> items, string tableName, bool shouldSendTelemetry = true) where T : ITableEntity
         {
             return await InsertBulkAsync(items, tableName, null).ConfigureAwait(false);
         }
 
-        public async Task<IEnumerable<TableResult<T>>> InsertBulkAsync<T>(IEnumerable<T> items, string tableName, Action<InsertTelemetryRequest, IEnumerable<TableResult<T>>> postCallMethod) where T : ITableEntity
+        public async Task<IEnumerable<TableResult<T>>> InsertBulkAsync<T>(IEnumerable<T> items, string tableName, Action<InsertTelemetryRequest, IEnumerable<TableResult<T>>> postCallMethod, bool shouldSendTelemetry = true) where T : ITableEntity
         {
             var methodName = $"{nameof(IAzureTableService<U>)}<{nameof(U)}>.{nameof(IAzureTableService<U>.InsertBulkAsync)}<{nameof(T)}>";
 
@@ -164,8 +164,8 @@ namespace DickinsonBros.Infrastructure.AzureTables
                     }
                 );
 
-                UpateBulkInsertTelemetryRequest(insertTelemetryRequest, results);
                 postCallMethod?.Invoke(insertTelemetryRequest, results);
+                UpateBulkInsertTelemetryRequest(insertTelemetryRequest, results);
 
                 return results;
 

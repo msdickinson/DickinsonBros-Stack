@@ -21,6 +21,7 @@ using DickinsonBros.IntegrationTests.Tests.Core.Stopwatch.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Encryption.AES.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Encryption.Certificate.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Encryption.JWT.Extensions;
+using DickinsonBros.IntegrationTests.Tests.Sinks.Telemetry.Log.Extensions;
 using DickinsonBros.Test.Integration.Abstractions;
 using DickinsonBros.Test.Integration.Adapter.AspDI.Extensions;
 using Microsoft.Extensions.DependencyInjection;
@@ -45,9 +46,9 @@ namespace DickinsonBros.IntegrationTests
                 var integrationTestService = provider.GetRequiredService<IIntegrationTestService>();
 
                 //Run Tests
-                var tests               = integrationTestService.FetchByName("JWT");
+                var tests               = integrationTestService.FetchTestsByName("SinksTelemetryLog");
                 var testSummary         = await integrationTestService.RunTests(tests).ConfigureAwait(false);
-                var testlog             = integrationTestService.GenerateLog(testSummary, true);
+                var testlog             = integrationTestService.GenerateLog(testSummary, false);
                 Console.WriteLine(testlog);
             }
             catch (Exception e)
@@ -85,6 +86,7 @@ namespace DickinsonBros.IntegrationTests
             serviceCollection.AddAESIntegrationTests();
             serviceCollection.AddCertificateIntegrationTests();
             serviceCollection.AddJWTIntegrationTests();
+            serviceCollection.AddSinksTelemetryLogIntegrationTests();
 
             return serviceCollection;
         }
