@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -7,8 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Source\DickinsonBros.Core.DateTime.Adapter.AspDI\DickinsonBros.Core.DateTime.Adapter.AspDI.csproj" />
-    <ProjectReference Include="..\..\Source\Dickinsonbros.Core.DateTime\Dickinsonbros.Core.DateTime.csproj" />
     <ProjectReference Include="..\BaseRunner\BaseRunner.csproj" />
   </ItemGroup>
 
