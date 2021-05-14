@@ -165,7 +165,7 @@ namespace DickinsonBros.Infrastructure.AzureTables
                 );
 
                 postCallMethod?.Invoke(insertTelemetryRequest, results);
-                UpateBulkInsertTelemetryRequest(insertTelemetryRequest, results);
+                UpdateBulkInsertTelemetryRequest(insertTelemetryRequest, results);
 
                 return results;
 
@@ -312,7 +312,7 @@ namespace DickinsonBros.Infrastructure.AzureTables
             insertTelemetryRequest.SignalResponse = $"Status Code: {tableResult.HttpStatusCode}";
         }
 
-        private void UpateBulkInsertTelemetryRequest<T>(InsertTelemetryRequest insertTelemetryRequest, IEnumerable<TableResult<T>> tableResults) where T : ITableEntity
+        private void UpdateBulkInsertTelemetryRequest<T>(InsertTelemetryRequest insertTelemetryRequest, IEnumerable<TableResult<T>> tableResults) where T : ITableEntity
         {
             if (tableResults.All(tableResult => tableResult.HttpStatusCode >= 200 && tableResult.HttpStatusCode < 300))
             {
