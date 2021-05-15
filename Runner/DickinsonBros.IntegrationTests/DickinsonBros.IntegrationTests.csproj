@@ -31,6 +31,9 @@
     <ProjectReference Include="..\..\Source\DickinsonBros.Encryption.JWT.Abstractions\DickinsonBros.Encryption.JWT.Abstractions.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Encryption.JWT.Adapter.AspDI\DickinsonBros.Encryption.JWT.Adapter.AspDI.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Encryption.JWT\DickinsonBros.Encryption.JWT.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.AzureTables.AspDI\DickinsonBros.Infrastructure.AzureTables.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Sinks.Telemetry.AzureTables.AspDI\DickinsonBros.Sinks.Telemetry.AzureTables.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Sinks.Telemetry.Log.AspDI\DickinsonBros.Sinks.Telemetry.Log.AspDI.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Test.Integration.Adapter.AspDI\DickinsonBros.Test.Integration.Adapter.AspDI.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Test.Integration\DickinsonBros.Test.Integration.csproj" />
     <ProjectReference Include="..\..\Tests\DickinsonBros.Core.Correlation.Abstractions.Tests\DickinsonBros.Core.Correlation.Abstractions.Tests.csproj" />
@@ -50,7 +53,6 @@
 
   <ItemGroup>
     <Folder Include="Tests\Application\Email\" />
-    <Folder Include="Tests\Infrastructure\AzureTables\Extensions\" />
     <Folder Include="Tests\Infrastructure\Cosmos\Extensions\" />
     <Folder Include="Tests\Infrastructure\File\Extensions\" />
     <Folder Include="Tests\Infrastructure\Rest\Extensions\" />
@@ -58,8 +60,6 @@
     <Folder Include="Tests\Infrastructure\SQL\Extensions\" />
     <Folder Include="Tests\Middleware\ASP\Extensions\" />
     <Folder Include="Tests\Middleware\Function\Extensions\" />
-    <Folder Include="Tests\Sinks\Telemetry\AzureTables\Extensions\" />
-    <Folder Include="Tests\Sinks\Telemetry\AzureTables\" />
   </ItemGroup>
 
   <ItemGroup>

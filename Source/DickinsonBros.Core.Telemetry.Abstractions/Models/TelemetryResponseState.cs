@@ -2,9 +2,11 @@
 {
     public enum TelemetryResponseState
     {
-        Successful      = 0,
-        CallerError     = 1,
-        ReciverError    = 2,
-        UnHandledException     = 3
+        Successful             = 0,
+        NotFound               = 1,
+        Conflict               = 2,
+        CallerError            = 3,
+        ReciverError           = 4,
+        UnHandledException     = 5
     }
 }

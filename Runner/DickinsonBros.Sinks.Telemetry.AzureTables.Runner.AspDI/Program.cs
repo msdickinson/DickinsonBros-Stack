@@ -1,4 +1,6 @@
 ﻿using BaseRunner;
+using DickinsonBros.Sinks.Telemetry.AzureTables.AspDI.Extensions;
+using DickinsonBros.Sinks.Telemetry.AzureTables.Runner.AspDI.Config;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -19,7 +21,7 @@ namespace DickinsonBros.Sinks.Telemetry.AzureTables.Runner.AspDI
                 var serviceCollection = ConfigureServices();
 
                 using var provider = serviceCollection.BuildServiceProvider();
-                //var xService = provider.GetRequiredService<>();
+                var xService = provider.GetRequiredService<SinksTelemetryAzureTablesService<RunnerAzureTableServiceOptionsType>>();
                 var hostApplicationLifetime = provider.GetService<IHostApplicationLifetime>();
 
                 provider.ConfigureAwait(true);
@@ -35,6 +37,7 @@ namespace DickinsonBros.Sinks.Telemetry.AzureTables.Runner.AspDI
         {
             var configruation = BaseRunnerSetup.FetchConfiguration();
             var serviceCollection = BaseRunnerSetup.InitializeDependencyInjection(configruation);
+            serviceCollection.AddSinksTelemetryAzureTablesService<RunnerAzureTableServiceOptionsType>();
 
             return serviceCollection;
         }

@@ -14,10 +14,6 @@
     <ProjectReference Include="..\DickinsonBros.Core.Redactor\DickinsonBros.Core.Redactor.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Extensions\NewFolder\" />
-  </ItemGroup>
-
   <Import Project="..\Packaging.targets" />
   <Import Project="..\CopyPackageToPublishDirectory.targets" />
   <Import Project="..\FixDistributedLockCoreDependencyVersion.targets" />

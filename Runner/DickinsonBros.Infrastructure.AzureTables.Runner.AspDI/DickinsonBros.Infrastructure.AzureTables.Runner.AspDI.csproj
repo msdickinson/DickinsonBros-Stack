@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Source\DickinsonBros.Core.Correlation.Adapter.AspDI\DickinsonBros.Core.Correlation.Adapter.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Core.DateTime.Adapter.AspDI\DickinsonBros.Core.DateTime.Adapter.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Core.Logger.Adapter.AspDI\DickinsonBros.Core.Logger.Adapter.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Core.Redactor.Adapter.AspDI\DickinsonBros.Core.Redactor.Adapter.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Core.Stopwatch.Adapter.AspDI\DickinsonBros.Core.Stopwatch.Adapter.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Encryption.Certificate.Adapter.AspDI\DickinsonBros.Encryption.Certificate.Adapter.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.AzureTables.AspDI\DickinsonBros.Infrastructure.AzureTables.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Sinks.Telemetry.Log.AspDI\DickinsonBros.Sinks.Telemetry.Log.AspDI.csproj" />
     <ProjectReference Include="..\BaseRunner\BaseRunner.csproj" />
   </ItemGroup>
 

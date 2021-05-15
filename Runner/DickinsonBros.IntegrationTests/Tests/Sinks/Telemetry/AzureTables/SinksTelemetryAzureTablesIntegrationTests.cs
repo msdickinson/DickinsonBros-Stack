@@ -1,22 +1,19 @@
 ﻿using DickinsonBros.Core.Telemetry.Abstractions;
 using DickinsonBros.Core.Telemetry.Abstractions.Models;
-using DickinsonBros.Encryption.AES.Abstractions;
-using DickinsonBros.IntegrationTests.Config;
 using DickinsonBros.Test.Integration.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
-namespace DickinsonBros.IntegrationTests.Tests.Sinks.Telemetry.Log
+namespace DickinsonBros.IntegrationTests.Tests.Sinks.Telemetry.AzureTables
 {
     [ExcludeFromCodeCoverage]
-    [TestAPIAttribute(Name = "SinksTelemetryLog", Group = "Sinks")]
-    public class SinksTelemetryLogIntegrationTests : ISinksTelemetryLogIntegrationTests
+    [TestAPIAttribute(Name = "SinksTelemetryAzureTables", Group = "Sinks")]
+    public class SinksTelemetryAzureTablesIntegrationTests : ISinksTelemetryAzureTablesIntegrationTests
     {
         public ITelemetryServiceWriter _telemetryServiceWriter;
-        public SinksTelemetryLogIntegrationTests
+        public SinksTelemetryAzureTablesIntegrationTests
         (
             ITelemetryServiceWriter telemetryServiceWriter
         )
@@ -24,7 +21,7 @@ namespace DickinsonBros.IntegrationTests.Tests.Sinks.Telemetry.Log
             _telemetryServiceWriter = telemetryServiceWriter;
         }
 
-        public async Task InsertAsync_Runs_DoesNotThrow(List<string> successLog)
+        public async Task InsertAndFlush_Runs_DoesNotThrow(List<string> successLog)
         {
             var insertTelemetryRequest = new InsertTelemetryRequest
             {
@@ -38,6 +35,7 @@ namespace DickinsonBros.IntegrationTests.Tests.Sinks.Telemetry.Log
             };
 
             await _telemetryServiceWriter.InsertAsync(insertTelemetryRequest).ConfigureAwait(false);
+            await _telemetryServiceWriter.FlushAsync().ConfigureAwait(false);
         }
 
     }

@@ -11,5 +11,6 @@ namespace DickinsonBros.Core.Telemetry.Abstractions.Models
         public TimeSpan Duration { get; set; }
         public string SignalResponse { get; set; }
         public TelemetryResponseState TelemetryResponseState { get; set; }
+
     }
 }
