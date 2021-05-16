@@ -234,7 +234,7 @@ namespace DickinsonBros.Test.Integration
                 logs.Add("");
             }
 
-            logs.Add($"{testSummary.TestResults.Count()} tests successful");
+            logs.Add($"{testSummary.TestResults.Count() - failingTests.Count()} tests successful");
 
             if(failingTests.Any())
             {

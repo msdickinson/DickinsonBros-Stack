@@ -9,6 +9,7 @@ using DickinsonBros.Encryption.AES.Adapter.AspDI.Extensions;
 using DickinsonBros.Encryption.Certificate.Abstractions.Models;
 using DickinsonBros.Encryption.Certificate.Adapter.AspDI.Extensions;
 using DickinsonBros.Encryption.JWT.Adapter.AspDI.Extensions;
+using DickinsonBros.Infrastructure.AzureTables.Abstractions;
 using DickinsonBros.Infrastructure.AzureTables.AspDI.Extensions;
 using DickinsonBros.IntegrationTests.Config;
 using DickinsonBros.IntegrationTests.Tests.Core.Correlation.Extensions;
@@ -21,11 +22,13 @@ using DickinsonBros.IntegrationTests.Tests.Encryption.AES.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Encryption.Certificate.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Encryption.JWT.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Infrastructure.AzureTables.Extensions;
+using DickinsonBros.IntegrationTests.Tests.Infrastructure.AzureTables.Models;
 using DickinsonBros.IntegrationTests.Tests.Sinks.Telemetry.AzureTables.Extensions;
 using DickinsonBros.Sinks.Telemetry.AzureTables.AspDI.Extensions;
 using DickinsonBros.Sinks.Telemetry.Log.AspDI.Extensions;
 using DickinsonBros.Test.Integration.Abstractions;
 using DickinsonBros.Test.Integration.Adapter.AspDI.Extensions;
+using Microsoft.Azure.Cosmos.Table;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
@@ -34,22 +37,23 @@ namespace DickinsonBros.IntegrationTests
 {
     class Program
     {
+        internal const string AZURE_TABLE_NAME = "DickinsonBrosIntegrationTests";
+
         async static Task Main()
         {
             await new Program().DoMain();
         }
         async Task DoMain()
         {
+            var serviceCollection = ConfigureServices();
+            using var provider = serviceCollection.BuildServiceProvider();
+            provider.ConfigureAwait(true);
+            var integrationTestService = provider.GetRequiredService<IIntegrationTestService>();
+
             try
             {
-                var serviceCollection = ConfigureServices();
-                using var provider = serviceCollection.BuildServiceProvider();
-                provider.ConfigureAwait(true);
-                var integrationTestService = provider.GetRequiredService<IIntegrationTestService>();
-
-                //Run Tests
-                var tests               = integrationTestService.FetchTestsByTestName("InsertAndUpsert_Runs_ValuesMatch");
-                //var tests               = integrationTestService.FetchTestsByName("AzureTables");
+                //var tests             = integrationTestService.FetchTestsByTestName("InsertBulkAndUpsertBulkAsync_Runs_IsSuccessful");
+                var tests               = integrationTestService.FetchTestsByName("AzureTables");
 
                 var testSummary         = await integrationTestService.RunTests(tests).ConfigureAwait(false);
                 var testlog             = integrationTestService.GenerateLog(testSummary, false);
@@ -57,10 +61,25 @@ namespace DickinsonBros.IntegrationTests
             }
             catch (Exception e)
             {
+
                 Console.WriteLine(e);
+            }
+            finally
+            {
+                await AzureTablesCleanUpAsync(provider).ConfigureAwait(false);
             }
         }
 
+        private async Task AzureTablesCleanUpAsync(ServiceProvider provider)
+        {
+            //Azure Tables
+            var azureTableService = provider.GetRequiredService<IAzureTableService<RunnerAzureTableServiceOptionsType>>();
+
+            var tableQuery = new TableQuery<SampleEntity>();
+
+            var items = await azureTableService.QueryAsync(AZURE_TABLE_NAME, tableQuery).ConfigureAwait(false);
+            var result = await azureTableService.DeleteBulkAsync(items, AZURE_TABLE_NAME).ConfigureAwait(false);
+        }
 
         private IServiceCollection ConfigureServices()
         {
