@@ -114,11 +114,11 @@ namespace DickinsonBros.IntegrationTests.Tests.Infrastructure.AzureTables
 
             //Insert Bulk
             var insertBulkAsyncResult = await _azureTableService.InsertBulkAsync(sampleEntitys, TABLE_NAME, true).ConfigureAwait(false);
-            Assert.AreEqual(2, insertBulkAsyncResult.Count(), "Insert Bulk Failed");
+            Assert.AreEqual(1, insertBulkAsyncResult.Count(), "Insert Bulk Failed");
             successLog.Add($"Insert Bulk Successful.");
 
             //Delete Bulk
-            var deleteAsyncResult = await _azureTableService.DeleteBulkAsync(insertBulkAsyncResult.Select(e=> e.Result), TABLE_NAME).ConfigureAwait(false);
+            var deleteAsyncResult = await _azureTableService.DeleteBulkAsync(insertBulkAsyncResult.First().Select(e => (SampleEntity)e.Result), TABLE_NAME).ConfigureAwait(false);
             Assert.AreEqual(2, deleteAsyncResult.FirstOrDefault().Count(), "Delete Bulk Failed");
             successLog.Add($"Delete Bulk Successful");
         }
@@ -134,14 +134,14 @@ namespace DickinsonBros.IntegrationTests.Tests.Infrastructure.AzureTables
 
             //Insert Bulk
             var insertBulkAsyncResult = await _azureTableService.InsertBulkAsync(sampleEntitys, TABLE_NAME, true).ConfigureAwait(false);
-            Assert.AreEqual(2, insertBulkAsyncResult.Count(), "Insert Bulk Failed");
+            Assert.AreEqual(2, insertBulkAsyncResult.First().Count(), "Insert Bulk Failed");
             successLog.Add($"Insert Bulk Successful");
 
             //Upsert Bulk
             var sampleEntitysPlusOne = new List<SampleEntity>();
             var sampleStringReplace = Guid.NewGuid().ToString();
 
-            sampleEntitysPlusOne.AddRange(insertBulkAsyncResult.Select(e=> e.Result));
+            sampleEntitysPlusOne.AddRange(insertBulkAsyncResult.First().Select(e=> (SampleEntity)e.Result));
             sampleEntitysPlusOne.ForEach((e) => { e.SampleString = sampleStringReplace; });
             sampleEntitysPlusOne.Add(GenerateNewSampleEntity());
 

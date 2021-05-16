@@ -61,12 +61,11 @@ namespace DickinsonBros.IntegrationTests
             }
             catch (Exception e)
             {
-
                 Console.WriteLine(e);
             }
             finally
             {
-                await AzureTablesCleanUpAsync(provider).ConfigureAwait(false);
+                //await AzureTablesCleanUpAsync(provider).ConfigureAwait(false);
             }
         }
 

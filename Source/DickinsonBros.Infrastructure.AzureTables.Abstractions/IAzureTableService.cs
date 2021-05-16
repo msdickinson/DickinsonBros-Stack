@@ -21,7 +21,7 @@ namespace DickinsonBros.Infrastructure.AzureTables.Abstractions
 
         //Insert [2/2]
         public Task<TableResult<T>> InsertAsync<T>(T item, string tableName) where T : ITableEntity;
-        public Task<IEnumerable<TableResult<T>>> InsertBulkAsync<T>(IEnumerable<T> items, string tableName, bool shouldSendTelemetry = true) where T : ITableEntity;
+        public Task<IEnumerable<TableBatchResult>> InsertBulkAsync<T>(IEnumerable<T> items, string tableName, bool shouldSendTelemetry = true) where T : ITableEntity;
 
         //Query [1/1]
         public Task<IEnumerable<T>> QueryAsync<T>(string tableName, TableQuery<T> tableQuery) where T : ITableEntity, new();
