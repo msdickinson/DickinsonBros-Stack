@@ -10,6 +10,7 @@ using DickinsonBros.Test.Unit;
 using Microsoft.Azure.Cosmos.Table;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -37,11 +38,14 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     var sampleEntity = new SampleEntity
                     {
                         Data = "SampleData",
-                        ETag = null,
+                        ETag = "SampleETag",
                         PartitionKey = "SamplePartitionKey",
                         RowKey = "SampleRowKey"
                     };
 
+                    //-- IDateTimeService
+                    var dateTime = new DateTime(2000, 1, 1);
+                    var dateTimeServiceMock = CreateDateTimeServiceMock(serviceProvider, dateTime);
 
                     //-- IStopwatchService
                     var stopwatchServiceMock = CreateStopWatchServiceMock(serviceProvider);
@@ -56,7 +60,7 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     var sampleEntityResult = new SampleEntity
                     {
                         Data = sampleEntity.Data,
-                        ETag = "SampleETag",
+                        ETag = sampleEntity.ETag,
                         PartitionKey = sampleEntity.PartitionKey,
                         RowKey = sampleEntity.RowKey
                     };
@@ -64,8 +68,8 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     var tableResult = new TableResult();
                     tableResult.Etag = sampleEntityResult.ETag;
                     tableResult.HttpStatusCode = 200;
-                    tableResult.Result = sampleEntityResult.Data;
-
+                    tableResult.Result = sampleEntityResult;
+                 
                     var cloudTableMock = SetupCloudServices(serviceProvider, uri, tableName, tableResult);
 
                     //-- ILoggerService
@@ -81,8 +85,13 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     //Act
                     var observed = await uutConcrete.DeleteAsync(sampleEntity, tableName).ConfigureAwait(false);
 
-
                     //Assert
+                    dateTimeServiceMock
+                    .Verify
+                    (
+                        dateTimeService => dateTimeService.GetDateTimeUTC(),
+                        Times.Once
+                    );
 
                 },
                 serviceCollection => ConfigureServices(serviceCollection)
@@ -200,6 +209,14 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
 
         #region Helpers
 
+        private Mock<IDateTimeService> CreateDateTimeServiceMock(IServiceProvider serviceProvider, DateTime getDateTimeUTCResponse)
+        {
+            var dateTimeServiceMock = serviceProvider.GetMock<IDateTimeService>();
+            dateTimeServiceMock.Setup(stopwatchService => stopwatchService.GetDateTimeUTC()).Returns(getDateTimeUTCResponse);
+
+            return dateTimeServiceMock;
+        }
+
         private Mock<IStopwatchService> CreateStopWatchServiceMock(IServiceProvider serviceProvider)
         {
             //-- IStopwatchService
@@ -269,12 +286,12 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
             return cloudTableClientMock;
         }
       
-        private CloudStorageAccount CreateCloudStorageAccount(IServiceProvider serviceProvider)
+        private CloudStorageAccount CreateCloudStorageAccount(IServiceProvider serviceProvider, Uri uri)
         {
-            return (CloudStorageAccount)null;
+            return new CloudStorageAccount(new StorageCredentials("SampleName"), uri);
         }
 
-        private Mock<ICloudStorageAccountFactory> CreateCloudStorageAccountFactoryMock(IServiceProvider serviceProvider, CloudStorageAccount createCloudStorageAccountResult)
+        private Mock<ICloudStorageAccountFactory> CreateCloudStorageAccountFactoryMock(IServiceProvider serviceProvider, CloudStorageAccount cloudStorageAccount)
         {
             var cloudStorageAccountFactoryMock = serviceProvider.GetMock<ICloudStorageAccountFactory>();
 
@@ -288,19 +305,39 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
             )
             .Returns
             (
-                createCloudStorageAccountResult
+                cloudStorageAccount
             );
 
             return cloudStorageAccountFactoryMock;
+        }
+     
+        private Mock<ICloudTableClientFactory> CreateCloudClientFactoryMock(IServiceProvider serviceProvider, CloudStorageAccount cloudStorageAccount, CloudTableClient cloudTableClient)
+        {
+            var cloudTableClientFactoryMock = serviceProvider.GetMock<ICloudTableClientFactory>();
+
+            cloudTableClientFactoryMock
+            .Setup
+            (
+                cloudTableClientFactory => cloudTableClientFactory.CreateCloudTableClient
+                (
+                    cloudStorageAccount
+                )
+            )
+            .Returns
+            (
+                cloudTableClient
+            );
+            return cloudTableClientFactoryMock;
         }
 
         private Mock<CloudTableClient> SetupCloudServices(IServiceProvider serviceProvider, Uri uri, string tableName, TableResult tableResult)
         {
             var cloudTableMock = CreateCloudTableMock(uri, tableResult);
             var cloudTableClientMock = CreateCloudTableClientMock(uri, tableName, cloudTableMock.Object);
-            var cloudStorageAccountMock = CreateCloudStorageAccount(serviceProvider);
+            var cloudStorageAccountMock = CreateCloudStorageAccount(serviceProvider, uri);
+            var cloudClientFactoryMock = CreateCloudClientFactoryMock(serviceProvider, cloudStorageAccountMock, cloudTableClientMock.Object);
             var cloudStorageAccountFactoryMock = CreateCloudStorageAccountFactoryMock(serviceProvider, cloudStorageAccountMock);
-       
+
             return cloudTableClientMock;
         }
 
@@ -321,6 +358,10 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
             {
                 ConnectionString = CONNECTION_STRING
             };
+            var options = Options.Create(azureTableServiceOptions);
+            serviceCollection.AddSingleton<IOptions<AzureTableServiceOptions<Test>>>(options);
+
+            //???
             var configurationRoot = BuildConfigurationRoot(azureTableServiceOptions);
             serviceCollection.AddSingleton<IConfiguration>(configurationRoot);
 

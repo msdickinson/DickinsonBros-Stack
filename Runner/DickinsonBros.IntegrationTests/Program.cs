@@ -53,11 +53,11 @@ namespace DickinsonBros.IntegrationTests
             try
             {
                 //var tests             = integrationTestService.FetchTestsByTestName("InsertBulkAndUpsertBulkAsync_Runs_IsSuccessful");
-                var tests               = integrationTestService.FetchTestsByName("AzureTables");
+                //var tests               = integrationTestService.FetchTestsByName("AzureTables");
 
-                var testSummary         = await integrationTestService.RunTests(tests).ConfigureAwait(false);
-                var testlog             = integrationTestService.GenerateLog(testSummary, false);
-                Console.WriteLine(testlog);
+                //var testSummary         = await integrationTestService.RunTests(tests).ConfigureAwait(false);
+                //var testlog             = integrationTestService.GenerateLog(testSummary, false);
+              //  Console.WriteLine(testlog);
             }
             catch (Exception e)
             {
