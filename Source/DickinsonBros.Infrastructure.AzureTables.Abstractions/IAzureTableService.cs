@@ -28,6 +28,6 @@ namespace DickinsonBros.Infrastructure.AzureTables.Abstractions
        
         //Upsert [2/2]
         public Task<TableResult<T>> UpsertAsync<T>(T item, string tableName) where T : ITableEntity;
-        public Task<IEnumerable<TableBatchResult>> UpsertBulkAsync<T>(IEnumerable<T> items, string tableName) where T : ITableEntity, new();
+        public Task<IEnumerable<TableBatchResult>> UpsertBulkAsync<T>(IEnumerable<T> items, string tableName) where T : ITableEntity;
     }
 }

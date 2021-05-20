@@ -41,7 +41,7 @@ namespace DickinsonBros.Sinks.Telemetry.Log.Runner.AspDI
                     TelemetryType = TelemetryType.Application
                 };
 
-                await sinksTelemetryLogService.InsertAsync(insertTelemetryRequest).ConfigureAwait(false);
+                sinksTelemetryLogService.Insert(insertTelemetryRequest);
 
                 provider.ConfigureAwait(true);
                 await Task.CompletedTask;

@@ -5,7 +5,7 @@ namespace DickinsonBros.Core.Telemetry.Abstractions
 {
     public interface ITelemetryServiceWriter
     {
-        Task InsertAsync(InsertTelemetryRequest telemetryItem);
+        void Insert(InsertTelemetryRequest telemetryItem);
         Task FlushAsync();
     }
 }

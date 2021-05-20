@@ -34,7 +34,7 @@ namespace DickinsonBros.IntegrationTests.Tests.Sinks.Telemetry.AzureTables
                 TelemetryType = TelemetryType.Application
             };
 
-            await _telemetryServiceWriter.InsertAsync(insertTelemetryRequest).ConfigureAwait(false);
+            _telemetryServiceWriter.Insert(insertTelemetryRequest);
             await _telemetryServiceWriter.FlushAsync().ConfigureAwait(false);
         }
 

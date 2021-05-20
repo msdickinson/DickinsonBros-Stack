@@ -46,23 +46,25 @@ namespace DickinsonBros.Infrastructure.AzureTables
 
         public async Task<TableResult<T>> DeleteAsync<T>(T item, string tableName) where T : ITableEntity
         {
-            var methodName = $"{nameof(IAzureTableService<U>)}<{nameof(U)}>.{nameof(IAzureTableService<U>.DeleteAsync)}<{nameof(T)}>";
+            var methodName = $"{nameof(IAzureTableService<U>)}<{typeof(U).Name}>.{nameof(IAzureTableService<U>.DeleteAsync)}<{typeof(T).Name}>";
 
             var insertTelemetryRequest = new InsertTelemetryRequest
             {
-                ConnectionName = $"{_cloudStorageAccount.TableStorageUri} {_cloudTableClient.BaseUri} {_cloudTableClient.StorageUri}",
+                ConnectionName = _cloudStorageAccount.TableStorageUri.PrimaryUri.ToString(),
                 DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
-                SignalRequest = $"Delete {nameof(T)}. Tablename: {tableName}",
+                SignalRequest = $"Delete {typeof(T).Name}. Tablename: {tableName}",
                 TelemetryType = TelemetryType.AzureTable
             };
 
             var stopwatchService = _stopwatchFactory.NewStopwatchService();
+            stopwatchService.Start();
             try
             {
                 var cloudTable = _cloudTableClient.GetTableReference(tableName);
                 var deleteOperation = TableOperation.Delete(item);
                 var tableResult = await cloudTable.ExecuteAsync(deleteOperation).ConfigureAwait(false);
                 stopwatchService.Stop();
+                insertTelemetryRequest.Duration = stopwatchService.Elapsed;
 
                 var results = new TableResult<T>
                 {
@@ -76,12 +78,24 @@ namespace DickinsonBros.Infrastructure.AzureTables
 
                 UpdateTelemetryRequest(insertTelemetryRequest, results);
 
+                //Log
+                _loggerService.LogInformationRedacted
+                (
+                    methodName,
+                    Core.Logger.Abstractions.Models.LogGroup.Infrastructure,
+                    new Dictionary<string, object>()
+                    {
+                        { nameof(insertTelemetryRequest) , insertTelemetryRequest }
+                    }
+                );
+
                 return results;
             }
             catch (Exception exception)
             {
                 stopwatchService.Stop();
-                insertTelemetryRequest.SignalResponse = $"Exceptional";
+                insertTelemetryRequest.Duration = stopwatchService.Elapsed;
+                insertTelemetryRequest.SignalResponse = "Exceptional";
                 insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.UnHandledException;
 
                 _loggerService.LogErrorRedacted
@@ -99,23 +113,24 @@ namespace DickinsonBros.Infrastructure.AzureTables
             }
             finally
             {
-                insertTelemetryRequest.Duration = stopwatchService.Elapsed;
-                await _telemetryServiceWriter.InsertAsync(insertTelemetryRequest).ConfigureAwait(false);
+                _telemetryServiceWriter.Insert(insertTelemetryRequest);
             }
         }
+    
         public async Task<IEnumerable<TableBatchResult>> DeleteBulkAsync<T>(IEnumerable<T> items, string tableName) where T : ITableEntity
         {
-            var methodName = $"{nameof(IAzureTableService<U>)}<{nameof(U)}>.{nameof(IAzureTableService<U>.DeleteAsync)}<{nameof(T)}>";
+            var methodName = $"{nameof(IAzureTableService<U>)}<{typeof(U).Name}>.{nameof(IAzureTableService<U>.DeleteBulkAsync)}<{typeof(T).Name}>";
 
             var insertTelemetryRequest = new InsertTelemetryRequest
             {
-                ConnectionName = $"{_cloudStorageAccount.TableStorageUri} {_cloudTableClient.BaseUri} {_cloudTableClient.StorageUri}",
+                ConnectionName = _cloudStorageAccount.TableStorageUri.PrimaryUri.ToString(),
                 DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
-                SignalRequest = $"DeleteBulk {nameof(T)}. Tablename: {tableName}",
+                SignalRequest = $"DeleteBulk {typeof(T).Name}. Tablename: {tableName}",
                 TelemetryType = TelemetryType.AzureTable
             };
 
             var stopwatchService = _stopwatchFactory.NewStopwatchService();
+            stopwatchService.Start();
             try
             {
                 var results = new List<TableBatchResult>();
@@ -137,11 +152,26 @@ namespace DickinsonBros.Infrastructure.AzureTables
                     results.Add(await cloudTable.ExecuteBatchAsync(tableBatchOperation));
                 }
 
+                //Log
+                stopwatchService.Stop();
+                insertTelemetryRequest.Duration = stopwatchService.Elapsed;
+                insertTelemetryRequest.SignalResponse = "Successful";
+                _loggerService.LogInformationRedacted
+                (
+                    methodName,
+                    Core.Logger.Abstractions.Models.LogGroup.Infrastructure,
+                    new Dictionary<string, object>()
+                    {
+                        { nameof(insertTelemetryRequest) , insertTelemetryRequest }
+                    }
+                );
+
                 return results;
             }
             catch (Exception exception)
             {
                 stopwatchService.Stop();
+                insertTelemetryRequest.Duration = stopwatchService.Elapsed;
                 insertTelemetryRequest.SignalResponse = $"Exceptional";
                 insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.UnHandledException;
 
@@ -160,25 +190,25 @@ namespace DickinsonBros.Infrastructure.AzureTables
             }
             finally
             {
-                insertTelemetryRequest.Duration = stopwatchService.Elapsed;
-                await _telemetryServiceWriter.InsertAsync(insertTelemetryRequest).ConfigureAwait(false);
+                _telemetryServiceWriter.Insert(insertTelemetryRequest);
             }
 
         }
     
         public async Task<TableResult<T>> FetchAsync<T>(string partitionKey, string rowkey, string tableName) where T : ITableEntity
         {
-            var methodName = $"{nameof(IAzureTableService<U>)}<{nameof(U)}>.{nameof(IAzureTableService<U>.FetchAsync)}<{nameof(T)}>";
+            var methodName = $"{nameof(IAzureTableService<U>)}<{typeof(U).Name}>.{nameof(IAzureTableService<U>.FetchAsync)}<{typeof(T).Name}>";
 
             var insertTelemetryRequest = new InsertTelemetryRequest
             {
-                ConnectionName = $"{_cloudStorageAccount.TableStorageUri} {_cloudTableClient.BaseUri} {_cloudTableClient.StorageUri}",
+                ConnectionName = _cloudStorageAccount.TableStorageUri.PrimaryUri.ToString(),
                 DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
-                SignalRequest = $"Fetch {nameof(T)}. Tablename: {tableName}",
+                SignalRequest = $"Fetch {typeof(T).Name}. Tablename: {tableName}",
                 TelemetryType = TelemetryType.AzureTable
             };
 
             var stopwatchService = _stopwatchFactory.NewStopwatchService();
+            stopwatchService.Start();
             try
             {
                 var cloudTable = _cloudTableClient.GetTableReference(tableName);
@@ -186,6 +216,7 @@ namespace DickinsonBros.Infrastructure.AzureTables
                 var tableResult = await cloudTable.ExecuteAsync(retrieveOperation).ConfigureAwait(false);
 
                 stopwatchService.Stop();
+                insertTelemetryRequest.Duration = stopwatchService.Elapsed;
 
                 var results = new TableResult<T>
                 {
@@ -198,6 +229,15 @@ namespace DickinsonBros.Infrastructure.AzureTables
                 };
 
                 UpdateTelemetryRequest(insertTelemetryRequest, results);
+                _loggerService.LogInformationRedacted
+                (
+                    methodName,
+                    Core.Logger.Abstractions.Models.LogGroup.Infrastructure,
+                    new Dictionary<string, object>()
+                    {
+                        { nameof(insertTelemetryRequest) , insertTelemetryRequest }
+                    }
+                );
 
                 return results;
             }
@@ -222,31 +262,32 @@ namespace DickinsonBros.Infrastructure.AzureTables
             }
             finally
             {
-                insertTelemetryRequest.Duration = stopwatchService.Elapsed;
-                await _telemetryServiceWriter.InsertAsync(insertTelemetryRequest).ConfigureAwait(false);
+                _telemetryServiceWriter.Insert(insertTelemetryRequest);
             }
         }
        
         public async Task<TableResult<T>> InsertAsync<T>(T item, string tableName) where T : ITableEntity
         {
-            var methodName = $"{nameof(IAzureTableService<U>)}<{nameof(U)}>.{nameof(IAzureTableService<U>.InsertAsync)}<{nameof(T)}>";
+            var methodName = $"{nameof(IAzureTableService<U>)}<{typeof(U).Name}>.{nameof(IAzureTableService<U>.InsertAsync)}<{typeof(T).Name}>";
 
             var insertTelemetryRequest = new InsertTelemetryRequest
             {
-                ConnectionName = $"{_cloudStorageAccount.TableStorageUri} {_cloudTableClient.BaseUri} {_cloudTableClient.StorageUri}",
+                ConnectionName = _cloudStorageAccount.TableStorageUri.PrimaryUri.ToString(),
                 DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
-                SignalRequest = $"Insert {nameof(T)}. Tablename: {tableName}",
+                SignalRequest = $"Insert {typeof(T).Name}. Tablename: {tableName}",
                 TelemetryType = TelemetryType.AzureTable
             };
+
             var stopwatchService = _stopwatchFactory.NewStopwatchService();
+            stopwatchService.Start();
             try
             {
                 var cloudTable = _cloudTableClient.GetTableReference(tableName);
 
                 var insertOperation = TableOperation.Insert(item);
                 var tableResult = await cloudTable.ExecuteAsync(insertOperation).ConfigureAwait(false);
-
                 stopwatchService.Stop();
+                insertTelemetryRequest.Duration = stopwatchService.Elapsed;
 
                 var results = new TableResult<T>
                 {
@@ -259,7 +300,6 @@ namespace DickinsonBros.Infrastructure.AzureTables
                 };
 
                 UpdateTelemetryRequest(insertTelemetryRequest, results);
-
                 _loggerService.LogInformationRedacted
                 (
                     methodName,
@@ -267,7 +307,7 @@ namespace DickinsonBros.Infrastructure.AzureTables
                     new Dictionary<string, object>()
                     {
                         {nameof(insertTelemetryRequest) , insertTelemetryRequest },
-                        {nameof(results) , results},
+                        {nameof(results) , results}
                     }
                 );
 
@@ -276,15 +316,17 @@ namespace DickinsonBros.Infrastructure.AzureTables
             catch (Exception exception)
             {
                 stopwatchService.Stop();
-                insertTelemetryRequest.SignalResponse = $"Exceptional";
+                insertTelemetryRequest.Duration = stopwatchService.Elapsed;
 
                 if(exception.Message == "Conflict")
                 {
                     insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.Conflict;
+                    insertTelemetryRequest.SignalResponse = $"Conflict";
                 }
                 else
                 {
                     insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.UnHandledException;
+                    insertTelemetryRequest.SignalResponse = $"Exceptional";
                 }
 
                 _loggerService.LogErrorRedacted
@@ -302,55 +344,65 @@ namespace DickinsonBros.Infrastructure.AzureTables
             }
             finally
             {
-                insertTelemetryRequest.Duration = stopwatchService.Elapsed;
-                await _telemetryServiceWriter.InsertAsync(insertTelemetryRequest).ConfigureAwait(false);
+                _telemetryServiceWriter.Insert(insertTelemetryRequest);
             }
         }
+     
         public async Task<IEnumerable<TableBatchResult>> InsertBulkAsync<T>(IEnumerable<T> items, string tableName, bool shouldSendTelemetry = true) where T : ITableEntity
         {
-            var methodName = $"{nameof(IAzureTableService<U>)}<{nameof(U)}>.{nameof(IAzureTableService<U>.InsertBulkAsync)}<{nameof(T)}>";
+            var methodName = $"{nameof(IAzureTableService<U>)}<{typeof(U).Name}>.{nameof(IAzureTableService<U>.InsertBulkAsync)}<{typeof(T).Name}>";
 
             var insertTelemetryRequest = new InsertTelemetryRequest
             {
-                ConnectionName = $"{_cloudStorageAccount.TableStorageUri} {_cloudTableClient.BaseUri} {_cloudTableClient.StorageUri}",
+                ConnectionName = _cloudStorageAccount.TableStorageUri.PrimaryUri.ToString(),
                 DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
-                SignalRequest = $"InsertBulk Query {nameof(T)}. Tablename: {tableName}",
+                SignalRequest = $"InsertBulk {typeof(T).Name}. Tablename: {tableName}",
                 TelemetryType = TelemetryType.AzureTable
             };
 
             var stopwatchService = _stopwatchFactory.NewStopwatchService();
-
+            stopwatchService.Start();
             try
             {
-                TableContinuationToken continuationToken = null;
                 var results = new List<TableBatchResult>();
-                do
+                var cloudTable = _cloudTableClient.GetTableReference(tableName);
+
+                // Split into chunks of 100 for batching
+                List<List<T>> rowsChunked = items.Select((x, index) => new { Index = index, Value = x })
+                    .Where(x => x.Value != null)
+                    .GroupBy(x => x.Index / 100)
+                    .Select(x => x.Select(v => v.Value).ToList())
+                    .ToList();
+
+                // Delete each chunk of 100 in a batch
+                foreach (List<T> rows in rowsChunked)
                 {
-                    var cloudTable = _cloudTableClient.GetTableReference(tableName);
+                    TableBatchOperation tableBatchOperation = new TableBatchOperation();
+                    rows.ForEach(x => tableBatchOperation.Add(TableOperation.Insert(x)));
 
-                    // Split into chunks of 100 for batching
-                    List<List<T>> rowsChunked = items.Select((x, index) => new { Index = index, Value = x })
-                        .Where(x => x.Value != null)
-                        .GroupBy(x => x.Index / 100)
-                        .Select(x => x.Select(v => v.Value).ToList())
-                        .ToList();
-
-                    // Delete each chunk of 100 in a batch
-                    foreach (List<T> rows in rowsChunked)
-                    {
-                        TableBatchOperation tableBatchOperation = new TableBatchOperation();
-                        rows.ForEach(x => tableBatchOperation.Add(TableOperation.Insert(x)));
-
-                        results.Add(await cloudTable.ExecuteBatchAsync(tableBatchOperation));
-                    }
+                    results.Add(await cloudTable.ExecuteBatchAsync(tableBatchOperation));
                 }
-                while (continuationToken != null);
+
+                //Log
+                stopwatchService.Stop();
+                insertTelemetryRequest.Duration = stopwatchService.Elapsed;
+                insertTelemetryRequest.SignalResponse = "Successful";
+                _loggerService.LogInformationRedacted
+                (
+                    methodName,
+                    Core.Logger.Abstractions.Models.LogGroup.Infrastructure,
+                    new Dictionary<string, object>()
+                    {
+                        { nameof(insertTelemetryRequest) , insertTelemetryRequest }
+                    }
+                );
 
                 return results;
             }
             catch (Exception exception)
             {
                 stopwatchService.Stop();
+                insertTelemetryRequest.Duration = stopwatchService.Elapsed;
                 insertTelemetryRequest.SignalResponse = $"Exceptional";
                 insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.UnHandledException;
 
@@ -369,24 +421,27 @@ namespace DickinsonBros.Infrastructure.AzureTables
             }
             finally
             {
-                insertTelemetryRequest.Duration = stopwatchService.Elapsed;
-                await _telemetryServiceWriter.InsertAsync(insertTelemetryRequest).ConfigureAwait(false);
+                if(shouldSendTelemetry)
+                {
+                    _telemetryServiceWriter.Insert(insertTelemetryRequest);
+                }
             }
         }
        
         public async Task<IEnumerable<T>> QueryAsync<T>(string tableName, TableQuery<T> tableQuery) where T : ITableEntity, new()
         {
-            var methodName = $"{nameof(IAzureTableService<U>)}<{nameof(U)}>.{nameof(IAzureTableService<U>.QueryAsync)}<{nameof(T)}>";
+            var methodName = $"{nameof(IAzureTableService<U>)}<{typeof(U).Name}>.{nameof(IAzureTableService<U>.QueryAsync)}<{typeof(T).Name}>";
 
             var insertTelemetryRequest = new InsertTelemetryRequest
             {
-                ConnectionName = $"{_cloudStorageAccount.TableStorageUri} {_cloudTableClient.BaseUri} {_cloudTableClient.StorageUri}",
+                ConnectionName = _cloudStorageAccount.TableStorageUri.PrimaryUri.ToString(),
                 DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
-                SignalRequest = $"Query {nameof(T)}. Tablename: {tableName}",
+                SignalRequest = $"Query {typeof(T).Name}. Tablename: {tableName}",
                 TelemetryType = TelemetryType.AzureTable
             };
 
             var stopwatchService = _stopwatchFactory.NewStopwatchService();
+            stopwatchService.Start();
             try
             {
                 var results = new List<T>();
@@ -399,14 +454,28 @@ namespace DickinsonBros.Infrastructure.AzureTables
                     results.AddRange(seg);
                 } while (token != null);
 
+                //Log
                 insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.Successful;
+                insertTelemetryRequest.SignalResponse = "Successful";
                 stopwatchService.Stop();
+                insertTelemetryRequest.Duration = stopwatchService.Elapsed;
+                _loggerService.LogInformationRedacted
+                (
+                    methodName,
+                    Core.Logger.Abstractions.Models.LogGroup.Infrastructure,
+                    new Dictionary<string, object>()
+                    {
+                            {nameof(insertTelemetryRequest) , insertTelemetryRequest },
+                            {nameof(results) , results}
+                    }
+                );
 
                 return results;
             }
             catch (Exception exception)
             {
                 stopwatchService.Stop();
+                insertTelemetryRequest.Duration = stopwatchService.Elapsed;
                 insertTelemetryRequest.SignalResponse = $"Exceptional";
                 insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.UnHandledException;
 
@@ -425,30 +494,31 @@ namespace DickinsonBros.Infrastructure.AzureTables
             }
             finally
             {
-                insertTelemetryRequest.Duration = stopwatchService.Elapsed;
-                await _telemetryServiceWriter.InsertAsync(insertTelemetryRequest).ConfigureAwait(false);
+                _telemetryServiceWriter.Insert(insertTelemetryRequest);
             }
         }
 
         public async Task<TableResult<T>> UpsertAsync<T>(T item, string tableName) where T : ITableEntity
         {
-            var methodName = $"{nameof(IAzureTableService<U>)}<{nameof(U)}>.{nameof(IAzureTableService<U>.UpsertAsync)}<{nameof(T)}>";
+            var methodName = $"{nameof(IAzureTableService<U>)}<{typeof(U).Name}>.{nameof(IAzureTableService<U>.UpsertAsync)}<{typeof(T).Name}>";
 
             var insertTelemetryRequest = new InsertTelemetryRequest
             {
-                ConnectionName = $"{_cloudStorageAccount.TableStorageUri} {_cloudTableClient.BaseUri} {_cloudTableClient.StorageUri}",
+                ConnectionName = _cloudStorageAccount.TableStorageUri.PrimaryUri.ToString(),
                 DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
-                SignalRequest = $"Upsert {nameof(T)}. Tablename: {tableName}",
+                SignalRequest = $"Upsert {typeof(T).Name}. Tablename: {tableName}",
                 TelemetryType = TelemetryType.AzureTable
             };
 
             var stopwatchService = _stopwatchFactory.NewStopwatchService();
+            stopwatchService.Start();
             try
             {
                 var cloudTable = _cloudTableClient.GetTableReference(tableName);
                 var insertOrReplaceOperation = TableOperation.InsertOrReplace(item);
                 var tableResult = await cloudTable.ExecuteAsync(insertOrReplaceOperation).ConfigureAwait(false);
                 stopwatchService.Stop();
+                insertTelemetryRequest.Duration = stopwatchService.Elapsed;
 
                 var results = new TableResult<T>
                 {
@@ -461,13 +531,23 @@ namespace DickinsonBros.Infrastructure.AzureTables
                 };
 
                 UpdateTelemetryRequest(insertTelemetryRequest, results);
+                _loggerService.LogInformationRedacted
+                (
+                    methodName,
+                    Core.Logger.Abstractions.Models.LogGroup.Infrastructure,
+                    new Dictionary<string, object>()
+                    {
+                        { nameof(insertTelemetryRequest) , insertTelemetryRequest }
+                    }
+                );
 
                 return results;
             }
             catch (Exception exception)
             {
                 stopwatchService.Stop();
-                insertTelemetryRequest.SignalResponse = $"Exceptional";
+                insertTelemetryRequest.Duration = stopwatchService.Elapsed;
+                insertTelemetryRequest.SignalResponse = "Exceptional";
                 insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.UnHandledException;
 
                 _loggerService.LogErrorRedacted
@@ -485,55 +565,65 @@ namespace DickinsonBros.Infrastructure.AzureTables
             }
             finally
             {
-                insertTelemetryRequest.Duration = stopwatchService.Elapsed; ;
-                await _telemetryServiceWriter.InsertAsync(insertTelemetryRequest).ConfigureAwait(false);
+                _telemetryServiceWriter.Insert(insertTelemetryRequest);
             }
         }
-        public async Task<IEnumerable<TableBatchResult>> UpsertBulkAsync<T>(IEnumerable<T> items, string tableName) where T : ITableEntity, new()
+
+        public async Task<IEnumerable<TableBatchResult>> UpsertBulkAsync<T>(IEnumerable<T> items, string tableName) where T : ITableEntity
         {
-            var methodName = $"{nameof(IAzureTableService<U>)}<{nameof(U)}>.{nameof(IAzureTableService<U>.DeleteAsync)}<{nameof(T)}>";
+            var methodName = $"{nameof(IAzureTableService<U>)}<{typeof(U).Name}>.{nameof(IAzureTableService<U>.UpsertBulkAsync)}<{typeof(T).Name}>";
 
             var insertTelemetryRequest = new InsertTelemetryRequest
             {
-                ConnectionName = $"{_cloudStorageAccount.TableStorageUri} {_cloudTableClient.BaseUri} {_cloudTableClient.StorageUri}",
+                ConnectionName = _cloudStorageAccount.TableStorageUri.PrimaryUri.ToString(),
                 DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
-                SignalRequest = $"UpsertBulk Query {nameof(T)}. Tablename: {tableName}",
+                SignalRequest = $"UpsertBulk {typeof(T).Name}. Tablename: {tableName}",
                 TelemetryType = TelemetryType.AzureTable
             };
 
             var stopwatchService = _stopwatchFactory.NewStopwatchService();
-
+            stopwatchService.Start();
             try
             {
-                TableContinuationToken continuationToken = null;
                 var results = new List<TableBatchResult>();
-                do
+                var cloudTable = _cloudTableClient.GetTableReference(tableName);
+
+                // Split into chunks of 100 for batching
+                List<List<T>> rowsChunked = items.Select((x, index) => new { Index = index, Value = x })
+                    .Where(x => x.Value != null)
+                    .GroupBy(x => x.Index / 100)
+                    .Select(x => x.Select(v => v.Value).ToList())
+                    .ToList();
+
+                // Delete each chunk of 100 in a batch
+                foreach (List<T> rows in rowsChunked)
                 {
-                    var cloudTable = _cloudTableClient.GetTableReference(tableName);
+                    TableBatchOperation tableBatchOperation = new TableBatchOperation();
+                    rows.ForEach(x => tableBatchOperation.Add(TableOperation.InsertOrReplace(x)));
 
-                    // Split into chunks of 100 for batching
-                    List<List<T>> rowsChunked = items.Select((x, index) => new { Index = index, Value = x })
-                        .Where(x => x.Value != null)
-                        .GroupBy(x => x.Index / 100)
-                        .Select(x => x.Select(v => v.Value).ToList())
-                        .ToList();
-
-                    // Delete each chunk of 100 in a batch
-                    foreach (List<T> rows in rowsChunked)
-                    {
-                        TableBatchOperation tableBatchOperation = new TableBatchOperation();
-                        rows.ForEach(x => tableBatchOperation.Add(TableOperation.InsertOrReplace(x)));
-
-                        results.Add(await cloudTable.ExecuteBatchAsync(tableBatchOperation));
-                    }
+                    results.Add(await cloudTable.ExecuteBatchAsync(tableBatchOperation));
                 }
-                while (continuationToken != null);
+
+                //Log
+                stopwatchService.Stop();
+                insertTelemetryRequest.Duration = stopwatchService.Elapsed;
+                insertTelemetryRequest.SignalResponse = "Successful";
+                _loggerService.LogInformationRedacted
+                (
+                    methodName,
+                    Core.Logger.Abstractions.Models.LogGroup.Infrastructure,
+                    new Dictionary<string, object>()
+                    {
+                        { nameof(insertTelemetryRequest) , insertTelemetryRequest }
+                    }
+                );
 
                 return results;
             }
             catch (Exception exception)
             {
                 stopwatchService.Stop();
+                insertTelemetryRequest.Duration = stopwatchService.Elapsed;
                 insertTelemetryRequest.SignalResponse = $"Exceptional";
                 insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.UnHandledException;
 
@@ -552,9 +642,9 @@ namespace DickinsonBros.Infrastructure.AzureTables
             }
             finally
             {
-                insertTelemetryRequest.Duration = stopwatchService.Elapsed;
-                await _telemetryServiceWriter.InsertAsync(insertTelemetryRequest).ConfigureAwait(false);
+                _telemetryServiceWriter.Insert(insertTelemetryRequest);
             }
+
         }
 
 
