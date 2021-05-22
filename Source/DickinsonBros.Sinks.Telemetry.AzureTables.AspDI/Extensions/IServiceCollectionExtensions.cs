@@ -10,7 +10,7 @@ namespace DickinsonBros.Sinks.Telemetry.AzureTables.AspDI.Extensions
         public static IServiceCollection AddSinksTelemetryAzureTablesService<T>(this IServiceCollection serviceCollection)
         where T : AzureTableServiceOptionsType
         {
-            serviceCollection.TryAddSingleton<ITelemetryServiceWriter, SinksTelemetryAzureTablesService<T>>();
+            //serviceCollection.TryAddSingleton<ITelemetryServiceWriter, SinksTelemetryAzureTablesService<T>>();
             return serviceCollection;
         }
     }

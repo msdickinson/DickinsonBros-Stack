@@ -14,4 +14,7 @@
 
   <Import Project="..\Packaging.targets" />
   <Import Project="..\CopyPackageToPublishDirectory.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\DickinsonBros.Infrastructure.AzureTables.Abstractions\DickinsonBros.Infrastructure.AzureTables.Abstractions.csproj" />
+  </ItemGroup>
 </Project>

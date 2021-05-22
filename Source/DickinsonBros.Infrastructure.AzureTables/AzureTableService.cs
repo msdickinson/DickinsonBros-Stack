@@ -23,7 +23,7 @@ namespace DickinsonBros.Infrastructure.AzureTables
         internal CloudTableClient _cloudTableClient;
         internal IDateTimeService _dateTimeService;
         internal IStopwatchFactory _stopwatchFactory;
-        internal ITelemetryServiceWriter _telemetryServiceWriter;
+        internal ITelemetryWriterService _telemetryServiceWriter;
 
         public AzureTableService
         (
@@ -32,7 +32,7 @@ namespace DickinsonBros.Infrastructure.AzureTables
             ICloudTableClientFactory cloudTableClientFactory,
             IDateTimeService dateTimeService,
             IStopwatchFactory stopwatchFactory, 
-            ITelemetryServiceWriter telemetryServiceWriter,
+            ITelemetryWriterService telemetryServiceWriter,
             IOptions<AzureTableServiceOptions<U>> options
         )
         {
@@ -48,7 +48,7 @@ namespace DickinsonBros.Infrastructure.AzureTables
         {
             var methodName = $"{nameof(IAzureTableService<U>)}<{typeof(U).Name}>.{nameof(IAzureTableService<U>.DeleteAsync)}<{typeof(T).Name}>";
 
-            var insertTelemetryRequest = new InsertTelemetryRequest
+            var insertTelemetryRequest = new InsertTelemetryItem
             {
                 ConnectionName = _cloudStorageAccount.TableStorageUri.PrimaryUri.ToString(),
                 DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
@@ -76,7 +76,7 @@ namespace DickinsonBros.Infrastructure.AzureTables
                     SessionToken = tableResult.SessionToken
                 };
 
-                UpdateTelemetryRequest(insertTelemetryRequest, results);
+                UpdateTelemetryRequest(insertTelemetryRequest, results.HttpStatusCode);
 
                 //Log
                 _loggerService.LogInformationRedacted
@@ -121,7 +121,7 @@ namespace DickinsonBros.Infrastructure.AzureTables
         {
             var methodName = $"{nameof(IAzureTableService<U>)}<{typeof(U).Name}>.{nameof(IAzureTableService<U>.DeleteBulkAsync)}<{typeof(T).Name}>";
 
-            var insertTelemetryRequest = new InsertTelemetryRequest
+            var insertTelemetryRequest = new InsertTelemetryItem
             {
                 ConnectionName = _cloudStorageAccount.TableStorageUri.PrimaryUri.ToString(),
                 DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
@@ -199,7 +199,7 @@ namespace DickinsonBros.Infrastructure.AzureTables
         {
             var methodName = $"{nameof(IAzureTableService<U>)}<{typeof(U).Name}>.{nameof(IAzureTableService<U>.FetchAsync)}<{typeof(T).Name}>";
 
-            var insertTelemetryRequest = new InsertTelemetryRequest
+            var insertTelemetryRequest = new InsertTelemetryItem
             {
                 ConnectionName = _cloudStorageAccount.TableStorageUri.PrimaryUri.ToString(),
                 DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
@@ -228,7 +228,7 @@ namespace DickinsonBros.Infrastructure.AzureTables
                     SessionToken = tableResult.SessionToken
                 };
 
-                UpdateTelemetryRequest(insertTelemetryRequest, results);
+                UpdateTelemetryRequest(insertTelemetryRequest, results.HttpStatusCode);
                 _loggerService.LogInformationRedacted
                 (
                     methodName,
@@ -270,7 +270,7 @@ namespace DickinsonBros.Infrastructure.AzureTables
         {
             var methodName = $"{nameof(IAzureTableService<U>)}<{typeof(U).Name}>.{nameof(IAzureTableService<U>.InsertAsync)}<{typeof(T).Name}>";
 
-            var insertTelemetryRequest = new InsertTelemetryRequest
+            var insertTelemetryRequest = new InsertTelemetryItem
             {
                 ConnectionName = _cloudStorageAccount.TableStorageUri.PrimaryUri.ToString(),
                 DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
@@ -299,7 +299,7 @@ namespace DickinsonBros.Infrastructure.AzureTables
                     SessionToken = tableResult.SessionToken
                 };
 
-                UpdateTelemetryRequest(insertTelemetryRequest, results);
+                UpdateTelemetryRequest(insertTelemetryRequest, results.HttpStatusCode);
                 _loggerService.LogInformationRedacted
                 (
                     methodName,
@@ -352,7 +352,7 @@ namespace DickinsonBros.Infrastructure.AzureTables
         {
             var methodName = $"{nameof(IAzureTableService<U>)}<{typeof(U).Name}>.{nameof(IAzureTableService<U>.InsertBulkAsync)}<{typeof(T).Name}>";
 
-            var insertTelemetryRequest = new InsertTelemetryRequest
+            var insertTelemetryRequest = new InsertTelemetryItem
             {
                 ConnectionName = _cloudStorageAccount.TableStorageUri.PrimaryUri.ToString(),
                 DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
@@ -432,7 +432,7 @@ namespace DickinsonBros.Infrastructure.AzureTables
         {
             var methodName = $"{nameof(IAzureTableService<U>)}<{typeof(U).Name}>.{nameof(IAzureTableService<U>.QueryAsync)}<{typeof(T).Name}>";
 
-            var insertTelemetryRequest = new InsertTelemetryRequest
+            var insertTelemetryRequest = new InsertTelemetryItem
             {
                 ConnectionName = _cloudStorageAccount.TableStorageUri.PrimaryUri.ToString(),
                 DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
@@ -502,7 +502,7 @@ namespace DickinsonBros.Infrastructure.AzureTables
         {
             var methodName = $"{nameof(IAzureTableService<U>)}<{typeof(U).Name}>.{nameof(IAzureTableService<U>.UpsertAsync)}<{typeof(T).Name}>";
 
-            var insertTelemetryRequest = new InsertTelemetryRequest
+            var insertTelemetryRequest = new InsertTelemetryItem
             {
                 ConnectionName = _cloudStorageAccount.TableStorageUri.PrimaryUri.ToString(),
                 DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
@@ -530,7 +530,7 @@ namespace DickinsonBros.Infrastructure.AzureTables
                     SessionToken = tableResult.SessionToken
                 };
 
-                UpdateTelemetryRequest(insertTelemetryRequest, results);
+                UpdateTelemetryRequest(insertTelemetryRequest, results.HttpStatusCode);
                 _loggerService.LogInformationRedacted
                 (
                     methodName,
@@ -573,7 +573,7 @@ namespace DickinsonBros.Infrastructure.AzureTables
         {
             var methodName = $"{nameof(IAzureTableService<U>)}<{typeof(U).Name}>.{nameof(IAzureTableService<U>.UpsertBulkAsync)}<{typeof(T).Name}>";
 
-            var insertTelemetryRequest = new InsertTelemetryRequest
+            var insertTelemetryRequest = new InsertTelemetryItem
             {
                 ConnectionName = _cloudStorageAccount.TableStorageUri.PrimaryUri.ToString(),
                 DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
@@ -650,13 +650,13 @@ namespace DickinsonBros.Infrastructure.AzureTables
 
         #region Helpers
 
-        private void UpdateTelemetryRequest<T>(InsertTelemetryRequest insertTelemetryRequest, TableResult<T> tableResult)
+        internal void UpdateTelemetryRequest(InsertTelemetryItem insertTelemetryRequest, int httpStatusCode)
         {
-            if (tableResult.HttpStatusCode >= 200 && tableResult.HttpStatusCode < 300)
+            if (httpStatusCode >= 200 && httpStatusCode < 300)
             {
                 insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.Successful;
             }
-            else if (tableResult.HttpStatusCode >= 400 && tableResult.HttpStatusCode < 500)
+            else if (httpStatusCode >= 400 && httpStatusCode < 500)
             {
                 insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.CallerError;
             }
@@ -665,23 +665,7 @@ namespace DickinsonBros.Infrastructure.AzureTables
                 insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.ReciverError;
             }
 
-            insertTelemetryRequest.SignalResponse = $"Status Code: {tableResult.HttpStatusCode}";
-        }
-
-        private void UpdateTelemetryRequest<T>(InsertTelemetryRequest insertTelemetryRequest, IEnumerable<TableResult<T>> tableResults) where T : ITableEntity
-        {
-            if (tableResults.All(tableResult => tableResult.HttpStatusCode >= 200 && tableResult.HttpStatusCode < 300))
-            {
-                insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.Successful;
-            }
-            else if (tableResults.Any(tableResult => tableResult.HttpStatusCode >= 400 && tableResult.HttpStatusCode < 500))
-            {
-                insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.CallerError;
-            }
-            else
-            {
-                insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.ReciverError;
-            }
+            insertTelemetryRequest.SignalResponse = $"Status Code: {httpStatusCode}";
         }
 
         #endregion

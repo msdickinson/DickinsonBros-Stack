@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DickinsonBros.Core.Telemetry.Abstractions.Models
 {
+    [ExcludeFromCodeCoverage]
     public class TelemetryPipe
     {
         public string ApplicationName { get; set; }

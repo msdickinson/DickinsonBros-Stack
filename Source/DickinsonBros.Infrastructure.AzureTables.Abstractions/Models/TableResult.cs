@@ -1,5 +1,8 @@
-﻿namespace DickinsonBros.Infrastructure.AzureTables.Abstractions.Models
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace DickinsonBros.Infrastructure.AzureTables.Abstractions.Models
 {
+    [ExcludeFromCodeCoverage]
     public class TableResult<T>
     {
         public T Result { get; set; }

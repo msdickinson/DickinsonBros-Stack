@@ -8,7 +8,7 @@ namespace DickinsonBros.Sinks.Telemetry.Log.AspDI.Extensions
     {
         public static IServiceCollection AddSinksTelemetryLogServiceService(this IServiceCollection serviceCollection)
         {
-            serviceCollection.TryAddSingleton<ITelemetryServiceWriter, SinksTelemetryLogService>();
+            serviceCollection.TryAddSingleton<ITelemetryWriterService, SinksTelemetryLogService>();
             return serviceCollection;
         }
     }

@@ -27,4 +27,7 @@
     <PackageReference Include="Moq" Version="[4.14.0,5.0.0)" />
     <PackageReference Include="morelinq" Version="[3.3.0,4.0.0)" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DickinsonBros.Test.Unit.Abstractions\DickinsonBros.Test.Unit.Abstractions.csproj" />
+  </ItemGroup>
 </Project>

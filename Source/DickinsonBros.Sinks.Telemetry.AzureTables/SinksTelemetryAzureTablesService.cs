@@ -1,12 +1,9 @@
-﻿using DickinsonBros.Core.Telemetry.Abstractions;
-using DickinsonBros.Core.Telemetry.Abstractions.Models;
-using DickinsonBros.Infrastructure.AzureTables.Abstractions.Models;
+﻿using DickinsonBros.Infrastructure.AzureTables.Abstractions.Models;
 using System.Threading.Tasks;
 
 namespace DickinsonBros.Sinks.Telemetry.AzureTables
 {
-    public class SinksTelemetryAzureTablesService<U> : ITelemetryServiceWriter
-    where U : AzureTableServiceOptionsType
+    public class SinksTelemetryAzureTablesService<U>
     {
         //internal readonly IAzureTableService<U> _azureTableService;
         //internal readonly ConcurrentQueue<InsertTelemetryRequest> _queueInsertTelemetryRequest = new ConcurrentQueue<InsertTelemetryRequest>();
@@ -92,7 +89,7 @@ namespace DickinsonBros.Sinks.Telemetry.AzureTables
             throw new System.NotImplementedException();
         }
 
-        public void Insert(InsertTelemetryRequest telemetryItem)
+        public void Insert(Core.Telemetry.Abstractions.Models.TelemetryItem telemetryItem)
         {
             throw new System.NotImplementedException();
         }

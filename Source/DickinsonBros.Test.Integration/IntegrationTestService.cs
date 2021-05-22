@@ -81,11 +81,6 @@ namespace DickinsonBros.Test.Integration
 
             foreach (var testClass in testClasses)
             {
-                if (testClass == null)
-                {
-                    throw (new NullReferenceException(NULL_TEST_CLASS_ERROR_MESSAGE));
-                }
-
                 var tests = new List<Abstractions.Models.Test>();
 
                 var testAPIAttribute = (TestAPIAttribute)System.Attribute.GetCustomAttributes(testClass.GetType()).FirstOrDefault(e => e is TestAPIAttribute);

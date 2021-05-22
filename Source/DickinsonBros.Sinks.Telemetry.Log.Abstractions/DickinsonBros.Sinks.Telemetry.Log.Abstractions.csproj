@@ -14,4 +14,7 @@
 
   <Import Project="..\Packaging.targets" />
   <Import Project="..\CopyPackageToPublishDirectory.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\DickinsonBros.Core.Telemetry.Abstractions\DickinsonBros.Core.Telemetry.Abstractions.csproj" />
+  </ItemGroup>
 </Project>
