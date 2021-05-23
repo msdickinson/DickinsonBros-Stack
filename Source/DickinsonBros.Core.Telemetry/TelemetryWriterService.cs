@@ -49,7 +49,7 @@ namespace DickinsonBros.Core.Telemetry
                 throw new ArgumentException("Date Expected to be set", nameof(insertTelemetryItem.DateTimeUTC));
             }
 
-            NewTelemetryEvent.Invoke(new TelemetryItem
+            NewTelemetryEvent?.Invoke(new TelemetryItem
             {
                 ApplicationName = _telemetryServiceWriterOptions.ApplicationName,
                 ConnectionName = insertTelemetryItem.ConnectionName,

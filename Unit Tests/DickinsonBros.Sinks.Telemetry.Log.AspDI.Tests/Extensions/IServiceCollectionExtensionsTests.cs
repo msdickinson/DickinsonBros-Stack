@@ -1,4 +1,4 @@
-﻿using DickinsonBros.Core.Telemetry.Abstractions;
+﻿using DickinsonBros.Sinks.Telemetry.Log.Abstractions;
 using DickinsonBros.Sinks.Telemetry.Log.AspDI.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -19,7 +19,7 @@ namespace DickinsonBros.Sinks.Telemetry.Log.AspDI.Tests.Extensions
             serviceCollection.AddSinksTelemetryLogServiceService();
 
             // Assert
-            Assert.IsTrue(serviceCollection.Any(serviceDefinition => serviceDefinition.ServiceType == typeof(ITelemetryWriterService) &&
+            Assert.IsTrue(serviceCollection.Any(serviceDefinition => serviceDefinition.ServiceType == typeof(ISinksTelemetryLogService) &&
                                            serviceDefinition.ImplementationType == typeof(SinksTelemetryLogService) &&
                                            serviceDefinition.Lifetime == ServiceLifetime.Singleton));
 

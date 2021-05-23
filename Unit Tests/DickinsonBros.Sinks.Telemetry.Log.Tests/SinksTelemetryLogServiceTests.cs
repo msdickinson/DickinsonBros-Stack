@@ -2,6 +2,7 @@
 using DickinsonBros.Core.Logger.Abstractions.Models;
 using DickinsonBros.Core.Telemetry.Abstractions;
 using DickinsonBros.Core.Telemetry.Abstractions.Models;
+using DickinsonBros.Sinks.Telemetry.Log.Abstractions;
 using DickinsonBros.Test.Unit;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -15,7 +16,7 @@ namespace DickinsonBros.Sinks.Telemetry.Log.Tests
     public class SinksTelemetryLogServiceTests : BaseTest
     {
         [TestMethod]
-        public async Task InsertAsync_Runs_LogsTelemetryItem()
+        public async Task TelemetryWriterService_NewTelemetryEvent_Runs_LogsTelemetryItem()
         {
             await RunDependencyInjectedTestAsync
             (
@@ -47,11 +48,11 @@ namespace DickinsonBros.Sinks.Telemetry.Log.Tests
                             propertiesObserved = properties;
                         }
                     );
-                    var uut = serviceProvider.GetRequiredService<ITelemetryWriterService>();
+                    var uut = serviceProvider.GetRequiredService<ISinksTelemetryLogService>();
                     var uutConcrete = (SinksTelemetryLogService)uut;
 
                     //Act
-                    await uutConcrete.InsertAsync(insertTelemetryRequest).ConfigureAwait(false);
+                    uutConcrete.TelemetryWriterService_NewTelemetryEvent(insertTelemetryRequest);
 
                     //Assert
                     loggerServiceMock.Verify
@@ -66,6 +67,8 @@ namespace DickinsonBros.Sinks.Telemetry.Log.Tests
 
                     Assert.AreEqual(propertiesObserved.Count, 1);
                     Assert.AreEqual(propertiesObserved["telemetryItem"], insertTelemetryRequest);
+
+                    await Task.CompletedTask.ConfigureAwait(false);
                 },
                 serviceCollection => ConfigureServices(serviceCollection)
             ).ConfigureAwait(false);
@@ -73,7 +76,8 @@ namespace DickinsonBros.Sinks.Telemetry.Log.Tests
 
         private IServiceCollection ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddSingleton<ITelemetryWriterService, SinksTelemetryLogService>();
+            serviceCollection.AddSingleton<ISinksTelemetryLogService, SinksTelemetryLogService>();
+            serviceCollection.AddSingleton(Mock.Of<ITelemetryWriterService>());
             serviceCollection.AddSingleton(Mock.Of<ILoggerService<SinksTelemetryLogService>>());
 
             return serviceCollection;

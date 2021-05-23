@@ -5,12 +5,13 @@ using DickinsonBros.Core.Logger.Adapter.AspDI.Extensions;
 using DickinsonBros.Core.Redactor.Adapter.AspDI.Extensions;
 using DickinsonBros.Core.Telemetry.Abstractions;
 using DickinsonBros.Core.Telemetry.Abstractions.Models;
+using DickinsonBros.Core.Telemetry.Adapter.AspDI.Extensions;
+using DickinsonBros.Sinks.Telemetry.Log.Abstractions;
 using DickinsonBros.Sinks.Telemetry.Log.AspDI.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading.Tasks;
-
 
 namespace DickinsonBros.Sinks.Telemetry.Log.Runner.AspDI
 {
@@ -27,8 +28,10 @@ namespace DickinsonBros.Sinks.Telemetry.Log.Runner.AspDI
                 var serviceCollection = ConfigureServices();
 
                 using var provider = serviceCollection.BuildServiceProvider();
-                var sinksTelemetryLogService = provider.GetRequiredService<ITelemetryWriterService>();
+                var telemetryWriterService = provider.GetRequiredService<ITelemetryWriterService>();
+                var sinksTelemetryLogService = provider.GetRequiredService<ISinksTelemetryLogService>();
                 var hostApplicationLifetime = provider.GetService<IHostApplicationLifetime>();
+
 
                 var insertTelemetryRequest = new InsertTelemetryItem
                 {
@@ -41,7 +44,7 @@ namespace DickinsonBros.Sinks.Telemetry.Log.Runner.AspDI
                     TelemetryType = TelemetryType.Application
                 };
 
-                sinksTelemetryLogService.Insert(insertTelemetryRequest);
+                telemetryWriterService.Insert(insertTelemetryRequest);
 
                 provider.ConfigureAwait(true);
                 await Task.CompletedTask;
@@ -52,6 +55,7 @@ namespace DickinsonBros.Sinks.Telemetry.Log.Runner.AspDI
             }
         }
 
+
         private IServiceCollection ConfigureServices()
         {
             var configruation = BaseRunnerSetup.FetchConfiguration();
@@ -60,6 +64,8 @@ namespace DickinsonBros.Sinks.Telemetry.Log.Runner.AspDI
             serviceCollection.AddLoggerService();
             serviceCollection.AddCorrelationService();
             serviceCollection.AddRedactorService();
+            serviceCollection.AddTelemetryWriterService();
+            
             serviceCollection.AddSinksTelemetryLogServiceService();
 
             return serviceCollection;

@@ -1,9 +1,6 @@
-﻿using DickinsonBros.Core.Telemetry.Abstractions.Models;
-
-namespace DickinsonBros.Sinks.Telemetry.Log.Abstractions
+﻿namespace DickinsonBros.Sinks.Telemetry.Log.Abstractions
 {
-    interface ISinksTelemetryLogService
+    public interface ISinksTelemetryLogService
     {
-        void Insert(TelemetryItem telemetryItem);
     }
 }

@@ -24,6 +24,8 @@ using DickinsonBros.IntegrationTests.Tests.Encryption.Certificate.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Encryption.JWT.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Infrastructure.AzureTables.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Infrastructure.AzureTables.Models;
+using DickinsonBros.IntegrationTests.Tests.Sinks.Telemetry.Log.Extensions;
+using DickinsonBros.Sinks.Telemetry.Log.AspDI.Extensions;
 using DickinsonBros.Test.Integration.Abstractions;
 using DickinsonBros.Test.Integration.Adapter.AspDI.Extensions;
 using Microsoft.Azure.Cosmos.Table;
@@ -50,7 +52,7 @@ namespace DickinsonBros.IntegrationTests
 
             try
             {
-                var tests               = integrationTestService.FetchTestsByName("Telemetry");
+                var tests               = integrationTestService.FetchTestsByName("SinksTelemetryLog");
 
                 var testSummary         = await integrationTestService.RunTests(tests).ConfigureAwait(false);
                 var testlog             = integrationTestService.GenerateLog(testSummary, false);
@@ -84,23 +86,15 @@ namespace DickinsonBros.IntegrationTests
             var configruation = BaseRunnerSetup.FetchConfiguration();
             var serviceCollection = BaseRunnerSetup.InitializeDependencyInjection(configruation);
 
-            //Add Services
+            ConfigureStack(serviceCollection);
+            ConfigureIntegreationTests(serviceCollection);
+
+            return serviceCollection;
+        }
+        private void ConfigureStack(IServiceCollection serviceCollection)
+        {
+            //--Core
             serviceCollection.AddGuidService();
-            serviceCollection.AddDateTimeService();
-            serviceCollection.AddCorrelationService();
-            serviceCollection.AddStopwatchService();
-            serviceCollection.AddStopwatchFactory();
-            serviceCollection.AddRedactorService();
-            serviceCollection.AddLoggerService();
-            serviceCollection.AddIntegrationTestService();
-            serviceCollection.AddAESEncryptionService<RunnerAESEncryptionServiceOptionsType>();
-            serviceCollection.AddCertificateEncryptionService<Configuration>();
-            serviceCollection.AddJWTEncryptionService<RunnerJWTEncryptionServiceOptionsType, Configuration>();
-            serviceCollection.AddAzureTablesService<RunnerAzureTableServiceOptionsType, Configuration>();
-
-            //serviceCollection.AddSinksTelemetryAzureTablesService<RunnerAzureTableServiceOptionsType>();
-            //serviceCollection.AddSinksTelemetryLogServiceService();
-
             serviceCollection.AddDateTimeService();
             serviceCollection.AddStopwatchService();
             serviceCollection.AddStopwatchFactory();
@@ -108,24 +102,52 @@ namespace DickinsonBros.IntegrationTests
             serviceCollection.AddRedactorService();
             serviceCollection.AddLoggerService();
             serviceCollection.AddTelemetryWriterService();
+
+            //--Test
+            serviceCollection.AddIntegrationTestService();
+
+            //--Encryption
+            serviceCollection.AddAESEncryptionService<RunnerAESEncryptionServiceOptionsType>();
             serviceCollection.AddCertificateEncryptionService<Configuration>();
+            serviceCollection.AddJWTEncryptionService<RunnerJWTEncryptionServiceOptionsType, Configuration>();
+
+            //--Infrastructure
             serviceCollection.AddAzureTablesService<RunnerAzureTableServiceOptionsType, Configuration>();
 
-            //Add Integreation Tests
+            //--Middleware
+
+            //--Application
+
+            //--Sinks
+            serviceCollection.AddSinksTelemetryLogServiceService();
+        }
+        private void ConfigureIntegreationTests(IServiceCollection serviceCollection)
+        {
+            //--Core
             serviceCollection.AddGuidIntegrationTests();
             serviceCollection.AddDateTimeIntegrationTests();
             serviceCollection.AddCorrelationIntegrationTests();
             serviceCollection.AddLoggerIntegrationTests();
             serviceCollection.AddStopwatchIntegrationTests();
             serviceCollection.AddRedactorIntegrationTests();
+            serviceCollection.AddTelemetryIntegrationTests();
+
+            //--Test
+
+            //--Encryption
             serviceCollection.AddAESIntegrationTests();
             serviceCollection.AddCertificateIntegrationTests();
             serviceCollection.AddJWTIntegrationTests();
-            serviceCollection.AddAzureTablesIntegrationTests();
-            //serviceCollection.AddSinksTelemetryAzureTablesIntegrationTests();
-            serviceCollection.AddTelemetryIntegrationTests();
 
-            return serviceCollection;
+            //--Infrastructure
+            serviceCollection.AddAzureTablesIntegrationTests();
+
+            //--Middleware
+
+            //--Application
+
+            //--Sinks
+            serviceCollection.AddSinksTelemetryLogIntegrationTests();
         }
     }
 }

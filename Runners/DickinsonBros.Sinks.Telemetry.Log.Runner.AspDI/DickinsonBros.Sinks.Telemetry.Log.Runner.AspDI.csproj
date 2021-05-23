@@ -11,6 +11,7 @@
     <ProjectReference Include="..\..\Source\DickinsonBros.Core.Correlation\DickinsonBros.Core.Correlation.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Core.Logger.Adapter.AspDI\DickinsonBros.Core.Logger.Adapter.AspDI.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Core.Redactor.Adapter.AspDI\DickinsonBros.Core.Redactor.Adapter.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Core.Telemetry.Adapter.AspDI\DickinsonBros.Core.Telemetry.Adapter.AspDI.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Sinks.Telemetry.Log.AspDI\DickinsonBros.Sinks.Telemetry.Log.AspDI.csproj" />
     <ProjectReference Include="..\BaseRunner\BaseRunner.csproj" />
   </ItemGroup>

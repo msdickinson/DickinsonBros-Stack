@@ -14,7 +14,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DickinsonBros.Core.Telemetry.Abstractions\DickinsonBros.Core.Telemetry.Abstractions.csproj" />
-    <ProjectReference Include="..\DickinsonBros.Sinks.Telemetry.AzureTables\DickinsonBros.Sinks.Telemetry.AzureTables.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

@@ -177,6 +177,39 @@ namespace DickinsonBros.Core.Redactor.Tests
             );
         }
 
+        [TestMethod]
+        public void Insert_NoEventListeners_DoesNotThrow()
+        {
+            RunDependencyInjectedTest
+            (
+                (serviceProvider) =>
+                {
+                    //Setup
+                    var telemetryItems = new List<TelemetryItem>();
+                    var telemetryItem = new InsertTelemetryItem()
+                    {
+                        DateTimeUTC = System.DateTime.UtcNow,
+                        ConnectionName = "SampleConnectionName",
+                        Duration = TimeSpan.FromSeconds(1),
+                        SignalRequest = "SampleSignalRequest",
+                        SignalResponse = "SampleSignalResponse",
+                        TelemetryResponseState = TelemetryResponseState.Successful,
+                        TelemetryType = TelemetryType.Application
+                    };
+
+                    var uut = serviceProvider.GetRequiredService<ITelemetryWriterService>();
+                    var uutConcrete = (TelemetryWriterService)uut;
+
+                    //Act
+                    uutConcrete.Insert(telemetryItem);
+
+                    //Assert
+
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            );
+        }
+
         private IServiceCollection ConfigureServices(IServiceCollection serviceCollection)
         {
             var telemetryWriterServiceOptions = new TelemetryWriterServiceOptions
