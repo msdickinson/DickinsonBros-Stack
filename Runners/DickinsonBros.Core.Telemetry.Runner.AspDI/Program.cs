@@ -39,8 +39,8 @@ namespace DickinsonBros.Core.Telemetry.Runner.AspDI
                     DateTimeUTC = DateTime.UtcNow,
                     ConnectionName = "SampleConnectionName",
                     Duration = TimeSpan.FromSeconds(1),
-                    SignalRequest = "SampleSignalRequest",
-                    SignalResponse = "SampleSignalResponse",
+                    Request = "SampleSignalRequest",
+                    CorrelationId = "SampleCorrelationId",
                     TelemetryResponseState = TelemetryResponseState.Successful,
                     TelemetryType = TelemetryType.Application
                 };

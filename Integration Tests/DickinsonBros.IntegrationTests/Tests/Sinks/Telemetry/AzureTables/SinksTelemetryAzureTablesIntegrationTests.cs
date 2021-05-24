@@ -1,42 +1,53 @@
-﻿//using DickinsonBros.Core.Telemetry.Abstractions;
-//using DickinsonBros.Core.Telemetry.Abstractions.Models;
-//using DickinsonBros.Test.Integration.Models;
-//using System;
-//using System.Collections.Generic;
-//using System.Diagnostics.CodeAnalysis;
-//using System.Threading.Tasks;
+﻿using DickinsonBros.Core.Correlation.Abstractions;
+using DickinsonBros.Core.Telemetry.Abstractions;
+using DickinsonBros.Core.Telemetry.Abstractions.Models;
+using DickinsonBros.Infrastructure.AzureTables.Abstractions.Models;
+using DickinsonBros.IntegrationTests.Config;
+using DickinsonBros.Sinks.Telemetry.AzureTables.Abstractions;
+using DickinsonBros.Test.Integration.Models;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 
-//namespace DickinsonBros.IntegrationTests.Tests.Sinks.Telemetry.AzureTables
-//{
-//    [ExcludeFromCodeCoverage]
-//    [TestAPIAttribute(Name = "SinksTelemetryAzureTables", Group = "Sinks")]
-//    public class SinksTelemetryAzureTablesIntegrationTests : ISinksTelemetryAzureTablesIntegrationTests
-//    {
-//        //public ITelemetryServiceWriter _telemetryServiceWriter;
-//        //public SinksTelemetryAzureTablesIntegrationTests
-//        //(
-//        //    ITelemetryServiceWriter telemetryServiceWriter
-//        //)
-//        //{
-//        //    _telemetryServiceWriter = telemetryServiceWriter;
-//        //}
+namespace DickinsonBros.IntegrationTests.Tests.Sinks.Telemetry.AzureTables
+{
+    [ExcludeFromCodeCoverage]
+    [TestAPIAttribute(Name = "SinksTelemetryAzureTables", Group = "Sinks")]
+    public class SinksTelemetryAzureTablesIntegrationTests : ISinksTelemetryAzureTablesIntegrationTests
+    {
+        private readonly ITelemetryWriterService _telemetryWriterService;
+        private readonly ICorrelationService _correlationService;
+        private readonly ISinksTelemetryAzureTablesService<RunnerAzureTableServiceOptionsType> _sinksTelemetryAzureTablesService;
+        public SinksTelemetryAzureTablesIntegrationTests
+        (
+            ITelemetryWriterService telemetryWriterService,
+            ICorrelationService correlationService,
+            ISinksTelemetryAzureTablesService<RunnerAzureTableServiceOptionsType> sinksTelemetryAzureTablesService
+        )
+        {
+            _telemetryWriterService = telemetryWriterService;
+            _correlationService = correlationService;
+            _sinksTelemetryAzureTablesService = sinksTelemetryAzureTablesService;
+        }
 
-//        //public async Task InsertAndFlush_Runs_DoesNotThrow(List<string> successLog)
-//        //{
-//        //    var insertTelemetryRequest = new DickinsonBros.Core.Telemetry.Abstractions.Models.TelemetryItem
-//        //    {
-//        //        ConnectionName = "SampleConnectionName",
-//        //        DateTimeUTC = DateTime.UtcNow,
-//        //        Duration = TimeSpan.FromSeconds(100),
-//        //        SignalRequest = "SampleSignalRequest",
-//        //        SignalResponse = "SampleSignalResponse",
-//        //        TelemetryResponseState = TelemetryResponseState.Successful,
-//        //        TelemetryType = TelemetryType.Application
-//        //    };
+        public async Task InsertAndFlush_Runs_DoesNotThrow(List<string> successLog)
+        {
+            var insertTelemetryItem = new InsertTelemetryItem()
+            {
+                DateTimeUTC = DateTime.UtcNow,
+                ConnectionName = "SampleConnectionName",
+                Duration = TimeSpan.FromSeconds(1),
+                Request = "SampleSignalRequest",
+                CorrelationId = _correlationService.CorrelationId,
+                TelemetryResponseState = TelemetryResponseState.Successful,
+                TelemetryType = TelemetryType.Application,
+            };
 
-//        //    _telemetryServiceWriter.Insert(insertTelemetryRequest);
-//        //    await _telemetryServiceWriter.FlushAsync().ConfigureAwait(false);
-//        //}
+            _telemetryWriterService.Insert(insertTelemetryItem);
 
-//    }
-//}
+            await _sinksTelemetryAzureTablesService.FlushAsync().ConfigureAwait(false);
+        }
+
+    }
+}

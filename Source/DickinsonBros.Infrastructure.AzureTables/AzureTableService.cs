@@ -13,12 +13,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DickinsonBros.Core.Logger.Abstractions;
+using DickinsonBros.Core.Correlation.Abstractions;
+
 namespace DickinsonBros.Infrastructure.AzureTables
 {
     public class AzureTableService<U> : IAzureTableService<U>
     where U : AzureTableServiceOptionsType
     {
         internal ILoggerService<U> _loggerService;
+        internal ICorrelationService _correlationService;
         internal CloudStorageAccount _cloudStorageAccount;
         internal CloudTableClient _cloudTableClient;
         internal IDateTimeService _dateTimeService;
@@ -27,7 +30,8 @@ namespace DickinsonBros.Infrastructure.AzureTables
 
         public AzureTableService
         (
-            ILoggerService<U> loggerService,
+            ILoggerService<U> loggerService, 
+            ICorrelationService correlationService,
             ICloudStorageAccountFactory cloudStorageAccountFactory,
             ICloudTableClientFactory cloudTableClientFactory,
             IDateTimeService dateTimeService,
@@ -37,6 +41,7 @@ namespace DickinsonBros.Infrastructure.AzureTables
         )
         {
             _loggerService = loggerService;
+            _correlationService = correlationService;
             _cloudStorageAccount = cloudStorageAccountFactory.CreateCloudStorageAccount(options.Value.ConnectionString);
             _cloudTableClient = cloudTableClientFactory.CreateCloudTableClient(_cloudStorageAccount);
             _dateTimeService = dateTimeService;
@@ -52,8 +57,9 @@ namespace DickinsonBros.Infrastructure.AzureTables
             {
                 ConnectionName = _cloudStorageAccount.TableStorageUri.PrimaryUri.ToString(),
                 DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
-                SignalRequest = $"Delete {typeof(T).Name}. Tablename: {tableName}",
-                TelemetryType = TelemetryType.AzureTable
+                Request = $"Delete {typeof(T).Name}. Tablename: {tableName}",
+                TelemetryType = TelemetryType.AzureTable,
+                CorrelationId = _correlationService.CorrelationId
             };
 
             var stopwatchService = _stopwatchFactory.NewStopwatchService();
@@ -95,7 +101,6 @@ namespace DickinsonBros.Infrastructure.AzureTables
             {
                 stopwatchService.Stop();
                 insertTelemetryRequest.Duration = stopwatchService.Elapsed;
-                insertTelemetryRequest.SignalResponse = "Exceptional";
                 insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.UnHandledException;
 
                 _loggerService.LogErrorRedacted
@@ -125,8 +130,9 @@ namespace DickinsonBros.Infrastructure.AzureTables
             {
                 ConnectionName = _cloudStorageAccount.TableStorageUri.PrimaryUri.ToString(),
                 DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
-                SignalRequest = $"DeleteBulk {typeof(T).Name}. Tablename: {tableName}",
-                TelemetryType = TelemetryType.AzureTable
+                Request = $"DeleteBulk {typeof(T).Name}. Tablename: {tableName}",
+                TelemetryType = TelemetryType.AzureTable,
+                CorrelationId = _correlationService.CorrelationId
             };
 
             var stopwatchService = _stopwatchFactory.NewStopwatchService();
@@ -155,7 +161,6 @@ namespace DickinsonBros.Infrastructure.AzureTables
                 //Log
                 stopwatchService.Stop();
                 insertTelemetryRequest.Duration = stopwatchService.Elapsed;
-                insertTelemetryRequest.SignalResponse = "Successful";
                 _loggerService.LogInformationRedacted
                 (
                     methodName,
@@ -172,7 +177,6 @@ namespace DickinsonBros.Infrastructure.AzureTables
             {
                 stopwatchService.Stop();
                 insertTelemetryRequest.Duration = stopwatchService.Elapsed;
-                insertTelemetryRequest.SignalResponse = $"Exceptional";
                 insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.UnHandledException;
 
                 _loggerService.LogErrorRedacted
@@ -203,8 +207,9 @@ namespace DickinsonBros.Infrastructure.AzureTables
             {
                 ConnectionName = _cloudStorageAccount.TableStorageUri.PrimaryUri.ToString(),
                 DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
-                SignalRequest = $"Fetch {typeof(T).Name}. Tablename: {tableName}",
-                TelemetryType = TelemetryType.AzureTable
+                Request = $"Fetch {typeof(T).Name}. Tablename: {tableName}",
+                TelemetryType = TelemetryType.AzureTable,
+                CorrelationId = _correlationService.CorrelationId
             };
 
             var stopwatchService = _stopwatchFactory.NewStopwatchService();
@@ -244,7 +249,6 @@ namespace DickinsonBros.Infrastructure.AzureTables
             catch (Exception exception)
             {
                 stopwatchService.Stop();
-                insertTelemetryRequest.SignalResponse = $"Exceptional";
                 insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.UnHandledException;
 
                 _loggerService.LogErrorRedacted
@@ -274,8 +278,9 @@ namespace DickinsonBros.Infrastructure.AzureTables
             {
                 ConnectionName = _cloudStorageAccount.TableStorageUri.PrimaryUri.ToString(),
                 DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
-                SignalRequest = $"Insert {typeof(T).Name}. Tablename: {tableName}",
-                TelemetryType = TelemetryType.AzureTable
+                Request = $"Insert {typeof(T).Name}. Tablename: {tableName}",
+                TelemetryType = TelemetryType.AzureTable,
+                CorrelationId = _correlationService.CorrelationId
             };
 
             var stopwatchService = _stopwatchFactory.NewStopwatchService();
@@ -321,12 +326,10 @@ namespace DickinsonBros.Infrastructure.AzureTables
                 if(exception.Message == "Conflict")
                 {
                     insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.Conflict;
-                    insertTelemetryRequest.SignalResponse = $"Conflict";
                 }
                 else
                 {
                     insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.UnHandledException;
-                    insertTelemetryRequest.SignalResponse = $"Exceptional";
                 }
 
                 _loggerService.LogErrorRedacted
@@ -356,8 +359,9 @@ namespace DickinsonBros.Infrastructure.AzureTables
             {
                 ConnectionName = _cloudStorageAccount.TableStorageUri.PrimaryUri.ToString(),
                 DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
-                SignalRequest = $"InsertBulk {typeof(T).Name}. Tablename: {tableName}",
-                TelemetryType = TelemetryType.AzureTable
+                Request = $"InsertBulk {typeof(T).Name}. Tablename: {tableName}",
+                TelemetryType = TelemetryType.AzureTable,
+                CorrelationId = _correlationService.CorrelationId
             };
 
             var stopwatchService = _stopwatchFactory.NewStopwatchService();
@@ -386,7 +390,6 @@ namespace DickinsonBros.Infrastructure.AzureTables
                 //Log
                 stopwatchService.Stop();
                 insertTelemetryRequest.Duration = stopwatchService.Elapsed;
-                insertTelemetryRequest.SignalResponse = "Successful";
                 _loggerService.LogInformationRedacted
                 (
                     methodName,
@@ -403,7 +406,6 @@ namespace DickinsonBros.Infrastructure.AzureTables
             {
                 stopwatchService.Stop();
                 insertTelemetryRequest.Duration = stopwatchService.Elapsed;
-                insertTelemetryRequest.SignalResponse = $"Exceptional";
                 insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.UnHandledException;
 
                 _loggerService.LogErrorRedacted
@@ -436,8 +438,9 @@ namespace DickinsonBros.Infrastructure.AzureTables
             {
                 ConnectionName = _cloudStorageAccount.TableStorageUri.PrimaryUri.ToString(),
                 DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
-                SignalRequest = $"Query {typeof(T).Name}. Tablename: {tableName}",
-                TelemetryType = TelemetryType.AzureTable
+                Request = $"Query {typeof(T).Name}. Tablename: {tableName}",
+                TelemetryType = TelemetryType.AzureTable,
+                CorrelationId = _correlationService.CorrelationId
             };
 
             var stopwatchService = _stopwatchFactory.NewStopwatchService();
@@ -456,7 +459,6 @@ namespace DickinsonBros.Infrastructure.AzureTables
 
                 //Log
                 insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.Successful;
-                insertTelemetryRequest.SignalResponse = "Successful";
                 stopwatchService.Stop();
                 insertTelemetryRequest.Duration = stopwatchService.Elapsed;
                 _loggerService.LogInformationRedacted
@@ -476,7 +478,6 @@ namespace DickinsonBros.Infrastructure.AzureTables
             {
                 stopwatchService.Stop();
                 insertTelemetryRequest.Duration = stopwatchService.Elapsed;
-                insertTelemetryRequest.SignalResponse = $"Exceptional";
                 insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.UnHandledException;
 
                 _loggerService.LogErrorRedacted
@@ -506,8 +507,9 @@ namespace DickinsonBros.Infrastructure.AzureTables
             {
                 ConnectionName = _cloudStorageAccount.TableStorageUri.PrimaryUri.ToString(),
                 DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
-                SignalRequest = $"Upsert {typeof(T).Name}. Tablename: {tableName}",
-                TelemetryType = TelemetryType.AzureTable
+                Request = $"Upsert {typeof(T).Name}. Tablename: {tableName}",
+                TelemetryType = TelemetryType.AzureTable,
+                CorrelationId = _correlationService.CorrelationId
             };
 
             var stopwatchService = _stopwatchFactory.NewStopwatchService();
@@ -547,7 +549,6 @@ namespace DickinsonBros.Infrastructure.AzureTables
             {
                 stopwatchService.Stop();
                 insertTelemetryRequest.Duration = stopwatchService.Elapsed;
-                insertTelemetryRequest.SignalResponse = "Exceptional";
                 insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.UnHandledException;
 
                 _loggerService.LogErrorRedacted
@@ -577,8 +578,9 @@ namespace DickinsonBros.Infrastructure.AzureTables
             {
                 ConnectionName = _cloudStorageAccount.TableStorageUri.PrimaryUri.ToString(),
                 DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
-                SignalRequest = $"UpsertBulk {typeof(T).Name}. Tablename: {tableName}",
-                TelemetryType = TelemetryType.AzureTable
+                Request = $"UpsertBulk {typeof(T).Name}. Tablename: {tableName}",
+                TelemetryType = TelemetryType.AzureTable,
+                CorrelationId = _correlationService.CorrelationId
             };
 
             var stopwatchService = _stopwatchFactory.NewStopwatchService();
@@ -607,7 +609,6 @@ namespace DickinsonBros.Infrastructure.AzureTables
                 //Log
                 stopwatchService.Stop();
                 insertTelemetryRequest.Duration = stopwatchService.Elapsed;
-                insertTelemetryRequest.SignalResponse = "Successful";
                 _loggerService.LogInformationRedacted
                 (
                     methodName,
@@ -624,7 +625,6 @@ namespace DickinsonBros.Infrastructure.AzureTables
             {
                 stopwatchService.Stop();
                 insertTelemetryRequest.Duration = stopwatchService.Elapsed;
-                insertTelemetryRequest.SignalResponse = $"Exceptional";
                 insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.UnHandledException;
 
                 _loggerService.LogErrorRedacted
@@ -664,8 +664,6 @@ namespace DickinsonBros.Infrastructure.AzureTables
             {
                 insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.ReciverError;
             }
-
-            insertTelemetryRequest.SignalResponse = $"Status Code: {httpStatusCode}";
         }
 
         #endregion

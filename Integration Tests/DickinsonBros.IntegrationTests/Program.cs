@@ -24,7 +24,9 @@ using DickinsonBros.IntegrationTests.Tests.Encryption.Certificate.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Encryption.JWT.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Infrastructure.AzureTables.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Infrastructure.AzureTables.Models;
+using DickinsonBros.IntegrationTests.Tests.Sinks.Telemetry.AzureTables.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Sinks.Telemetry.Log.Extensions;
+using DickinsonBros.Sinks.Telemetry.AzureTables.AspDI.Extensions;
 using DickinsonBros.Sinks.Telemetry.Log.AspDI.Extensions;
 using DickinsonBros.Test.Integration.Abstractions;
 using DickinsonBros.Test.Integration.Adapter.AspDI.Extensions;
@@ -38,6 +40,7 @@ namespace DickinsonBros.IntegrationTests
     class Program
     {
         internal const string AZURE_TABLE_NAME = "DickinsonBrosIntegrationTests";
+        internal const string AZURE_TABLE_NAME_TELEMETRY = "DickinsonBrosIntegrationTestsTelemetry";
 
         async static Task Main()
         {
@@ -52,7 +55,7 @@ namespace DickinsonBros.IntegrationTests
 
             try
             {
-                var tests               = integrationTestService.FetchTestsByName("SinksTelemetryLog");
+                var tests               = integrationTestService.FetchTestsByGroup("Sinks");
 
                 var testSummary         = await integrationTestService.RunTests(tests).ConfigureAwait(false);
                 var testlog             = integrationTestService.GenerateLog(testSummary, false);
@@ -66,19 +69,24 @@ namespace DickinsonBros.IntegrationTests
             }
             finally
             {
-                //await AzureTablesCleanUpAsync(provider).ConfigureAwait(false);
+                await AzureTablesCleanUpAsync(provider).ConfigureAwait(false);
             }
         }
 
         private async Task AzureTablesCleanUpAsync(ServiceProvider provider)
         {
+            //all azure calls -or at least delete remove logs when not want them here to clear properly
+
             //Azure Tables
             var azureTableService = provider.GetRequiredService<IAzureTableService<RunnerAzureTableServiceOptionsType>>();
 
             var tableQuery = new TableQuery<SampleEntity>();
-
             var items = await azureTableService.QueryAsync(AZURE_TABLE_NAME, tableQuery).ConfigureAwait(false);
             await azureTableService.DeleteBulkAsync(items, AZURE_TABLE_NAME).ConfigureAwait(false);
+
+            var tableQueryTelemetry = new TableQuery<SampleEntity>();
+            var itemsTelemetry = await azureTableService.QueryAsync(AZURE_TABLE_NAME_TELEMETRY, tableQueryTelemetry).ConfigureAwait(false);
+            await azureTableService.DeleteBulkAsync(itemsTelemetry, AZURE_TABLE_NAME_TELEMETRY).ConfigureAwait(false);
         }
 
         private IServiceCollection ConfigureServices()
@@ -120,6 +128,7 @@ namespace DickinsonBros.IntegrationTests
 
             //--Sinks
             serviceCollection.AddSinksTelemetryLogServiceService();
+            serviceCollection.AddSinksTelemetryAzureTablesService<RunnerAzureTableServiceOptionsType>();
         }
         private void ConfigureIntegreationTests(IServiceCollection serviceCollection)
         {
@@ -148,6 +157,7 @@ namespace DickinsonBros.IntegrationTests
 
             //--Sinks
             serviceCollection.AddSinksTelemetryLogIntegrationTests();
+            serviceCollection.AddSinksTelemetryAzureTablesIntegrationTests();
         }
     }
 }

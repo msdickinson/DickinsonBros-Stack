@@ -13,8 +13,8 @@ namespace DickinsonBros.IntegrationTests.Tests.Sinks.Telemetry.Log
     [TestAPIAttribute(Name = "SinksTelemetryLog", Group = "Sinks")]
     public class SinksTelemetryLogIntegrationTests : ISinksTelemetryLogIntegrationTests
     {
-        public ITelemetryWriterService _telemetryWriterService;
-        public ISinksTelemetryLogService _sinksTelemetryLogService;
+        private readonly ITelemetryWriterService _telemetryWriterService;
+        private readonly ISinksTelemetryLogService _sinksTelemetryLogService;
         public SinksTelemetryLogIntegrationTests
         (
             ITelemetryWriterService telemetryWriterService,

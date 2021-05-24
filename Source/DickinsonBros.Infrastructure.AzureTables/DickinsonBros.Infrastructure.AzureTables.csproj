@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DickinsonBros.Core.Correlation.Abstractions\DickinsonBros.Core.Correlation.Abstractions.csproj" />
     <ProjectReference Include="..\DickinsonBros.Core.DateTime.Abstractions\DickinsonBros.Core.DateTime.Abstractions.csproj" />
     <ProjectReference Include="..\DickinsonBros.Core.Logger.Abstractions\DickinsonBros.Core.Logger.Abstractions.csproj" />
     <ProjectReference Include="..\DickinsonBros.Core.Stopwatch.Abstractions\DickinsonBros.Core.Stopwatch.Abstractions.csproj" />

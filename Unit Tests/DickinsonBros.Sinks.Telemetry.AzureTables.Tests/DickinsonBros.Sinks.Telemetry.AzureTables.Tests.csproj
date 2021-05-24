@@ -16,8 +16,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Source\Dickinsonbros.Core.Guid.Abstractions\Dickinsonbros.Core.Guid.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Core.Logger\DickinsonBros.Core.Logger.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Core.Telemetry.Abstractions\DickinsonBros.Core.Telemetry.Abstractions.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.AzureTables.Abstractions\DickinsonBros.Infrastructure.AzureTables.Abstractions.csproj" />
-    <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.AzureTables.AspDI\DickinsonBros.Infrastructure.AzureTables.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Sinks.Telemetry.AzureTables.Abstractions\DickinsonBros.Sinks.Telemetry.AzureTables.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Sinks.Telemetry.AzureTables\DickinsonBros.Sinks.Telemetry.AzureTables.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Sinks.Telemetry.Log.AspDI\DickinsonBros.Sinks.Telemetry.Log.AspDI.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Test.Unit\DickinsonBros.Test.Unit.csproj" />
   </ItemGroup>
 

@@ -6,13 +6,13 @@ namespace DickinsonBros.Core.Telemetry.Abstractions.Models
     [ExcludeFromCodeCoverage]
     public class TelemetryItem
     {
-        public string ApplicationName { get; set; }
+        public string Request { get; set; }
+        public string Source { get; set; }
         public TelemetryType TelemetryType { get; set; }
-        public string ConnectionName { get; set; }
-        public string SignalRequest { get; set; }
+        public string Connection { get; set; }
         public DateTime DateTimeUTC { get; set; }
         public TimeSpan Duration { get; set; }
-        public string SignalResponse { get; set; }
         public TelemetryResponseState TelemetryResponseState { get; set; }
+        public string CorrelationId { get; set; }
     }
 }

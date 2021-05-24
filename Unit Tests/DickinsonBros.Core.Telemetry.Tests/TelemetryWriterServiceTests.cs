@@ -27,8 +27,7 @@ namespace DickinsonBros.Core.Redactor.Tests
                         DateTimeUTC = System.DateTime.UtcNow,
                         ConnectionName = "SampleConnectionName",
                         Duration = TimeSpan.FromSeconds(1),
-                        SignalRequest = "SampleSignalRequest",
-                        SignalResponse = "SampleSignalResponse",
+                        Request = "SampleSignalRequest",
                         TelemetryResponseState = TelemetryResponseState.Successful,
                         TelemetryType = TelemetryType.Application
                     };
@@ -88,8 +87,7 @@ namespace DickinsonBros.Core.Redactor.Tests
                         DateTimeUTC = System.DateTime.UtcNow,
                         ConnectionName = "",
                         Duration = TimeSpan.FromSeconds(1),
-                        SignalRequest = "SampleSignalRequest",
-                        SignalResponse = "SampleSignalResponse",
+                        Request = "SampleSignalRequest",
                         TelemetryResponseState = TelemetryResponseState.Successful,
                         TelemetryType = TelemetryType.Application
                     };
@@ -122,8 +120,7 @@ namespace DickinsonBros.Core.Redactor.Tests
                         DateTimeUTC = System.DateTime.UtcNow,
                         ConnectionName = "SampleConnectionName",
                         Duration = TimeSpan.FromSeconds(1),
-                        SignalRequest = "",
-                        SignalResponse = "SampleSignalResponse",
+                        Request = "",
                         TelemetryResponseState = TelemetryResponseState.Successful,
                         TelemetryType = TelemetryType.Application
                     };
@@ -156,8 +153,7 @@ namespace DickinsonBros.Core.Redactor.Tests
                     {
                         ConnectionName = "SampleConnectionName",
                         Duration = TimeSpan.FromSeconds(1),
-                        SignalRequest = "SampleSignalRequest",
-                        SignalResponse = "SampleSignalResponse",
+                        Request = "SampleSignalRequest",
                         TelemetryResponseState = TelemetryResponseState.Successful,
                         TelemetryType = TelemetryType.Application
                     };
@@ -191,8 +187,7 @@ namespace DickinsonBros.Core.Redactor.Tests
                         DateTimeUTC = System.DateTime.UtcNow,
                         ConnectionName = "SampleConnectionName",
                         Duration = TimeSpan.FromSeconds(1),
-                        SignalRequest = "SampleSignalRequest",
-                        SignalResponse = "SampleSignalResponse",
+                        Request = "SampleSignalRequest",
                         TelemetryResponseState = TelemetryResponseState.Successful,
                         TelemetryType = TelemetryType.Application
                     };
@@ -204,7 +199,6 @@ namespace DickinsonBros.Core.Redactor.Tests
                     uutConcrete.Insert(telemetryItem);
 
                     //Assert
-
                 },
                 serviceCollection => ConfigureServices(serviceCollection)
             );

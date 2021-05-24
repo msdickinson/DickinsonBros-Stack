@@ -1,4 +1,5 @@
-﻿using DickinsonBros.Core.DateTime.Abstractions;
+﻿using DickinsonBros.Core.Correlation.Abstractions;
+using DickinsonBros.Core.DateTime.Abstractions;
 using DickinsonBros.Core.Logger.Abstractions;
 using DickinsonBros.Core.Logger.Abstractions.Models;
 using DickinsonBros.Core.Stopwatch.Abstractions;
@@ -646,9 +647,8 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     var insertTelemetryRequestObserved = (InsertTelemetryItem)propertiesObserved["insertTelemetryRequest"];
 
                     Assert.AreEqual(uri.ToString(), insertTelemetryRequestObserved.ConnectionName);
-                    Assert.AreEqual($"Delete {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.SignalRequest);
+                    Assert.AreEqual($"Delete {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.Request);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
-                    Assert.AreEqual("Exceptional", insertTelemetryRequestObserved.SignalResponse);
                     Assert.AreEqual(TelemetryResponseState.UnHandledException, insertTelemetryRequestObserved.TelemetryResponseState);
 
                 },
@@ -829,7 +829,6 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     );
 
                     Assert.AreEqual("http://services.odata.org/", insertTelemetryRequestObserved.ConnectionName);
-                    Assert.AreEqual("Status Code: 200", insertTelemetryRequestObserved.SignalResponse);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
                 },
                 serviceCollection => ConfigureServices(serviceCollection)
@@ -929,9 +928,8 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     var insertTelemetryRequestObserved = (InsertTelemetryItem)propertiesObserved["insertTelemetryRequest"];
 
                     Assert.AreEqual(uri.ToString(), insertTelemetryRequestObserved.ConnectionName);
-                    Assert.AreEqual($"Delete {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.SignalRequest);
+                    Assert.AreEqual($"Delete {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.Request);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
-                    Assert.AreEqual("Status Code: 200", insertTelemetryRequestObserved.SignalResponse);
                     Assert.AreEqual(TelemetryResponseState.Successful, insertTelemetryRequestObserved.TelemetryResponseState);
 
                 },
@@ -1537,9 +1535,8 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     var insertTelemetryRequestObserved = (InsertTelemetryItem)propertiesObserved["insertTelemetryRequest"];
 
                     Assert.AreEqual(uri.ToString(), insertTelemetryRequestObserved.ConnectionName);
-                    Assert.AreEqual($"DeleteBulk {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.SignalRequest);
+                    Assert.AreEqual($"DeleteBulk {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.Request);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
-                    Assert.AreEqual("Successful", insertTelemetryRequestObserved.SignalResponse);
                     Assert.AreEqual(TelemetryResponseState.Successful, insertTelemetryRequestObserved.TelemetryResponseState);
 
                 },
@@ -1718,7 +1715,6 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     );
 
                     Assert.AreEqual("http://services.odata.org/", insertTelemetryRequestObserved.ConnectionName);
-                    Assert.AreEqual("Successful", insertTelemetryRequestObserved.SignalResponse);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
 
                 },
@@ -1918,9 +1914,8 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     var insertTelemetryRequestObserved = (InsertTelemetryItem)propertiesObserved["insertTelemetryRequest"];
 
                     Assert.AreEqual(uri.ToString(), insertTelemetryRequestObserved.ConnectionName);
-                    Assert.AreEqual($"DeleteBulk {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.SignalRequest);
+                    Assert.AreEqual($"DeleteBulk {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.Request);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
-                    Assert.AreEqual("Exceptional", insertTelemetryRequestObserved.SignalResponse);
                     Assert.AreEqual(TelemetryResponseState.UnHandledException, insertTelemetryRequestObserved.TelemetryResponseState);
 
                 },
@@ -2548,9 +2543,8 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     var insertTelemetryRequestObserved = (InsertTelemetryItem)propertiesObserved["insertTelemetryRequest"];
 
                     Assert.AreEqual(uri.ToString(), insertTelemetryRequestObserved.ConnectionName);
-                    Assert.AreEqual($"Insert {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.SignalRequest);
+                    Assert.AreEqual($"Insert {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.Request);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
-                    Assert.AreEqual("Exceptional", insertTelemetryRequestObserved.SignalResponse);
                     Assert.AreEqual(TelemetryResponseState.UnHandledException, insertTelemetryRequestObserved.TelemetryResponseState);
 
                 },
@@ -2655,9 +2649,8 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     var insertTelemetryRequestObserved = (InsertTelemetryItem)propertiesObserved["insertTelemetryRequest"];
 
                     Assert.AreEqual(uri.ToString(), insertTelemetryRequestObserved.ConnectionName);
-                    Assert.AreEqual($"Insert {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.SignalRequest);
+                    Assert.AreEqual($"Insert {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.Request);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
-                    Assert.AreEqual("Conflict", insertTelemetryRequestObserved.SignalResponse);
                     Assert.AreEqual(TelemetryResponseState.Conflict, insertTelemetryRequestObserved.TelemetryResponseState);
 
                 },
@@ -2838,7 +2831,6 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     );
 
                     Assert.AreEqual("http://services.odata.org/", insertTelemetryRequestObserved.ConnectionName);
-                    Assert.AreEqual("Status Code: 200", insertTelemetryRequestObserved.SignalResponse);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
                 },
                 serviceCollection => ConfigureServices(serviceCollection)
@@ -2938,9 +2930,8 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     var insertTelemetryRequestObserved = (InsertTelemetryItem)propertiesObserved["insertTelemetryRequest"];
 
                     Assert.AreEqual(uri.ToString(), insertTelemetryRequestObserved.ConnectionName);
-                    Assert.AreEqual($"Insert {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.SignalRequest);
+                    Assert.AreEqual($"Insert {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.Request);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
-                    Assert.AreEqual("Status Code: 200", insertTelemetryRequestObserved.SignalResponse);
                     Assert.AreEqual(TelemetryResponseState.Successful, insertTelemetryRequestObserved.TelemetryResponseState);
 
                 },
@@ -3546,9 +3537,8 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     var insertTelemetryRequestObserved = (InsertTelemetryItem)propertiesObserved["insertTelemetryRequest"];
 
                     Assert.AreEqual(uri.ToString(), insertTelemetryRequestObserved.ConnectionName);
-                    Assert.AreEqual($"InsertBulk {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.SignalRequest);
+                    Assert.AreEqual($"InsertBulk {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.Request);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
-                    Assert.AreEqual("Successful", insertTelemetryRequestObserved.SignalResponse);
                     Assert.AreEqual(TelemetryResponseState.Successful, insertTelemetryRequestObserved.TelemetryResponseState);
 
                 },
@@ -3727,7 +3717,6 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     );
 
                     Assert.AreEqual("http://services.odata.org/", insertTelemetryRequestObserved.ConnectionName);
-                    Assert.AreEqual("Successful", insertTelemetryRequestObserved.SignalResponse);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
 
                 },
@@ -4020,9 +4009,8 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     var insertTelemetryRequestObserved = (InsertTelemetryItem)propertiesObserved["insertTelemetryRequest"];
 
                     Assert.AreEqual(uri.ToString(), insertTelemetryRequestObserved.ConnectionName);
-                    Assert.AreEqual($"InsertBulk {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.SignalRequest);
+                    Assert.AreEqual($"InsertBulk {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.Request);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
-                    Assert.AreEqual("Exceptional", insertTelemetryRequestObserved.SignalResponse);
                     Assert.AreEqual(TelemetryResponseState.UnHandledException, insertTelemetryRequestObserved.TelemetryResponseState);
 
                 },
@@ -4609,9 +4597,8 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     var insertTelemetryRequestObserved = (InsertTelemetryItem)propertiesObserved["insertTelemetryRequest"];
 
                     Assert.AreEqual(uri.ToString(), insertTelemetryRequestObserved.ConnectionName);
-                    Assert.AreEqual($"Fetch {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.SignalRequest);
+                    Assert.AreEqual($"Fetch {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.Request);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
-                    Assert.AreEqual("Exceptional", insertTelemetryRequestObserved.SignalResponse);
                     Assert.AreEqual(TelemetryResponseState.UnHandledException, insertTelemetryRequestObserved.TelemetryResponseState);
 
                 },
@@ -4782,7 +4769,6 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     );
 
                     Assert.AreEqual("http://services.odata.org/", insertTelemetryRequestObserved.ConnectionName);
-                    Assert.AreEqual("Status Code: 200", insertTelemetryRequestObserved.SignalResponse);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
                 },
                 serviceCollection => ConfigureServices(serviceCollection)
@@ -4877,9 +4863,8 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     var insertTelemetryRequestObserved = (InsertTelemetryItem)propertiesObserved["insertTelemetryRequest"];
 
                     Assert.AreEqual(uri.ToString(), insertTelemetryRequestObserved.ConnectionName);
-                    Assert.AreEqual($"Fetch {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.SignalRequest);
+                    Assert.AreEqual($"Fetch {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.Request);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
-                    Assert.AreEqual("Status Code: 200", insertTelemetryRequestObserved.SignalResponse);
                     Assert.AreEqual(TelemetryResponseState.Successful, insertTelemetryRequestObserved.TelemetryResponseState);
 
                 },
@@ -5315,9 +5300,8 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     var insertTelemetryRequestObserved = (InsertTelemetryItem)propertiesObserved["insertTelemetryRequest"];
 
                     Assert.AreEqual(uri.ToString(), insertTelemetryRequestObserved.ConnectionName);
-                    Assert.AreEqual($"Query {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.SignalRequest);
+                    Assert.AreEqual($"Query {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.Request);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
-                    Assert.AreEqual("Successful", insertTelemetryRequestObserved.SignalResponse);
                     Assert.AreEqual(TelemetryResponseState.Successful, insertTelemetryRequestObserved.TelemetryResponseState);
                     
                     var resultsObserved = (List<SampleEntity>)propertiesObserved["results"];
@@ -5456,9 +5440,8 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     var insertTelemetryRequestObserved = (InsertTelemetryItem)propertiesObserved["insertTelemetryRequest"];
 
                     Assert.AreEqual(uri.ToString(), insertTelemetryRequestObserved.ConnectionName);
-                    Assert.AreEqual($"Query {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.SignalRequest);
+                    Assert.AreEqual($"Query {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.Request);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
-                    Assert.AreEqual("Exceptional", insertTelemetryRequestObserved.SignalResponse);
                     Assert.AreEqual(TelemetryResponseState.UnHandledException, insertTelemetryRequestObserved.TelemetryResponseState);
                 },
                 serviceCollection => ConfigureServices(serviceCollection)
@@ -5601,7 +5584,6 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     );
 
                     Assert.AreEqual("http://services.odata.org/", insertTelemetryRequestObserved.ConnectionName);
-                    Assert.AreEqual("Successful", insertTelemetryRequestObserved.SignalResponse);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
                 },
                 serviceCollection => ConfigureServices(serviceCollection)
@@ -6229,9 +6211,8 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     var insertTelemetryRequestObserved = (InsertTelemetryItem)propertiesObserved["insertTelemetryRequest"];
 
                     Assert.AreEqual(uri.ToString(), insertTelemetryRequestObserved.ConnectionName);
-                    Assert.AreEqual($"Upsert {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.SignalRequest);
+                    Assert.AreEqual($"Upsert {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.Request);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
-                    Assert.AreEqual("Exceptional", insertTelemetryRequestObserved.SignalResponse);
                     Assert.AreEqual(TelemetryResponseState.UnHandledException, insertTelemetryRequestObserved.TelemetryResponseState);
 
                 },
@@ -6412,7 +6393,6 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     );
 
                     Assert.AreEqual("http://services.odata.org/", insertTelemetryRequestObserved.ConnectionName);
-                    Assert.AreEqual("Status Code: 200", insertTelemetryRequestObserved.SignalResponse);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
                 },
                 serviceCollection => ConfigureServices(serviceCollection)
@@ -6512,9 +6492,8 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     var insertTelemetryRequestObserved = (InsertTelemetryItem)propertiesObserved["insertTelemetryRequest"];
 
                     Assert.AreEqual(uri.ToString(), insertTelemetryRequestObserved.ConnectionName);
-                    Assert.AreEqual($"Upsert {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.SignalRequest);
+                    Assert.AreEqual($"Upsert {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.Request);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
-                    Assert.AreEqual("Status Code: 200", insertTelemetryRequestObserved.SignalResponse);
                     Assert.AreEqual(TelemetryResponseState.Successful, insertTelemetryRequestObserved.TelemetryResponseState);
 
                 },
@@ -7120,9 +7099,8 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     var insertTelemetryRequestObserved = (InsertTelemetryItem)propertiesObserved["insertTelemetryRequest"];
 
                     Assert.AreEqual(uri.ToString(), insertTelemetryRequestObserved.ConnectionName);
-                    Assert.AreEqual($"UpsertBulk {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.SignalRequest);
+                    Assert.AreEqual($"UpsertBulk {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.Request);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
-                    Assert.AreEqual("Successful", insertTelemetryRequestObserved.SignalResponse);
                     Assert.AreEqual(TelemetryResponseState.Successful, insertTelemetryRequestObserved.TelemetryResponseState);
 
                 },
@@ -7301,7 +7279,6 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     );
 
                     Assert.AreEqual("http://services.odata.org/", insertTelemetryRequestObserved.ConnectionName);
-                    Assert.AreEqual("Successful", insertTelemetryRequestObserved.SignalResponse);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
 
                 },
@@ -7501,9 +7478,8 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     var insertTelemetryRequestObserved = (InsertTelemetryItem)propertiesObserved["insertTelemetryRequest"];
 
                     Assert.AreEqual(uri.ToString(), insertTelemetryRequestObserved.ConnectionName);
-                    Assert.AreEqual($"UpsertBulk {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.SignalRequest);
+                    Assert.AreEqual($"UpsertBulk {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.Request);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
-                    Assert.AreEqual("Exceptional", insertTelemetryRequestObserved.SignalResponse);
                     Assert.AreEqual(TelemetryResponseState.UnHandledException, insertTelemetryRequestObserved.TelemetryResponseState);
 
                 },
@@ -7525,7 +7501,6 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     //Setup
                     var insertTelemetryRequest = new InsertTelemetryItem
                     {
-                        SignalResponse = ""
                     };
 
                     var tableResult = new TableResult<SampleEntity>
@@ -7559,7 +7534,6 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     //Setup
                     var insertTelemetryRequest = new InsertTelemetryItem
                     {
-                        SignalResponse = ""
                     };
 
                     var tableResult = new TableResult<SampleEntity>
@@ -7593,7 +7567,6 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     //Setup
                     var insertTelemetryRequest = new InsertTelemetryItem
                     {
-                        SignalResponse = ""
                     };
 
                     var tableResult = new TableResult<SampleEntity>
@@ -7627,7 +7600,6 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     //Setup
                     var insertTelemetryRequest = new InsertTelemetryItem
                     {
-                        SignalResponse = ""
                     };
 
                     var tableResult = new TableResult<SampleEntity>
@@ -7661,7 +7633,6 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     //Setup
                     var insertTelemetryRequest = new InsertTelemetryItem
                     {
-                        SignalResponse = ""
                     };
 
                     var tableResult = new TableResult<SampleEntity>
@@ -7695,7 +7666,6 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     //Setup
                     var insertTelemetryRequest = new InsertTelemetryItem
                     {
-                        SignalResponse = ""
                     };
 
                     var tableResult = new TableResult<SampleEntity>
@@ -7729,7 +7699,6 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     //Setup
                     var insertTelemetryRequest = new InsertTelemetryItem
                     {
-                        SignalResponse = ""
                     };
 
                     var tableResult = new TableResult<SampleEntity>
@@ -7746,40 +7715,6 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
 
                     //Assert
                     Assert.AreEqual(TelemetryResponseState.ReciverError, insertTelemetryRequest.TelemetryResponseState);
-
-                    await Task.CompletedTask.ConfigureAwait(false);
-                },
-                serviceCollection => ConfigureServices(serviceCollection)
-            ).ConfigureAwait(false);
-        }
-
-        [TestMethod]
-        public async Task UpdateTelemetryRequest_Runs_SignalResponseIsSetWithStatusCode()
-        {
-            await RunDependencyInjectedTestAsync
-            (
-                async (serviceProvider) =>
-                {
-                    //Setup
-                    var insertTelemetryRequest = new InsertTelemetryItem
-                    {
-                        SignalResponse = ""
-                    };
-
-                    var tableResult = new TableResult<SampleEntity>
-                    {
-                        HttpStatusCode = 200
-                    };
-
-                    //--uut
-                    var uut = serviceProvider.GetRequiredService<IAzureTableService<Test>>();
-                    var uutConcrete = (AzureTableService<Test>)uut;
-
-                    //Act
-                    uutConcrete.UpdateTelemetryRequest(insertTelemetryRequest, tableResult.HttpStatusCode);
-
-                    //Assert
-                    Assert.AreEqual($"Status Code: {tableResult.HttpStatusCode}", insertTelemetryRequest.SignalResponse);
 
                     await Task.CompletedTask.ConfigureAwait(false);
                 },
@@ -8122,6 +8057,7 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
             serviceCollection.AddSingleton(Mock.Of<IStopwatchFactory>());
             serviceCollection.AddSingleton(Mock.Of<IStopwatchService>());
             serviceCollection.AddSingleton(Mock.Of<IDateTimeService>());
+            serviceCollection.AddSingleton(Mock.Of<ICorrelationService>());
             serviceCollection.AddSingleton(Mock.Of<ILoggerService<Test>>());
             serviceCollection.AddSingleton(Mock.Of<ITelemetryWriterService>());
             
@@ -8134,7 +8070,6 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
             var options = Options.Create(azureTableServiceOptions);
             serviceCollection.AddSingleton<IOptions<AzureTableServiceOptions<Test>>>(options);
 
-            //???
             var configurationRoot = BuildConfigurationRoot(azureTableServiceOptions);
             serviceCollection.AddSingleton<IConfiguration>(configurationRoot);
 

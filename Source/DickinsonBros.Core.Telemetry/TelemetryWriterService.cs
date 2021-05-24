@@ -39,7 +39,7 @@ namespace DickinsonBros.Core.Telemetry
                 throw new ArgumentNullException();
             }
 
-            if (string.IsNullOrWhiteSpace(insertTelemetryItem.SignalRequest))
+            if (string.IsNullOrWhiteSpace(insertTelemetryItem.Request))
             {
                 throw new ArgumentNullException();
             }
@@ -51,14 +51,14 @@ namespace DickinsonBros.Core.Telemetry
 
             NewTelemetryEvent?.Invoke(new TelemetryItem
             {
-                ApplicationName = _telemetryServiceWriterOptions.ApplicationName,
-                ConnectionName = insertTelemetryItem.ConnectionName,
+                Source = _telemetryServiceWriterOptions.ApplicationName,
+                Connection = insertTelemetryItem.ConnectionName,
                 DateTimeUTC = insertTelemetryItem.DateTimeUTC,
                 Duration = insertTelemetryItem.Duration,
-                SignalRequest = insertTelemetryItem.SignalRequest,
-                SignalResponse = insertTelemetryItem.SignalResponse,
+                Request = insertTelemetryItem.Request,
                 TelemetryResponseState = insertTelemetryItem.TelemetryResponseState,
-                TelemetryType = insertTelemetryItem.TelemetryType
+                TelemetryType = insertTelemetryItem.TelemetryType,
+                CorrelationId = insertTelemetryItem.CorrelationId
             });
         }
      

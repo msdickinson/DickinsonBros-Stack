@@ -38,10 +38,10 @@ namespace DickinsonBros.Sinks.Telemetry.Log.Runner.AspDI
                     ConnectionName = "SampleConnectionName",
                     DateTimeUTC = DateTime.UtcNow,
                     Duration = TimeSpan.FromSeconds(100),
-                    SignalRequest = "SampleSignalRequest",
-                    SignalResponse = "SampleSignalResponse",
+                    Request = "SampleSignalRequest",
                     TelemetryResponseState = TelemetryResponseState.Successful,
-                    TelemetryType = TelemetryType.Application
+                    TelemetryType = TelemetryType.Application,
+                    CorrelationId = "SampleCorrelationId"
                 };
 
                 telemetryWriterService.Insert(insertTelemetryRequest);

@@ -1,7 +1,6 @@
 ﻿using DickinsonBros.Core.Logger.Abstractions;
 using DickinsonBros.Core.Logger.Abstractions.Models;
 using DickinsonBros.Core.Telemetry.Abstractions;
-using DickinsonBros.Core.Telemetry.Abstractions.Models;
 using DickinsonBros.Sinks.Telemetry.Log.Abstractions;
 using DickinsonBros.Test.Unit;
 using Microsoft.Extensions.DependencyInjection;
