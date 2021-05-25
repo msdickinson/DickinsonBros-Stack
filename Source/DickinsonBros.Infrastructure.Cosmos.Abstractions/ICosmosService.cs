@@ -8,9 +8,10 @@ namespace DickinsonBros.Infrastructure.Cosmos.Abstractions
     {
         Task<IEnumerable<T>> QueryAsync<T>(QueryDefinition queryDefinition, QueryRequestOptions queryRequestOptions);
         Task<ItemResponse<T>> DeleteAsync<T>(string id, string key);
+        Task<IEnumerable<ResponseMessage>> DeleteBulkAsync<T>(IEnumerable<string> ids, string key);
         Task<ItemResponse<T>> FetchAsync<T>(string id, string key);
-        Task<IEnumerable<ResponseMessage>> BulkInsertAsync<T>(string key, IEnumerable<T> value);
-        Task<ItemResponse<T>> InsertAsync<T>(string key, T value);
-        Task<ItemResponse<T>> UpsertAsync<T>(string key, string eTag, T value);
+        Task<IEnumerable<ResponseMessage>> InsertBulkAsync<T>(IEnumerable<T> value, string key);
+        Task<ItemResponse<T>> InsertAsync<T>(T value, string key);
+        Task<ItemResponse<T>> UpsertAsync<T>(T value, string key, string eTag);
     }
 }

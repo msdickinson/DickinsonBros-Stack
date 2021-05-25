@@ -11,6 +11,8 @@ using DickinsonBros.Encryption.Certificate.Adapter.AspDI.Extensions;
 using DickinsonBros.Encryption.JWT.Adapter.AspDI.Extensions;
 using DickinsonBros.Infrastructure.AzureTables.Abstractions;
 using DickinsonBros.Infrastructure.AzureTables.AspDI.Extensions;
+using DickinsonBros.Infrastructure.Cosmos.Abstractions;
+using DickinsonBros.Infrastructure.Cosmos.AspDI.Extensions;
 using DickinsonBros.IntegrationTests.Config;
 using DickinsonBros.IntegrationTests.Tests.Core.Correlation.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Core.DateTime.Extensions;
@@ -24,15 +26,21 @@ using DickinsonBros.IntegrationTests.Tests.Encryption.Certificate.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Encryption.JWT.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Infrastructure.AzureTables.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Infrastructure.AzureTables.Models;
+using DickinsonBros.IntegrationTests.Tests.Infrastructure.Cosmos.Extensions;
+using DickinsonBros.IntegrationTests.Tests.Infrastructure.Cosmos.Models;
 using DickinsonBros.IntegrationTests.Tests.Sinks.Telemetry.AzureTables.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Sinks.Telemetry.Log.Extensions;
+using DickinsonBros.Sinks.Telemetry.AzureTables.Abstractions;
 using DickinsonBros.Sinks.Telemetry.AzureTables.AspDI.Extensions;
+using DickinsonBros.Sinks.Telemetry.Log.Abstractions;
 using DickinsonBros.Sinks.Telemetry.Log.AspDI.Extensions;
 using DickinsonBros.Test.Integration.Abstractions;
 using DickinsonBros.Test.Integration.Adapter.AspDI.Extensions;
+using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Table;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DickinsonBros.IntegrationTests
@@ -41,7 +49,7 @@ namespace DickinsonBros.IntegrationTests
     {
         internal const string AZURE_TABLE_NAME = "DickinsonBrosIntegrationTests";
         internal const string AZURE_TABLE_NAME_TELEMETRY = "DickinsonBrosIntegrationTestsTelemetry";
-
+        internal const string COSMOS_KEY = "DickinsonBrosIntegrationTests";
         async static Task Main()
         {
             await new Program().DoMain();
@@ -51,12 +59,17 @@ namespace DickinsonBros.IntegrationTests
             var serviceCollection = ConfigureServices();
             using var provider = serviceCollection.BuildServiceProvider();
             provider.ConfigureAwait(true);
+
+
+            //These have to pulled here to ensure there constuctor is called. 
+            var sinksTelemetryAzureTablesService = provider.GetRequiredService<ISinksTelemetryAzureTablesService<RunnerAzureTableServiceOptionsType>>();
+            var sinksTelemetryLogService = provider.GetRequiredService<ISinksTelemetryLogService>();
+
             var integrationTestService = provider.GetRequiredService<IIntegrationTestService>();
 
             try
             {
-                var tests               = integrationTestService.FetchTestsByGroup("Sinks");
-
+                var tests               = integrationTestService.FetchTests();
                 var testSummary         = await integrationTestService.RunTests(tests).ConfigureAwait(false);
                 var testlog             = integrationTestService.GenerateLog(testSummary, false);
                 Console.WriteLine(testlog);
@@ -69,24 +82,48 @@ namespace DickinsonBros.IntegrationTests
             }
             finally
             {
+                await CosmosCleanUpAsync(provider).ConfigureAwait(false);
+
+
+                await FlushAzureTablesCleanUpAsync(provider).ConfigureAwait(false);
+                await Task.Delay(3000).ConfigureAwait(false);
                 await AzureTablesCleanUpAsync(provider).ConfigureAwait(false);
             }
         }
-
+        private async Task FlushAzureTablesCleanUpAsync(ServiceProvider provider)
+        {
+            var sinksTelemetryAzureTablesService = provider.GetRequiredService<ISinksTelemetryAzureTablesService<RunnerAzureTableServiceOptionsType>>();
+            await sinksTelemetryAzureTablesService.FlushAsync().ConfigureAwait(false);
+        }
         private async Task AzureTablesCleanUpAsync(ServiceProvider provider)
         {
-            //all azure calls -or at least delete remove logs when not want them here to clear properly
-
-            //Azure Tables
             var azureTableService = provider.GetRequiredService<IAzureTableService<RunnerAzureTableServiceOptionsType>>();
-
             var tableQuery = new TableQuery<SampleEntity>();
-            var items = await azureTableService.QueryAsync(AZURE_TABLE_NAME, tableQuery).ConfigureAwait(false);
-            await azureTableService.DeleteBulkAsync(items, AZURE_TABLE_NAME).ConfigureAwait(false);
+            var items = await azureTableService.QueryAsync(AZURE_TABLE_NAME, tableQuery, false).ConfigureAwait(false);
+            await azureTableService.DeleteBulkAsync(items, AZURE_TABLE_NAME, false).ConfigureAwait(false);
 
             var tableQueryTelemetry = new TableQuery<SampleEntity>();
-            var itemsTelemetry = await azureTableService.QueryAsync(AZURE_TABLE_NAME_TELEMETRY, tableQueryTelemetry).ConfigureAwait(false);
-            await azureTableService.DeleteBulkAsync(itemsTelemetry, AZURE_TABLE_NAME_TELEMETRY).ConfigureAwait(false);
+            var itemsTelemetry = await azureTableService.QueryAsync(AZURE_TABLE_NAME_TELEMETRY, tableQueryTelemetry, false).ConfigureAwait(false);
+            await azureTableService.DeleteBulkAsync(itemsTelemetry, AZURE_TABLE_NAME_TELEMETRY, false).ConfigureAwait(false);
+        }
+        private async Task CosmosCleanUpAsync(ServiceProvider provider)
+        {
+            //Azure Tables
+            var cosmosService = provider.GetRequiredService<ICosmosService<RunnerCosmosServiceOptionsType>>();
+
+            var queryResult = await cosmosService.QueryAsync<SampleModel>
+                                   (
+                                       new QueryDefinition($"SELECT TOP 1000 * FROM c where c.key='{COSMOS_KEY}'"),
+                                       new QueryRequestOptions
+                                       {
+                                           PartitionKey = new PartitionKey(COSMOS_KEY),
+                                           MaxItemCount = 100
+                                       }
+                                   ).ConfigureAwait(false);
+
+            //Bulk Delete
+            await cosmosService.DeleteBulkAsync<SampleModel>(queryResult.Select(e => e.Id), COSMOS_KEY).ConfigureAwait(false);
+
         }
 
         private IServiceCollection ConfigureServices()
@@ -121,6 +158,7 @@ namespace DickinsonBros.IntegrationTests
 
             //--Infrastructure
             serviceCollection.AddAzureTablesService<RunnerAzureTableServiceOptionsType, Configuration>();
+            serviceCollection.AddCosmosService<RunnerCosmosServiceOptionsType, Configuration>();
 
             //--Middleware
 
@@ -150,6 +188,7 @@ namespace DickinsonBros.IntegrationTests
 
             //--Infrastructure
             serviceCollection.AddAzureTablesIntegrationTests();
+            serviceCollection.AddCosmosIntegrationTests();
 
             //--Middleware
 

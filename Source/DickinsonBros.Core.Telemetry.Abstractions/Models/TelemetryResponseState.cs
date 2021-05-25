@@ -7,6 +7,6 @@
         Conflict               = 2,
         CallerError            = 3,
         ReciverError           = 4,
-        UnHandledException     = 5
+        UnhandledException     = 5
     }
 }

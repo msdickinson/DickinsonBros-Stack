@@ -20,13 +20,13 @@ namespace DickinsonBros.Infrastructure.AzureTables
     public class AzureTableService<U> : IAzureTableService<U>
     where U : AzureTableServiceOptionsType
     {
-        internal ILoggerService<U> _loggerService;
-        internal ICorrelationService _correlationService;
-        internal CloudStorageAccount _cloudStorageAccount;
-        internal CloudTableClient _cloudTableClient;
-        internal IDateTimeService _dateTimeService;
-        internal IStopwatchFactory _stopwatchFactory;
-        internal ITelemetryWriterService _telemetryServiceWriter;
+        internal readonly ILoggerService<U> _loggerService;
+        internal readonly ICorrelationService _correlationService;
+        internal readonly CloudStorageAccount _cloudStorageAccount;
+        internal readonly CloudTableClient _cloudTableClient;
+        internal readonly IDateTimeService _dateTimeService;
+        internal readonly IStopwatchFactory _stopwatchFactory;
+        internal readonly ITelemetryWriterService _telemetryWriterService;
 
         public AzureTableService
         (
@@ -36,7 +36,7 @@ namespace DickinsonBros.Infrastructure.AzureTables
             ICloudTableClientFactory cloudTableClientFactory,
             IDateTimeService dateTimeService,
             IStopwatchFactory stopwatchFactory, 
-            ITelemetryWriterService telemetryServiceWriter,
+            ITelemetryWriterService telemetryWriterService,
             IOptions<AzureTableServiceOptions<U>> options
         )
         {
@@ -46,10 +46,10 @@ namespace DickinsonBros.Infrastructure.AzureTables
             _cloudTableClient = cloudTableClientFactory.CreateCloudTableClient(_cloudStorageAccount);
             _dateTimeService = dateTimeService;
             _stopwatchFactory = stopwatchFactory;
-            _telemetryServiceWriter = telemetryServiceWriter;
+            _telemetryWriterService = telemetryWriterService;
         }
 
-        public async Task<TableResult<T>> DeleteAsync<T>(T item, string tableName) where T : ITableEntity
+        public async Task<TableResult<T>> DeleteAsync<T>(T item, string tableName, bool sendTelemetry = true) where T : ITableEntity
         {
             var methodName = $"{nameof(IAzureTableService<U>)}<{typeof(U).Name}>.{nameof(IAzureTableService<U>.DeleteAsync)}<{typeof(T).Name}>";
 
@@ -101,7 +101,7 @@ namespace DickinsonBros.Infrastructure.AzureTables
             {
                 stopwatchService.Stop();
                 insertTelemetryRequest.Duration = stopwatchService.Elapsed;
-                insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.UnHandledException;
+                insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.UnhandledException;
 
                 _loggerService.LogErrorRedacted
                 (
@@ -114,15 +114,18 @@ namespace DickinsonBros.Infrastructure.AzureTables
                     }
                 );
 
-                throw exception;
+                throw;
             }
             finally
             {
-                _telemetryServiceWriter.Insert(insertTelemetryRequest);
+                if (sendTelemetry)
+                {
+                    _telemetryWriterService.Insert(insertTelemetryRequest);
+                }
             }
         }
     
-        public async Task<IEnumerable<TableBatchResult>> DeleteBulkAsync<T>(IEnumerable<T> items, string tableName) where T : ITableEntity
+        public async Task<IEnumerable<TableBatchResult>> DeleteBulkAsync<T>(IEnumerable<T> items, string tableName, bool sendTelemetry = true) where T : ITableEntity
         {
             var methodName = $"{nameof(IAzureTableService<U>)}<{typeof(U).Name}>.{nameof(IAzureTableService<U>.DeleteBulkAsync)}<{typeof(T).Name}>";
 
@@ -177,7 +180,7 @@ namespace DickinsonBros.Infrastructure.AzureTables
             {
                 stopwatchService.Stop();
                 insertTelemetryRequest.Duration = stopwatchService.Elapsed;
-                insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.UnHandledException;
+                insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.UnhandledException;
 
                 _loggerService.LogErrorRedacted
                 (
@@ -194,12 +197,15 @@ namespace DickinsonBros.Infrastructure.AzureTables
             }
             finally
             {
-                _telemetryServiceWriter.Insert(insertTelemetryRequest);
+                if (sendTelemetry)
+                {
+                    _telemetryWriterService.Insert(insertTelemetryRequest);
+                }
             }
 
         }
     
-        public async Task<TableResult<T>> FetchAsync<T>(string partitionKey, string rowkey, string tableName) where T : ITableEntity
+        public async Task<TableResult<T>> FetchAsync<T>(string partitionKey, string rowkey, string tableName, bool sendTelemetry = true) where T : ITableEntity
         {
             var methodName = $"{nameof(IAzureTableService<U>)}<{typeof(U).Name}>.{nameof(IAzureTableService<U>.FetchAsync)}<{typeof(T).Name}>";
 
@@ -249,7 +255,7 @@ namespace DickinsonBros.Infrastructure.AzureTables
             catch (Exception exception)
             {
                 stopwatchService.Stop();
-                insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.UnHandledException;
+                insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.UnhandledException;
 
                 _loggerService.LogErrorRedacted
                 (
@@ -266,11 +272,14 @@ namespace DickinsonBros.Infrastructure.AzureTables
             }
             finally
             {
-                _telemetryServiceWriter.Insert(insertTelemetryRequest);
+                if (sendTelemetry)
+                {
+                    _telemetryWriterService.Insert(insertTelemetryRequest);
+                }
             }
         }
        
-        public async Task<TableResult<T>> InsertAsync<T>(T item, string tableName) where T : ITableEntity
+        public async Task<TableResult<T>> InsertAsync<T>(T item, string tableName, bool sendTelemetry = true) where T : ITableEntity
         {
             var methodName = $"{nameof(IAzureTableService<U>)}<{typeof(U).Name}>.{nameof(IAzureTableService<U>.InsertAsync)}<{typeof(T).Name}>";
 
@@ -329,7 +338,7 @@ namespace DickinsonBros.Infrastructure.AzureTables
                 }
                 else
                 {
-                    insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.UnHandledException;
+                    insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.UnhandledException;
                 }
 
                 _loggerService.LogErrorRedacted
@@ -347,11 +356,14 @@ namespace DickinsonBros.Infrastructure.AzureTables
             }
             finally
             {
-                _telemetryServiceWriter.Insert(insertTelemetryRequest);
+                if (sendTelemetry)
+                {
+                    _telemetryWriterService.Insert(insertTelemetryRequest);
+                }
             }
         }
      
-        public async Task<IEnumerable<TableBatchResult>> InsertBulkAsync<T>(IEnumerable<T> items, string tableName, bool shouldSendTelemetry = true) where T : ITableEntity
+        public async Task<IEnumerable<TableBatchResult>> InsertBulkAsync<T>(IEnumerable<T> items, string tableName, bool sendTelemetry = true) where T : ITableEntity
         {
             var methodName = $"{nameof(IAzureTableService<U>)}<{typeof(U).Name}>.{nameof(IAzureTableService<U>.InsertBulkAsync)}<{typeof(T).Name}>";
 
@@ -406,7 +418,7 @@ namespace DickinsonBros.Infrastructure.AzureTables
             {
                 stopwatchService.Stop();
                 insertTelemetryRequest.Duration = stopwatchService.Elapsed;
-                insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.UnHandledException;
+                insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.UnhandledException;
 
                 _loggerService.LogErrorRedacted
                 (
@@ -423,14 +435,14 @@ namespace DickinsonBros.Infrastructure.AzureTables
             }
             finally
             {
-                if(shouldSendTelemetry)
+                if(sendTelemetry)
                 {
-                    _telemetryServiceWriter.Insert(insertTelemetryRequest);
+                    _telemetryWriterService.Insert(insertTelemetryRequest);
                 }
             }
         }
        
-        public async Task<IEnumerable<T>> QueryAsync<T>(string tableName, TableQuery<T> tableQuery) where T : ITableEntity, new()
+        public async Task<IEnumerable<T>> QueryAsync<T>(string tableName, TableQuery<T> tableQuery, bool sendTelemetry = true) where T : ITableEntity, new()
         {
             var methodName = $"{nameof(IAzureTableService<U>)}<{typeof(U).Name}>.{nameof(IAzureTableService<U>.QueryAsync)}<{typeof(T).Name}>";
 
@@ -478,7 +490,7 @@ namespace DickinsonBros.Infrastructure.AzureTables
             {
                 stopwatchService.Stop();
                 insertTelemetryRequest.Duration = stopwatchService.Elapsed;
-                insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.UnHandledException;
+                insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.UnhandledException;
 
                 _loggerService.LogErrorRedacted
                 (
@@ -495,11 +507,14 @@ namespace DickinsonBros.Infrastructure.AzureTables
             }
             finally
             {
-                _telemetryServiceWriter.Insert(insertTelemetryRequest);
+                if (sendTelemetry)
+                {
+                    _telemetryWriterService.Insert(insertTelemetryRequest);
+                }
             }
         }
 
-        public async Task<TableResult<T>> UpsertAsync<T>(T item, string tableName) where T : ITableEntity
+        public async Task<TableResult<T>> UpsertAsync<T>(T item, string tableName, bool sendTelemetry = true) where T : ITableEntity
         {
             var methodName = $"{nameof(IAzureTableService<U>)}<{typeof(U).Name}>.{nameof(IAzureTableService<U>.UpsertAsync)}<{typeof(T).Name}>";
 
@@ -549,7 +564,7 @@ namespace DickinsonBros.Infrastructure.AzureTables
             {
                 stopwatchService.Stop();
                 insertTelemetryRequest.Duration = stopwatchService.Elapsed;
-                insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.UnHandledException;
+                insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.UnhandledException;
 
                 _loggerService.LogErrorRedacted
                 (
@@ -566,11 +581,14 @@ namespace DickinsonBros.Infrastructure.AzureTables
             }
             finally
             {
-                _telemetryServiceWriter.Insert(insertTelemetryRequest);
+                if (sendTelemetry)
+                {
+                    _telemetryWriterService.Insert(insertTelemetryRequest);
+                }
             }
         }
 
-        public async Task<IEnumerable<TableBatchResult>> UpsertBulkAsync<T>(IEnumerable<T> items, string tableName) where T : ITableEntity
+        public async Task<IEnumerable<TableBatchResult>> UpsertBulkAsync<T>(IEnumerable<T> items, string tableName, bool sendTelemetry = true) where T : ITableEntity
         {
             var methodName = $"{nameof(IAzureTableService<U>)}<{typeof(U).Name}>.{nameof(IAzureTableService<U>.UpsertBulkAsync)}<{typeof(T).Name}>";
 
@@ -625,7 +643,7 @@ namespace DickinsonBros.Infrastructure.AzureTables
             {
                 stopwatchService.Stop();
                 insertTelemetryRequest.Duration = stopwatchService.Elapsed;
-                insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.UnHandledException;
+                insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.UnhandledException;
 
                 _loggerService.LogErrorRedacted
                 (
@@ -642,7 +660,10 @@ namespace DickinsonBros.Infrastructure.AzureTables
             }
             finally
             {
-                _telemetryServiceWriter.Insert(insertTelemetryRequest);
+                if (sendTelemetry)
+                {
+                    _telemetryWriterService.Insert(insertTelemetryRequest);
+                }
             }
 
         }

@@ -17,8 +17,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DickinsonBros.Encryption.Certificate.Abstractions\DickinsonBros.Encryption.Certificate.Abstractions.csproj" />
-    <ProjectReference Include="..\DickinsonBros.Infrastructure.AzureTables.Abstractions\DickinsonBros.Infrastructure.AzureTables.Abstractions.csproj" />
-    <ProjectReference Include="..\DickinsonBros.Infrastructure.AzureTables\DickinsonBros.Infrastructure.AzureTables.csproj" />
+    <ProjectReference Include="..\DickinsonBros.Infrastructure.Cosmos.Abstractions\DickinsonBros.Infrastructure.Cosmos.Abstractions.csproj" />
+    <ProjectReference Include="..\DickinsonBros.Infrastructure.Cosmos\DickinsonBros.Infrastructure.Cosmos.csproj" />
   </ItemGroup>
 
   <Import Project="..\Packaging.targets" />

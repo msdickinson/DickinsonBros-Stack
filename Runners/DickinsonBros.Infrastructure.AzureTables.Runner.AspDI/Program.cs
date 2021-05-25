@@ -4,12 +4,14 @@ using DickinsonBros.Core.DateTime.Adapter.AspDI.Extensions;
 using DickinsonBros.Core.Logger.Adapter.AspDI.Extensions;
 using DickinsonBros.Core.Redactor.Adapter.AspDI.Extensions;
 using DickinsonBros.Core.Stopwatch.Adapter.AspDI.Extensions;
+using DickinsonBros.Core.Telemetry.Abstractions;
 using DickinsonBros.Encryption.Certificate.Abstractions.Models;
 using DickinsonBros.Encryption.Certificate.Adapter.AspDI.Extensions;
 using DickinsonBros.Infrastructure.AzureTables.Abstractions;
 using DickinsonBros.Infrastructure.AzureTables.AspDI.Extensions;
 using DickinsonBros.Infrastructure.AzureTables.Runner.AspDI.Config;
 using DickinsonBros.Infrastructure.AzureTables.Runner.AspDI.Models;
+using DickinsonBros.Sinks.Telemetry.Log.Abstractions;
 using DickinsonBros.Sinks.Telemetry.Log.AspDI.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -33,6 +35,8 @@ namespace DickinsonBros.Infrastructure.AzureTables.Runner.AspDI
 
                 using var provider = serviceCollection.BuildServiceProvider();
                 var azureTableService = provider.GetRequiredService<IAzureTableService<RunnerAzureTableServiceOptionsType>>();
+                var telemetryWriterService = provider.GetRequiredService<ITelemetryWriterService>();
+                var sinksTelemetryLogService = provider.GetRequiredService<ISinksTelemetryLogService>();
                 var hostApplicationLifetime = provider.GetService<IHostApplicationLifetime>();
 
                 var sampleEntity = GenerateNewSampleEntity();

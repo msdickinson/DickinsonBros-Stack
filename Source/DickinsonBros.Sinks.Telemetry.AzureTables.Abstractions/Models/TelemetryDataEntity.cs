@@ -1,5 +1,4 @@
-﻿using DickinsonBros.Core.Telemetry.Abstractions.Models;
-using Microsoft.Azure.Cosmos.Table;
+﻿using Microsoft.Azure.Cosmos.Table;
 using System;
 using System.Diagnostics.CodeAnalysis;
 

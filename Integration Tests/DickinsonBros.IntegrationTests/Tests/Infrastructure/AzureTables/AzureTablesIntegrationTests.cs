@@ -18,7 +18,7 @@ namespace DickinsonBros.IntegrationTests.Tests.Infrastructure.AzureTables
     [TestAPIAttribute(Name = "AzureTables", Group = "Infrastructure")]
     public class AzureTablesIntegrationTests : IAzureTablesIntegrationTests
     {
-        public IAzureTableService<RunnerAzureTableServiceOptionsType> _azureTableService;
+        public readonly IAzureTableService<RunnerAzureTableServiceOptionsType> _azureTableService;
 
         internal const string TABLE_NAME = "DickinsonBrosIntegrationTests";
 

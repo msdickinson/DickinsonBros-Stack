@@ -16,12 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
-<ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.AzureTables.Abstractions\DickinsonBros.Infrastructure.AzureTables.Abstractions.csproj" />
-<ProjectReference Include="..\..\Source\DickinsonBros.Test.Unit\DickinsonBros.Test.Unit.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Models\" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.Cosmos.AspDI\DickinsonBros.Infrastructure.Cosmos.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Test.Unit\DickinsonBros.Test.Unit.csproj" />
+    <ProjectReference Include="..\DickinsonBros.Infrastructure.AzureTables.AspDI.Tests\DickinsonBros.Infrastructure.AzureTables.AspDI.Tests.csproj" />
   </ItemGroup>
 
 </Project>

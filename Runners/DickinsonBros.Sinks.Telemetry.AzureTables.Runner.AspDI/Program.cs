@@ -71,7 +71,6 @@ namespace DickinsonBros.Sinks.Telemetry.AzureTables.Runner.AspDI
                 await sinksTelemetryAzureTablesService.FlushAsync().ConfigureAwait(false);
 
                 hostApplicationLifetime.StopApplication();
-
                 provider.ConfigureAwait(true);
                 await Task.CompletedTask;
             }

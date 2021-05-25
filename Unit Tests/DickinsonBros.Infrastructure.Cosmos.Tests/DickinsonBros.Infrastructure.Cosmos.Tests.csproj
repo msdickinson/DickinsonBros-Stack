@@ -16,11 +16,12 @@
   </ItemGroup>
 
   <ItemGroup>
-<ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.AzureTables.Abstractions\DickinsonBros.Infrastructure.AzureTables.Abstractions.csproj" />
-<ProjectReference Include="..\..\Source\DickinsonBros.Test.Unit\DickinsonBros.Test.Unit.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.Cosmos\DickinsonBros.Infrastructure.Cosmos.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Test.Unit\DickinsonBros.Test.Unit.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Models\" />
     <Folder Include="Models\" />
   </ItemGroup>
 

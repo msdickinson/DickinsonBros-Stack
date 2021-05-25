@@ -649,7 +649,7 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     Assert.AreEqual(uri.ToString(), insertTelemetryRequestObserved.ConnectionName);
                     Assert.AreEqual($"Delete {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.Request);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
-                    Assert.AreEqual(TelemetryResponseState.UnHandledException, insertTelemetryRequestObserved.TelemetryResponseState);
+                    Assert.AreEqual(TelemetryResponseState.UnhandledException, insertTelemetryRequestObserved.TelemetryResponseState);
 
                 },
                 serviceCollection => ConfigureServices(serviceCollection)
@@ -830,6 +830,96 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
 
                     Assert.AreEqual("http://services.odata.org/", insertTelemetryRequestObserved.ConnectionName);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            ).ConfigureAwait(false);
+        }
+
+        [TestMethod]
+        public async Task DeleteAsync_SendTelemetryIsFalse_TelemetryServiceWriterInsertIsNotCalled()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+
+                    //-- Input
+                    var sampleEntity = new SampleEntity
+                    {
+                        Data = "SampleData",
+                        ETag = "SampleETag",
+                        PartitionKey = "SamplePartitionKey",
+                        RowKey = "SampleRowKey"
+                    };
+
+                    //-- IDateTimeService
+                    var dateTime = new DateTime(2000, 1, 1);
+                    var dateTimeServiceMock = CreateDateTimeServiceMock(serviceProvider, dateTime);
+
+                    //-- IStopwatchService
+                    var stopwatchServiceMock = CreateStopWatchServiceMock(serviceProvider);
+
+                    //-- IStopwatchFactory
+                    var stopwatchFactoryMock = CreateStopWatchFactoryMock(serviceProvider, stopwatchServiceMock.Object);
+
+                    //-- Cloud Services 
+                    var tableName = "SampleTableName";
+                    var uri = new Uri("http://services.odata.org");
+
+                    var sampleEntityResult = new SampleEntity
+                    {
+                        Data = sampleEntity.Data,
+                        ETag = sampleEntity.ETag,
+                        PartitionKey = sampleEntity.PartitionKey,
+                        RowKey = sampleEntity.RowKey
+                    };
+
+                    var tableResult = new TableResult
+                    {
+                        Etag = sampleEntityResult.ETag,
+                        HttpStatusCode = 200,
+                        Result = sampleEntityResult
+                    };
+
+                    var (cloudTableClientMock, cloudTableMock) = SetupCloudClientServices(serviceProvider, uri, tableName, tableResult);
+
+                    //-- ILoggerService
+                    var loggerServiceMock = serviceProvider.GetMock<ILoggerService<Test>>();
+
+                    //-- ITelemetryServiceWriter
+                    var telemetryServiceWriterMock = serviceProvider.GetMock<ITelemetryWriterService>();
+                    var insertTelemetryRequestObserved = (InsertTelemetryItem)null;
+                    telemetryServiceWriterMock
+                    .Setup
+                    (
+                        telemetryServiceWriter => telemetryServiceWriter.Insert
+                        (
+                            It.IsAny<InsertTelemetryItem>()
+                        )
+                    )
+                    .Callback((InsertTelemetryItem insertTelemetryRequest) =>
+                    {
+                        insertTelemetryRequestObserved = insertTelemetryRequest;
+                    });
+
+                    //--uut
+                    var uut = serviceProvider.GetRequiredService<IAzureTableService<Test>>();
+                    var uutConcrete = (AzureTableService<Test>)uut;
+
+                    //Act
+                    var observed = await uutConcrete.DeleteAsync(sampleEntity, tableName, false).ConfigureAwait(false);
+
+                    //Assert
+                    telemetryServiceWriterMock
+                    .Verify
+                    (
+                        telemetryServiceWriter => telemetryServiceWriter.Insert
+                        (
+                            It.IsAny<InsertTelemetryItem>()
+                        ),
+                        Times.Never
+                    );
                 },
                 serviceCollection => ConfigureServices(serviceCollection)
             ).ConfigureAwait(false);
@@ -1620,6 +1710,104 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                 serviceCollection => ConfigureServices(serviceCollection)
             ).ConfigureAwait(false);
         }
+        
+        [TestMethod]
+        public async Task DeleteBulkAsync_SendTelemetryIsFalse_TelemetryServiceWriterInsertAsyncIsNotCalled()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+
+                    //-- Input
+                    var sampleEntity = new SampleEntity
+                    {
+                        Data = "SampleData",
+                        ETag = "SampleETag",
+                        PartitionKey = "SamplePartitionKey",
+                        RowKey = "SampleRowKey"
+                    };
+
+                    var sampleEntitys = new List<SampleEntity> { sampleEntity };
+
+                    //-- IDateTimeService
+                    var dateTime = new DateTime(2000, 1, 1);
+                    var dateTimeServiceMock = CreateDateTimeServiceMock(serviceProvider, dateTime);
+
+                    //-- IStopwatchService
+                    var stopwatchServiceMock = CreateStopWatchServiceMock(serviceProvider);
+
+                    //-- IStopwatchFactory
+                    var stopwatchFactoryMock = CreateStopWatchFactoryMock(serviceProvider, stopwatchServiceMock.Object);
+
+                    //-- Cloud Services 
+                    var tableName = "SampleTableName";
+                    var uri = new Uri("http://services.odata.org");
+
+                    var sampleEntityResult = new SampleEntity
+                    {
+                        Data = sampleEntity.Data,
+                        ETag = sampleEntity.ETag,
+                        PartitionKey = sampleEntity.PartitionKey,
+                        RowKey = sampleEntity.RowKey
+                    };
+
+                    var tableResult = new TableResult
+                    {
+                        Etag = sampleEntityResult.ETag,
+                        HttpStatusCode = 200,
+                        Result = sampleEntityResult
+                    };
+
+                    var tableBatchResult = new TableBatchResult
+                    {
+                        tableResult
+                    };
+
+                    var (cloudTableClientMock, cloudTableMock) = SetupCloudClientServices(serviceProvider, uri, tableName, tableBatchResult);
+
+                    //-- ILoggerService
+                    var loggerServiceMock = serviceProvider.GetMock<ILoggerService<Test>>();
+
+                    //-- ITelemetryServiceWriter
+                    var telemetryServiceWriterMock = serviceProvider.GetMock<ITelemetryWriterService>();
+                    var insertTelemetryRequestObserved = (InsertTelemetryItem)null;
+                    telemetryServiceWriterMock
+                    .Setup
+                    (
+                        telemetryServiceWriter => telemetryServiceWriter.Insert
+                        (
+                            It.IsAny<InsertTelemetryItem>()
+                        )
+                    )
+                    .Callback((InsertTelemetryItem insertTelemetryRequest) =>
+                    {
+                        insertTelemetryRequestObserved = insertTelemetryRequest;
+                    });
+
+                    //--uut
+                    var uut = serviceProvider.GetRequiredService<IAzureTableService<Test>>();
+                    var uutConcrete = (AzureTableService<Test>)uut;
+
+                    //Act
+                    var observed = await uutConcrete.DeleteBulkAsync(sampleEntitys, tableName, false).ConfigureAwait(false);
+
+                    //Assert
+                    telemetryServiceWriterMock
+                    .Verify
+                    (
+                        telemetryServiceWriter => telemetryServiceWriter.Insert
+                        (
+                            It.IsAny<InsertTelemetryItem>()
+                        ),
+                        Times.Never
+                    );
+
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            ).ConfigureAwait(false);
+        }
 
         [TestMethod]
         public async Task DeleteBulkAsync_Runs_TelemetryServiceWriterInsertAsyncCalled()
@@ -1916,7 +2104,7 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     Assert.AreEqual(uri.ToString(), insertTelemetryRequestObserved.ConnectionName);
                     Assert.AreEqual($"DeleteBulk {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.Request);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
-                    Assert.AreEqual(TelemetryResponseState.UnHandledException, insertTelemetryRequestObserved.TelemetryResponseState);
+                    Assert.AreEqual(TelemetryResponseState.UnhandledException, insertTelemetryRequestObserved.TelemetryResponseState);
 
                 },
                 serviceCollection => ConfigureServices(serviceCollection)
@@ -2545,7 +2733,7 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     Assert.AreEqual(uri.ToString(), insertTelemetryRequestObserved.ConnectionName);
                     Assert.AreEqual($"Insert {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.Request);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
-                    Assert.AreEqual(TelemetryResponseState.UnHandledException, insertTelemetryRequestObserved.TelemetryResponseState);
+                    Assert.AreEqual(TelemetryResponseState.UnhandledException, insertTelemetryRequestObserved.TelemetryResponseState);
 
                 },
                 serviceCollection => ConfigureServices(serviceCollection)
@@ -2832,6 +3020,96 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
 
                     Assert.AreEqual("http://services.odata.org/", insertTelemetryRequestObserved.ConnectionName);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            ).ConfigureAwait(false);
+        }
+        
+        [TestMethod]
+        public async Task InsertAsync_SendTelemetryIsFalse_TelemetryServiceWriterInsertAsyncIsNotCalled()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+
+                    //-- Input
+                    var sampleEntity = new SampleEntity
+                    {
+                        Data = "SampleData",
+                        ETag = "SampleETag",
+                        PartitionKey = "SamplePartitionKey",
+                        RowKey = "SampleRowKey"
+                    };
+
+                    //-- IDateTimeService
+                    var dateTime = new DateTime(2000, 1, 1);
+                    var dateTimeServiceMock = CreateDateTimeServiceMock(serviceProvider, dateTime);
+
+                    //-- IStopwatchService
+                    var stopwatchServiceMock = CreateStopWatchServiceMock(serviceProvider);
+
+                    //-- IStopwatchFactory
+                    var stopwatchFactoryMock = CreateStopWatchFactoryMock(serviceProvider, stopwatchServiceMock.Object);
+
+                    //-- Cloud Services 
+                    var tableName = "SampleTableName";
+                    var uri = new Uri("http://services.odata.org");
+
+                    var sampleEntityResult = new SampleEntity
+                    {
+                        Data = sampleEntity.Data,
+                        ETag = sampleEntity.ETag,
+                        PartitionKey = sampleEntity.PartitionKey,
+                        RowKey = sampleEntity.RowKey
+                    };
+
+                    var tableResult = new TableResult
+                    {
+                        Etag = sampleEntityResult.ETag,
+                        HttpStatusCode = 200,
+                        Result = sampleEntityResult
+                    };
+
+                    var (cloudTableClientMock, cloudTableMock) = SetupCloudClientServices(serviceProvider, uri, tableName, tableResult);
+
+                    //-- ILoggerService
+                    var loggerServiceMock = serviceProvider.GetMock<ILoggerService<Test>>();
+
+                    //-- ITelemetryServiceWriter
+                    var telemetryServiceWriterMock = serviceProvider.GetMock<ITelemetryWriterService>();
+                    var insertTelemetryRequestObserved = (InsertTelemetryItem)null;
+                    telemetryServiceWriterMock
+                    .Setup
+                    (
+                        telemetryServiceWriter => telemetryServiceWriter.Insert
+                        (
+                            It.IsAny<InsertTelemetryItem>()
+                        )
+                    )
+                    .Callback((InsertTelemetryItem insertTelemetryRequest) =>
+                    {
+                        insertTelemetryRequestObserved = insertTelemetryRequest;
+                    });
+
+                    //--uut
+                    var uut = serviceProvider.GetRequiredService<IAzureTableService<Test>>();
+                    var uutConcrete = (AzureTableService<Test>)uut;
+
+                    //Act
+                    var observed = await uutConcrete.InsertAsync(sampleEntity, tableName, false).ConfigureAwait(false);
+
+                    //Assert
+                    telemetryServiceWriterMock
+                    .Verify
+                    (
+                        telemetryServiceWriter => telemetryServiceWriter.Insert
+                        (
+                            It.IsAny<InsertTelemetryItem>()
+                        ),
+                        Times.Never
+                    );
                 },
                 serviceCollection => ConfigureServices(serviceCollection)
             ).ConfigureAwait(false);
@@ -4011,7 +4289,7 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     Assert.AreEqual(uri.ToString(), insertTelemetryRequestObserved.ConnectionName);
                     Assert.AreEqual($"InsertBulk {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.Request);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
-                    Assert.AreEqual(TelemetryResponseState.UnHandledException, insertTelemetryRequestObserved.TelemetryResponseState);
+                    Assert.AreEqual(TelemetryResponseState.UnhandledException, insertTelemetryRequestObserved.TelemetryResponseState);
 
                 },
                 serviceCollection => ConfigureServices(serviceCollection)
@@ -4599,7 +4877,7 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     Assert.AreEqual(uri.ToString(), insertTelemetryRequestObserved.ConnectionName);
                     Assert.AreEqual($"Fetch {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.Request);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
-                    Assert.AreEqual(TelemetryResponseState.UnHandledException, insertTelemetryRequestObserved.TelemetryResponseState);
+                    Assert.AreEqual(TelemetryResponseState.UnhandledException, insertTelemetryRequestObserved.TelemetryResponseState);
 
                 },
                 serviceCollection => ConfigureServices(serviceCollection)
@@ -4682,6 +4960,91 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     await Assert.ThrowsExceptionAsync<Exception>(async () => await uutConcrete.FetchAsync<SampleEntity>(partitionKey, rowkey, tableName).ConfigureAwait(false)).ConfigureAwait(false);
 
                     //Assert
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            ).ConfigureAwait(false);
+        }
+
+        [TestMethod]
+        public async Task FetchAsync_SendTelemetryIsFalse_TelemetryServiceWriterFetchAsyncIsNotCalled()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+
+                    //-- Input
+                    string partitionKey = "SamplePartitionKey";
+                    string rowkey = "SampleRowKey";
+                    string tableName = "SampleTableName";
+
+                    //-- IDateTimeService
+                    var dateTime = new DateTime(2000, 1, 1);
+                    var dateTimeServiceMock = CreateDateTimeServiceMock(serviceProvider, dateTime);
+
+                    //-- IStopwatchService
+                    var stopwatchServiceMock = CreateStopWatchServiceMock(serviceProvider);
+
+                    //-- IStopwatchFactory
+                    var stopwatchFactoryMock = CreateStopWatchFactoryMock(serviceProvider, stopwatchServiceMock.Object);
+
+                    //-- Cloud Services 
+                    var uri = new Uri("http://services.odata.org");
+
+                    var sampleEntityResult = new SampleEntity
+                    {
+                        Data = "SampleData",
+                        ETag = "SampleETag",
+                        PartitionKey = "SamplePartitionKey",
+                        RowKey = "SampleRowKey"
+                    };
+
+                    var tableResult = new TableResult
+                    {
+                        Etag = sampleEntityResult.ETag,
+                        HttpStatusCode = 200,
+                        Result = sampleEntityResult
+                    };
+
+                    var (cloudTableClientMock, cloudTableMock) = SetupCloudClientServices(serviceProvider, uri, tableName, tableResult);
+
+                    //-- ILoggerService
+                    var loggerServiceMock = serviceProvider.GetMock<ILoggerService<Test>>();
+
+                    //-- ITelemetryServiceWriter
+                    var telemetryServiceWriterMock = serviceProvider.GetMock<ITelemetryWriterService>();
+                    var insertTelemetryRequestObserved = (InsertTelemetryItem)null;
+                    telemetryServiceWriterMock
+                    .Setup
+                    (
+                        telemetryServiceWriter => telemetryServiceWriter.Insert
+                        (
+                            It.IsAny<InsertTelemetryItem>()
+                        )
+                    )
+                    .Callback((InsertTelemetryItem insertTelemetryRequest) =>
+                    {
+                        insertTelemetryRequestObserved = insertTelemetryRequest;
+                    });
+
+                    //--uut
+                    var uut = serviceProvider.GetRequiredService<IAzureTableService<Test>>();
+                    var uutConcrete = (AzureTableService<Test>)uut;
+
+                    //Act
+                    var observed = await uutConcrete.FetchAsync<SampleEntity>(partitionKey, rowkey, tableName, false).ConfigureAwait(false);
+
+                    //Assert
+                    telemetryServiceWriterMock
+                    .Verify
+                    (
+                        telemetryServiceWriter => telemetryServiceWriter.Insert
+                        (
+                            It.IsAny<InsertTelemetryItem>()
+                        ),
+                        Times.Never
+                    );
                 },
                 serviceCollection => ConfigureServices(serviceCollection)
             ).ConfigureAwait(false);
@@ -5442,7 +5805,7 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     Assert.AreEqual(uri.ToString(), insertTelemetryRequestObserved.ConnectionName);
                     Assert.AreEqual($"Query {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.Request);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
-                    Assert.AreEqual(TelemetryResponseState.UnHandledException, insertTelemetryRequestObserved.TelemetryResponseState);
+                    Assert.AreEqual(TelemetryResponseState.UnhandledException, insertTelemetryRequestObserved.TelemetryResponseState);
                 },
                 serviceCollection => ConfigureServices(serviceCollection)
             ).ConfigureAwait(false);
@@ -5510,6 +5873,79 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     await Assert.ThrowsExceptionAsync<Exception>(async () => await uutConcrete.QueryAsync(tableName, tableQuery).ConfigureAwait(false)).ConfigureAwait(false);
 
                     //Assert
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            ).ConfigureAwait(false);
+        }
+
+        [TestMethod]
+        public async Task QueryAsync_SendTelemetryIsFalse_TelemetryServiceWriterInsertAsyncIsNotCalled()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+
+                    //-- Input
+                    var tableQuery = new TableQuery<SampleEntity>();
+
+                    //-- IDateTimeService
+                    var dateTime = new DateTime(2000, 1, 1);
+                    var dateTimeServiceMock = CreateDateTimeServiceMock(serviceProvider, dateTime);
+
+                    //-- IStopwatchService
+                    var stopwatchServiceMock = CreateStopWatchServiceMock(serviceProvider);
+
+                    //-- IStopwatchFactory
+                    var stopwatchFactoryMock = CreateStopWatchFactoryMock(serviceProvider, stopwatchServiceMock.Object);
+
+                    //-- Cloud Services 
+                    var tableName = "SampleTableName";
+                    var uri = new Uri("http://services.odata.org");
+
+                    var createTableQuerySegmentMock = CreateTableQuerySegmentMock(true);
+                    var createTableQuerySegmentNullTokenMock = CreateTableQuerySegmentMock(false);
+                    var (cloudTableClientMock, cloudTableMock) = SetupCloudClientServices(serviceProvider, uri, tableName, tableQuery, createTableQuerySegmentMock, createTableQuerySegmentNullTokenMock);
+
+                    //-- ILoggerService
+                    var loggerServiceMock = serviceProvider.GetMock<ILoggerService<Test>>();
+
+                    //-- ITelemetryServiceWriter
+                    var telemetryServiceWriterMock = serviceProvider.GetMock<ITelemetryWriterService>();
+                    var insertTelemetryRequestObserved = (InsertTelemetryItem)null;
+                    telemetryServiceWriterMock
+                    .Setup
+                    (
+                        telemetryServiceWriter => telemetryServiceWriter.Insert
+                        (
+                            It.IsAny<InsertTelemetryItem>()
+                        )
+                    )
+                    .Callback((InsertTelemetryItem insertTelemetryRequest) =>
+                    {
+                        insertTelemetryRequestObserved = insertTelemetryRequest;
+                    });
+
+                    //--uut
+                    var uut = serviceProvider.GetRequiredService<IAzureTableService<Test>>();
+                    var uutConcrete = (AzureTableService<Test>)uut;
+
+                    //Act
+
+                    var observed = await uutConcrete.QueryAsync(tableName, tableQuery, false).ConfigureAwait(false);
+
+                    //Assert
+                    telemetryServiceWriterMock
+                    .Verify
+                    (
+                        telemetryServiceWriter => telemetryServiceWriter.Insert
+                        (
+                            It.IsAny<InsertTelemetryItem>()
+                        ),
+                        Times.Never
+                    );
+
                 },
                 serviceCollection => ConfigureServices(serviceCollection)
             ).ConfigureAwait(false);
@@ -5590,7 +6026,6 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
             ).ConfigureAwait(false);
         }
 
-        // public async Task InsertAsync_Runs_TelemetryServiceWriterInsertAsync()
 
         #endregion
 
@@ -6213,7 +6648,7 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     Assert.AreEqual(uri.ToString(), insertTelemetryRequestObserved.ConnectionName);
                     Assert.AreEqual($"Upsert {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.Request);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
-                    Assert.AreEqual(TelemetryResponseState.UnHandledException, insertTelemetryRequestObserved.TelemetryResponseState);
+                    Assert.AreEqual(TelemetryResponseState.UnhandledException, insertTelemetryRequestObserved.TelemetryResponseState);
 
                 },
                 serviceCollection => ConfigureServices(serviceCollection)
@@ -6394,6 +6829,96 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
 
                     Assert.AreEqual("http://services.odata.org/", insertTelemetryRequestObserved.ConnectionName);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            ).ConfigureAwait(false);
+        }
+
+        [TestMethod]
+        public async Task UpsertAsync_SendTelemetryIsFalse_TelemetryServiceWriterInsertAsyncIsNotCalled()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+
+                    //-- Input
+                    var sampleEntity = new SampleEntity
+                    {
+                        Data = "SampleData",
+                        ETag = "SampleETag",
+                        PartitionKey = "SamplePartitionKey",
+                        RowKey = "SampleRowKey"
+                    };
+
+                    //-- IDateTimeService
+                    var dateTime = new DateTime(2000, 1, 1);
+                    var dateTimeServiceMock = CreateDateTimeServiceMock(serviceProvider, dateTime);
+
+                    //-- IStopwatchService
+                    var stopwatchServiceMock = CreateStopWatchServiceMock(serviceProvider);
+
+                    //-- IStopwatchFactory
+                    var stopwatchFactoryMock = CreateStopWatchFactoryMock(serviceProvider, stopwatchServiceMock.Object);
+
+                    //-- Cloud Services 
+                    var tableName = "SampleTableName";
+                    var uri = new Uri("http://services.odata.org");
+
+                    var sampleEntityResult = new SampleEntity
+                    {
+                        Data = sampleEntity.Data,
+                        ETag = sampleEntity.ETag,
+                        PartitionKey = sampleEntity.PartitionKey,
+                        RowKey = sampleEntity.RowKey
+                    };
+
+                    var tableResult = new TableResult
+                    {
+                        Etag = sampleEntityResult.ETag,
+                        HttpStatusCode = 200,
+                        Result = sampleEntityResult
+                    };
+
+                    var (cloudTableClientMock, cloudTableMock) = SetupCloudClientServices(serviceProvider, uri, tableName, tableResult);
+
+                    //-- ILoggerService
+                    var loggerServiceMock = serviceProvider.GetMock<ILoggerService<Test>>();
+
+                    //-- ITelemetryServiceWriter
+                    var telemetryServiceWriterMock = serviceProvider.GetMock<ITelemetryWriterService>();
+                    var insertTelemetryRequestObserved = (InsertTelemetryItem)null;
+                    telemetryServiceWriterMock
+                    .Setup
+                    (
+                        telemetryServiceWriter => telemetryServiceWriter.Insert
+                        (
+                            It.IsAny<InsertTelemetryItem>()
+                        )
+                    )
+                    .Callback((InsertTelemetryItem insertTelemetryRequest) =>
+                    {
+                        insertTelemetryRequestObserved = insertTelemetryRequest;
+                    });
+
+                    //--uut
+                    var uut = serviceProvider.GetRequiredService<IAzureTableService<Test>>();
+                    var uutConcrete = (AzureTableService<Test>)uut;
+
+                    //Act
+                    var observed = await uutConcrete.UpsertAsync(sampleEntity, tableName, false).ConfigureAwait(false);
+
+                    //Assert
+                    telemetryServiceWriterMock
+                    .Verify
+                    (
+                        telemetryServiceWriter => telemetryServiceWriter.Insert
+                        (
+                            It.IsAny<InsertTelemetryItem>()
+                        ),
+                        Times.Never
+                    );
                 },
                 serviceCollection => ConfigureServices(serviceCollection)
             ).ConfigureAwait(false);
@@ -7287,6 +7812,103 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
         }
 
         [TestMethod]
+        public async Task UpsertBulkAsync_SendTelemetryIsFalse_TelemetryServiceWriterInsertAsyncIsNotCalled()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+
+                    //-- Input
+                    var sampleEntity = new SampleEntity
+                    {
+                        Data = "SampleData",
+                        ETag = "SampleETag",
+                        PartitionKey = "SamplePartitionKey",
+                        RowKey = "SampleRowKey"
+                    };
+
+                    var sampleEntitys = new List<SampleEntity> { sampleEntity };
+
+                    //-- IDateTimeService
+                    var dateTime = new DateTime(2000, 1, 1);
+                    var dateTimeServiceMock = CreateDateTimeServiceMock(serviceProvider, dateTime);
+
+                    //-- IStopwatchService
+                    var stopwatchServiceMock = CreateStopWatchServiceMock(serviceProvider);
+
+                    //-- IStopwatchFactory
+                    var stopwatchFactoryMock = CreateStopWatchFactoryMock(serviceProvider, stopwatchServiceMock.Object);
+
+                    //-- Cloud Services 
+                    var tableName = "SampleTableName";
+                    var uri = new Uri("http://services.odata.org");
+
+                    var sampleEntityResult = new SampleEntity
+                    {
+                        Data = sampleEntity.Data,
+                        ETag = sampleEntity.ETag,
+                        PartitionKey = sampleEntity.PartitionKey,
+                        RowKey = sampleEntity.RowKey
+                    };
+
+                    var tableResult = new TableResult
+                    {
+                        Etag = sampleEntityResult.ETag,
+                        HttpStatusCode = 200,
+                        Result = sampleEntityResult
+                    };
+
+                    var tableBatchResult = new TableBatchResult
+                    {
+                        tableResult
+                    };
+
+                    var (cloudTableClientMock, cloudTableMock) = SetupCloudClientServices(serviceProvider, uri, tableName, tableBatchResult);
+
+                    //-- ILoggerService
+                    var loggerServiceMock = serviceProvider.GetMock<ILoggerService<Test>>();
+
+                    //-- ITelemetryServiceWriter
+                    var telemetryServiceWriterMock = serviceProvider.GetMock<ITelemetryWriterService>();
+                    var insertTelemetryRequestObserved = (InsertTelemetryItem)null;
+                    telemetryServiceWriterMock
+                    .Setup
+                    (
+                        telemetryServiceWriter => telemetryServiceWriter.Insert
+                        (
+                            It.IsAny<InsertTelemetryItem>()
+                        )
+                    )
+                    .Callback((InsertTelemetryItem insertTelemetryRequest) =>
+                    {
+                        insertTelemetryRequestObserved = insertTelemetryRequest;
+                    });
+
+                    //--uut
+                    var uut = serviceProvider.GetRequiredService<IAzureTableService<Test>>();
+                    var uutConcrete = (AzureTableService<Test>)uut;
+
+                    //Act
+                    var observed = await uutConcrete.UpsertBulkAsync(sampleEntitys, tableName, false).ConfigureAwait(false);
+
+                    //Assert
+                    telemetryServiceWriterMock
+                    .Verify
+                    (
+                        telemetryServiceWriter => telemetryServiceWriter.Insert
+                        (
+                            It.IsAny<InsertTelemetryItem>()
+                        ),
+                        Times.Never
+                    );
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            ).ConfigureAwait(false);
+        }
+
+        [TestMethod]
         public async Task UpsertBulkAsync_Throws_ThrowsException()
         {
             await RunDependencyInjectedTestAsync
@@ -7480,7 +8102,7 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
                     Assert.AreEqual(uri.ToString(), insertTelemetryRequestObserved.ConnectionName);
                     Assert.AreEqual($"UpsertBulk {typeof(SampleEntity).Name}. Tablename: {tableName}", insertTelemetryRequestObserved.Request);
                     Assert.AreEqual(TelemetryType.AzureTable, insertTelemetryRequestObserved.TelemetryType);
-                    Assert.AreEqual(TelemetryResponseState.UnHandledException, insertTelemetryRequestObserved.TelemetryResponseState);
+                    Assert.AreEqual(TelemetryResponseState.UnhandledException, insertTelemetryRequestObserved.TelemetryResponseState);
 
                 },
                 serviceCollection => ConfigureServices(serviceCollection)
