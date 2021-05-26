@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace DickinsonBros.Infrastructure.Cosmos.Models
+namespace DickinsonBros.Infrastructure.Cosmos.Abstractions.Models
 {
     [ExcludeFromCodeCoverage]
     public class CosmosEntity

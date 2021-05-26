@@ -34,12 +34,12 @@ namespace DickinsonBros.IntegrationTests.Tests.Infrastructure.Cosmos
         {
             var sampleEntity = GenerateNewSampleModel();
 
-            var insertAsyncResult = await _cosmosService.InsertAsync(sampleEntity, KEY).ConfigureAwait(false);
+            var insertAsyncResult = await _cosmosService.InsertAsync(sampleEntity).ConfigureAwait(false);
             Assert.AreEqual(HttpStatusCode.Created, insertAsyncResult.StatusCode, "Insert Failed");
             successLog.Add($"Insert Successful. Id: {sampleEntity.Id}");
 
             insertAsyncResult.Resource.SampleData = "Changed Value";
-            var upsertAsyncResult = await _cosmosService.UpsertAsync(insertAsyncResult.Resource, KEY, insertAsyncResult.Resource._etag).ConfigureAwait(false);
+            var upsertAsyncResult = await _cosmosService.UpsertAsync(insertAsyncResult.Resource).ConfigureAwait(false);
             Assert.AreEqual(HttpStatusCode.Created, insertAsyncResult.StatusCode, "Upsert Failed");
             successLog.Add($"Upsert Successful. Id: {upsertAsyncResult.Resource.Id}");
 
@@ -55,16 +55,16 @@ namespace DickinsonBros.IntegrationTests.Tests.Infrastructure.Cosmos
 
         public async Task InsertBulkAndQueryAndDeleteBulk_Runs_ValuesMatch(List<string> successLog)
         {
-            //Bulk Insert
+            //Insert Bulk 
             var sampleModelValues = new List<SampleModel>();
             for (var i = 0; i < 3; i++)
             {
                 sampleModelValues.Add(GenerateNewSampleModel("BULK"));
             }
 
-            var bulkInsertResult = await _cosmosService.InsertBulkAsync(sampleModelValues, KEY).ConfigureAwait(false);
-            Assert.IsTrue(bulkInsertResult.All(e=> e.StatusCode == HttpStatusCode.Created), "Bulk Insert Failed");
-            successLog.Add($"Bulk Insert Successful");
+            var bulkInsertResult = await _cosmosService.InsertBulkAsync(sampleModelValues).ConfigureAwait(false);
+            Assert.IsTrue(bulkInsertResult.All(e=> e.StatusCode == HttpStatusCode.Created), "Insert Bulk Failed");
+            successLog.Add($"Insert Bulk Successful");
 
             //Query
             var queryResult = await _cosmosService.QueryAsync<SampleModel>
@@ -79,9 +79,15 @@ namespace DickinsonBros.IntegrationTests.Tests.Infrastructure.Cosmos
             Assert.AreEqual(3, queryResult.Count(), "Query Failed");
             successLog.Add($"Query Successful");
 
-            //Bulk Delete
-            var deleteBulkResult = await _cosmosService.DeleteBulkAsync<SampleModel>(queryResult.Select(e => e.Id), KEY).ConfigureAwait(false);
-            Assert.IsTrue(deleteBulkResult.All(e => e.StatusCode == HttpStatusCode.NoContent), "Delete Insert Failed");
+            //Upsert Bulk
+            queryResult.ToList().ForEach(sampleModel => sampleModel.SampleData += " Edited");
+            var upsertBulkResult = await _cosmosService.UpsertBulkAsync(queryResult).ConfigureAwait(false);
+            Assert.IsTrue(upsertBulkResult.All(e => e.StatusCode == HttpStatusCode.OK), "Upsert Bulk Failed");
+            successLog.Add($"Upsert Bulk Successful");
+
+            //Delete Bulk 
+            var deleteBulkResult = await _cosmosService.DeleteBulkAsync<SampleModel>(queryResult).ConfigureAwait(false);
+            Assert.IsTrue(deleteBulkResult.All(e => e.StatusCode == HttpStatusCode.NoContent), "Delete Bulk Failed");
             successLog.Add($"Delete Bulk Successful");
         }
 

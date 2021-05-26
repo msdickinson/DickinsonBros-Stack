@@ -57,21 +57,19 @@ namespace DickinsonBros.Infrastructure.AzureTables.Runner.AspDI
                     sampleModelValues.Add(GenerateNewSampleModel());
                 }
 
-                var insertResult2 = await cosmosService.InsertAsync(sampleModelValue2, KEY).ConfigureAwait(false);
-
 
                 //Insert
-                var insertResult = await cosmosService.InsertAsync(sampleModelValue, KEY).ConfigureAwait(false);
+                var insertResult = await cosmosService.InsertAsync(sampleModelValue).ConfigureAwait(false);
 
                 //Upsert
                 insertResult.Resource.SampleData = "NewDATA";
-                var resultTwo = await cosmosService.UpsertAsync(insertResult.Resource, KEY, insertResult.Resource._etag).ConfigureAwait(false);
+                var resultTwo = await cosmosService.UpsertAsync(insertResult.Resource).ConfigureAwait(false);
 
                 //Delete
                 var deleteResult = await cosmosService.DeleteAsync<SampleModel>(insertResult.Resource.Id, insertResult.Resource.Key).ConfigureAwait(false);
 
-                //Bulk Insert
-                var bulkInsertResult = await cosmosService.InsertBulkAsync(sampleModelValues, KEY).ConfigureAwait(false);
+                //Insert Bulk 
+                var bulkInsertResult = await cosmosService.InsertBulkAsync(sampleModelValues).ConfigureAwait(false);
 
                 //Query
                 var queryResult = await cosmosService.QueryAsync<SampleModel>
@@ -84,8 +82,12 @@ namespace DickinsonBros.Infrastructure.AzureTables.Runner.AspDI
                                        }
                                    ).ConfigureAwait(false);
 
-                //Bulk Delete
-                await cosmosService.DeleteBulkAsync<SampleModel>(queryResult.Select(e=> e.Id), KEY).ConfigureAwait(false);
+                //Upsert Bulk
+                queryResult.ToList().ForEach(sampleModel => sampleModel.SampleData += " Edited");
+                var upsertBulkResult = await cosmosService.UpsertBulkAsync(queryResult).ConfigureAwait(false);
+
+                //Delete Bulk 
+                var deleteBulkResult = await cosmosService.DeleteBulkAsync<SampleModel>(queryResult).ConfigureAwait(false);
 
                 hostApplicationLifetime.StopApplication();
                 provider.ConfigureAwait(true);

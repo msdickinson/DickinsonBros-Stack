@@ -66,13 +66,12 @@ namespace DickinsonBros.IntegrationTests
             var sinksTelemetryLogService = provider.GetRequiredService<ISinksTelemetryLogService>();
 
             var integrationTestService = provider.GetRequiredService<IIntegrationTestService>();
-
+            var testlog = (string)null;
             try
             {
-                var tests               = integrationTestService.FetchTests();
+                var tests               = integrationTestService.FetchTestsByName("Cosmos");
                 var testSummary         = await integrationTestService.RunTests(tests).ConfigureAwait(false);
-                var testlog             = integrationTestService.GenerateLog(testSummary, false);
-                Console.WriteLine(testlog);
+                testlog                 = integrationTestService.GenerateLog(testSummary, false);
 
                 await Task.CompletedTask.ConfigureAwait(false);
             }
@@ -86,8 +85,10 @@ namespace DickinsonBros.IntegrationTests
 
 
                 await FlushAzureTablesCleanUpAsync(provider).ConfigureAwait(false);
-                await Task.Delay(3000).ConfigureAwait(false);
+                await Task.Delay(1000).ConfigureAwait(false);
                 await AzureTablesCleanUpAsync(provider).ConfigureAwait(false);
+                await Task.Delay(1000).ConfigureAwait(false);
+                Console.WriteLine(testlog);
             }
         }
         private async Task FlushAzureTablesCleanUpAsync(ServiceProvider provider)
@@ -122,7 +123,7 @@ namespace DickinsonBros.IntegrationTests
                                    ).ConfigureAwait(false);
 
             //Bulk Delete
-            await cosmosService.DeleteBulkAsync<SampleModel>(queryResult.Select(e => e.Id), COSMOS_KEY).ConfigureAwait(false);
+            await cosmosService.DeleteBulkAsync<SampleModel>(queryResult).ConfigureAwait(false);
 
         }
 

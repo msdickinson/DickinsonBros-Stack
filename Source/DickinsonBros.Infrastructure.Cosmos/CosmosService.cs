@@ -50,7 +50,7 @@ namespace DickinsonBros.Infrastructure.Cosmos
             _logger = logger;
         }
 
-        public async Task<IEnumerable<T>> QueryAsync<T>(QueryDefinition queryDefinition, QueryRequestOptions queryRequestOptions)
+        public async Task<IEnumerable<T>> QueryAsync<T>(QueryDefinition queryDefinition, QueryRequestOptions queryRequestOptions) where T : CosmosEntity
         {
             var methodIdentifier = $"{nameof(ICosmosService<U>)}<{typeof(U).Name}>.{nameof(ICosmosService<U>.QueryAsync)}<{typeof(T).Name}>";
 
@@ -127,7 +127,7 @@ namespace DickinsonBros.Infrastructure.Cosmos
             }
         }
 
-        public async Task<ItemResponse<T>> FetchAsync<T>(string id, string key)
+        public async Task<ItemResponse<T>> FetchAsync<T>(string id, string key) where T : CosmosEntity
         {
             var methodIdentifier = $"{nameof(ICosmosService<U>)}<{typeof(U).Name}>.{nameof(ICosmosService<U>.FetchAsync)}<{typeof(T).Name}>";
 
@@ -145,7 +145,7 @@ namespace DickinsonBros.Infrastructure.Cosmos
 
             try
             {
-                var result = await _cosmosContainer.ReadItemAsync<T>(id, new PartitionKey(key)).ConfigureAwait(false);
+                var response = await _cosmosContainer.ReadItemAsync<T>(id, new PartitionKey(key)).ConfigureAwait(false);
                 stopwatchService.Stop();
 
                 insertTelemetryRequest.Duration = stopwatchService.Elapsed;
@@ -153,18 +153,19 @@ namespace DickinsonBros.Infrastructure.Cosmos
 
                 _logger.LogInformationRedacted
                 (
-                    $"{methodIdentifier}<{ nameof(T)}>",
+                    methodIdentifier,
                     LogGroup.Infrastructure,
                     new Dictionary<string, object>
                     {
                         { nameof(id), id },
                         { nameof(key), key },
-                        { nameof(result), result },
-                        { nameof(insertTelemetryRequest.Duration), insertTelemetryRequest.Duration }
+                        { nameof(response), response },
+                        { nameof(insertTelemetryRequest.Duration), insertTelemetryRequest.Duration },
+                        { nameof(insertTelemetryRequest.TelemetryResponseState), insertTelemetryRequest.TelemetryResponseState }
                     }
                 );
 
-                return result;
+                return response;
             }
             catch (CosmosException cosmosException) when (cosmosException.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
@@ -174,13 +175,14 @@ namespace DickinsonBros.Infrastructure.Cosmos
 
                 _logger.LogInformationRedacted
                 (
-                    $"{methodIdentifier}<{nameof(T)}> NotFound",
+                    $"{methodIdentifier} NotFound",
                     LogGroup.Infrastructure,
                     new Dictionary<string, object>
                     {
                         { nameof(id), id },
                         { nameof(key), key },
-                        { nameof(insertTelemetryRequest.Duration), insertTelemetryRequest.Duration }
+                        { nameof(insertTelemetryRequest.Duration), insertTelemetryRequest.Duration },
+                        { nameof(insertTelemetryRequest.TelemetryResponseState), insertTelemetryRequest.TelemetryResponseState }
                     }
                 );
 
@@ -194,14 +196,15 @@ namespace DickinsonBros.Infrastructure.Cosmos
 
                 _logger.LogErrorRedacted
                 (
-                    $"Unhandled exception {methodIdentifier}<{nameof(T)}>",
+                    methodIdentifier,
                     LogGroup.Infrastructure,
                     exception,
                     new Dictionary<string, object>
                     {
                         { nameof(id), id },
                         { nameof(key), key },
-                        { nameof(insertTelemetryRequest.Duration), insertTelemetryRequest.Duration }
+                        { nameof(insertTelemetryRequest.Duration), insertTelemetryRequest.Duration },
+                        { nameof(insertTelemetryRequest.TelemetryResponseState), insertTelemetryRequest.TelemetryResponseState }
                     }
                 );
 
@@ -212,8 +215,8 @@ namespace DickinsonBros.Infrastructure.Cosmos
                 _telemetryWriterService.Insert(insertTelemetryRequest);
             }
         }
-
-        public async Task<ItemResponse<T>> InsertAsync<T>(T value, string key)
+      
+        public async Task<ItemResponse<T>> InsertAsync<T>(T value) where T : CosmosEntity
         {
             var methodIdentifier = $"{nameof(ICosmosService<U>)}<{typeof(U).Name}>.{nameof(ICosmosService<U>.InsertAsync)}<{typeof(T).Name}>";
 
@@ -231,7 +234,7 @@ namespace DickinsonBros.Infrastructure.Cosmos
 
             try
             {
-                var itemResponse = await _cosmosContainer.CreateItemAsync<T>(value, new PartitionKey(key)).ConfigureAwait(false);
+                var response = await _cosmosContainer.CreateItemAsync<T>(value, new PartitionKey(value.Key)).ConfigureAwait(false);
                 stopwatchService.Stop();
 
                 insertTelemetryRequest.Duration = stopwatchService.Elapsed;
@@ -239,17 +242,19 @@ namespace DickinsonBros.Infrastructure.Cosmos
 
                 _logger.LogInformationRedacted
                 (
-                    $"{methodIdentifier}<{nameof(T)}>",
+                    methodIdentifier,
                     LogGroup.Infrastructure,
                     new Dictionary<string, object>
                     {
-                        { nameof(key), key },
+                        { nameof(value.Key), value.Key },
                         { nameof(value), value },
-                        { nameof(insertTelemetryRequest.Duration), insertTelemetryRequest.Duration }
+                        { nameof(response), response },
+                        { nameof(insertTelemetryRequest.Duration), insertTelemetryRequest.Duration },
+                        { nameof(insertTelemetryRequest.TelemetryResponseState), insertTelemetryRequest.TelemetryResponseState }
                     }
                 );
 
-                return itemResponse;
+                return response;
             }
             catch (Exception exception)
             {
@@ -259,14 +264,14 @@ namespace DickinsonBros.Infrastructure.Cosmos
 
                 _logger.LogErrorRedacted
                 (
-                    $"Unhandled exception {methodIdentifier}<{nameof(T)}>",
+                    methodIdentifier,
                     LogGroup.Infrastructure,
                     exception,
                     new Dictionary<string, object>
                     {
-                        { nameof(key), key },
                         { nameof(value), value },
-                        { nameof(insertTelemetryRequest.Duration), insertTelemetryRequest.Duration }
+                        { nameof(insertTelemetryRequest.Duration), insertTelemetryRequest.Duration },
+                        { nameof(insertTelemetryRequest.TelemetryResponseState), insertTelemetryRequest.TelemetryResponseState }
                     }
                 );
 
@@ -278,7 +283,7 @@ namespace DickinsonBros.Infrastructure.Cosmos
             }
         }
 
-        public async Task<IEnumerable<ResponseMessage>> InsertBulkAsync<T>(IEnumerable<T> items, string key)
+        public async Task<IEnumerable<ResponseMessage>> InsertBulkAsync<T>(IEnumerable<T> items) where T : CosmosEntity
         {
             var methodIdentifier = $"{nameof(ICosmosService<U>)}<{typeof(U).Name}>.{nameof(ICosmosService<U>.InsertBulkAsync)}<{typeof(T).Name}>";
 
@@ -286,7 +291,7 @@ namespace DickinsonBros.Infrastructure.Cosmos
             {
                 ConnectionName = _cosmosClient.Endpoint.ToString(),
                 DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
-                Request = $"BulkInsert {typeof(T).Name}",
+                Request = $"InsertBulk {typeof(T).Name}",
                 TelemetryType = TelemetryType.Cosmos,
                 CorrelationId = _correlationService.CorrelationId
             };
@@ -304,8 +309,8 @@ namespace DickinsonBros.Infrastructure.Cosmos
                 {
                     MemoryStream stream = new MemoryStream();
                     await JsonSerializer.SerializeAsync(stream, item, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }).ConfigureAwait(false);
-                    var partitionKey = new PartitionKey(key);
-                    tasks.Add(_cosmosContainer.CreateItemStreamAsync(stream, new PartitionKey(key))
+                    var partitionKey = new PartitionKey(item.Key);
+                    tasks.Add(_cosmosContainer.CreateItemStreamAsync(stream, new PartitionKey(item.Key))
                       .ContinueWith((Task<ResponseMessage> task) =>
                       {
                           using (ResponseMessage response = task.Result)
@@ -315,13 +320,12 @@ namespace DickinsonBros.Infrastructure.Cosmos
                               {
                                   _logger.LogErrorRedacted
                                   (
-                                      $"Received {methodIdentifier}",
+                                      $"{methodIdentifier} Item Response",
                                       LogGroup.Infrastructure,
                                       null,
                                       new Dictionary<string, object>
                                       {
                                             { nameof(item), item },
-                                            { nameof(partitionKey), partitionKey },
                                             { nameof(response.StatusCode), response.StatusCode },
                                             { nameof(response.ErrorMessage), response.ErrorMessage }
                                       }
@@ -340,13 +344,13 @@ namespace DickinsonBros.Infrastructure.Cosmos
 
                 _logger.LogInformationRedacted
                 (
-                    $"{methodIdentifier}<{nameof(T)}>",
+                    methodIdentifier,
                     LogGroup.Infrastructure,
                     new Dictionary<string, object>
                     {
-                        { nameof(key), key },
                         { nameof(items), items },
-                        { nameof(insertTelemetryRequest.Duration), insertTelemetryRequest.Duration }
+                        { nameof(insertTelemetryRequest.Duration), insertTelemetryRequest.Duration },
+                        { nameof(insertTelemetryRequest.TelemetryResponseState), insertTelemetryRequest.TelemetryResponseState }
                     }
                 );
 
@@ -360,14 +364,14 @@ namespace DickinsonBros.Infrastructure.Cosmos
 
                 _logger.LogErrorRedacted
                 (
-                    $"Unhandled exception { methodIdentifier}<{nameof(T)}>",
+                    methodIdentifier,
                     LogGroup.Infrastructure,
                     exception,
                     new Dictionary<string, object>
                     {
-                        { nameof(key), key },
                         { nameof(items), items },
-                        { nameof(insertTelemetryRequest.Duration), insertTelemetryRequest.Duration }
+                        { nameof(insertTelemetryRequest.Duration), insertTelemetryRequest.Duration },
+                        { nameof(insertTelemetryRequest.TelemetryResponseState), insertTelemetryRequest.TelemetryResponseState }
                     }
                 );
 
@@ -379,7 +383,7 @@ namespace DickinsonBros.Infrastructure.Cosmos
             }
         }
 
-        public async Task<ItemResponse<T>> UpsertAsync<T>(T value, string key, string eTag)
+        public async Task<ItemResponse<T>> UpsertAsync<T>(T value) where T : CosmosEntity
         {
             var methodIdentifier = $"{nameof(ICosmosService<U>)}<{typeof(U).Name}>.{nameof(ICosmosService<U>.UpsertAsync)}<{typeof(T).Name}>";
 
@@ -397,7 +401,7 @@ namespace DickinsonBros.Infrastructure.Cosmos
 
             try
             {
-                var itemResponse = await _cosmosContainer.UpsertItemAsync<T>(value, new PartitionKey(key), new ItemRequestOptions { IfMatchEtag = eTag }).ConfigureAwait(false);
+                var response = await _cosmosContainer.UpsertItemAsync<T>(value, new PartitionKey(value.Key), new ItemRequestOptions { IfMatchEtag = value._etag }).ConfigureAwait(false);
                 stopwatchService.Stop();
 
                 insertTelemetryRequest.Duration = stopwatchService.Elapsed;
@@ -405,32 +409,33 @@ namespace DickinsonBros.Infrastructure.Cosmos
 
                 _logger.LogInformationRedacted
                 (
-                    $"{methodIdentifier}<{nameof(T)}>",
+                    methodIdentifier,
                     LogGroup.Infrastructure,
                     new Dictionary<string, object>
                     {
-                        { nameof(key), key },
                         { nameof(value), value },
-                        { nameof(insertTelemetryRequest.Duration), insertTelemetryRequest.Duration }
+                        { nameof(response), response },
+                        { nameof(insertTelemetryRequest.Duration), insertTelemetryRequest.Duration },
+                        { nameof(insertTelemetryRequest.TelemetryResponseState), insertTelemetryRequest.TelemetryResponseState }
                     }
                 );
 
-                return itemResponse;
+                return response;
             }
             catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.PreconditionFailed)
             {
                 stopwatchService.Stop();
                 insertTelemetryRequest.Duration = stopwatchService.Elapsed;
-                insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.CallerError;
+                insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.Conflict;
                 _logger.LogInformationRedacted
                 (
-                    $"PreconditionFailed {methodIdentifier}<{nameof(T)}>",
+                    $"{methodIdentifier} PreconditionFailed",
                     LogGroup.Infrastructure,
                     new Dictionary<string, object>
                     {
-                        { nameof(key), key },
                         { nameof(value), value },
-                        { nameof(insertTelemetryRequest.Duration), insertTelemetryRequest.Duration }
+                        { nameof(insertTelemetryRequest.Duration), insertTelemetryRequest.Duration },
+                        { nameof(insertTelemetryRequest.TelemetryResponseState), insertTelemetryRequest.TelemetryResponseState }
                     }
                 );
 
@@ -444,14 +449,14 @@ namespace DickinsonBros.Infrastructure.Cosmos
 
                 _logger.LogErrorRedacted
                 (
-                    $"Unhandled exception {methodIdentifier}<{nameof(T)}>",
+                    methodIdentifier,
                     LogGroup.Infrastructure,
                     exception,
                     new Dictionary<string, object>
                     {
-                        { nameof(key), key },
                         { nameof(value), value },
-                        { nameof(insertTelemetryRequest.Duration), insertTelemetryRequest.Duration }
+                        { nameof(insertTelemetryRequest.Duration), insertTelemetryRequest.Duration },
+                        { nameof(insertTelemetryRequest.TelemetryResponseState), insertTelemetryRequest.TelemetryResponseState }
                     }
                 );
 
@@ -464,7 +469,104 @@ namespace DickinsonBros.Infrastructure.Cosmos
 
         }
 
-        public async Task<ItemResponse<T>> DeleteAsync<T>(string id, string key)
+        public async Task<IEnumerable<ResponseMessage>> UpsertBulkAsync<T>(IEnumerable<T> items) where T : CosmosEntity
+        {
+            var methodIdentifier = $"{nameof(ICosmosService<U>)}<{typeof(U).Name}>.{nameof(ICosmosService<U>.UpsertBulkAsync)}<{typeof(T).Name}>";
+
+            var insertTelemetryRequest = new InsertTelemetryItem
+            {
+                ConnectionName = _cosmosClient.Endpoint.ToString(),
+                DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
+                Request = $"UpsertBulk {typeof(T).Name}",
+                TelemetryType = TelemetryType.Cosmos,
+                CorrelationId = _correlationService.CorrelationId
+            };
+
+            var stopwatchService = _stopwatchFactory.NewStopwatchService();
+            stopwatchService.Start();
+
+            try
+            {
+                var responseMessages = new List<ResponseMessage>();
+                Dictionary<PartitionKey, Stream> itemsToInsert = new Dictionary<PartitionKey, Stream>();
+                List<Task> tasks = new List<Task>();
+                foreach (T item in items)
+                {
+                    MemoryStream stream = new MemoryStream();
+                    await JsonSerializer.SerializeAsync(stream, item, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }).ConfigureAwait(false);
+                    tasks.Add(_cosmosContainer.UpsertItemStreamAsync(stream, new PartitionKey(item.Key), new ItemRequestOptions { IfMatchEtag = item._etag })
+                      .ContinueWith((Task<ResponseMessage> task) =>
+                      {
+                          using (ResponseMessage response = task.Result)
+                          {
+                              responseMessages.Add(response);
+                              if (!response.IsSuccessStatusCode)
+                              {
+                                  _logger.LogErrorRedacted
+                                  (
+                                      $"{methodIdentifier} Item Response",
+                                      LogGroup.Infrastructure,
+                                      null,
+                                      new Dictionary<string, object>
+                                      {
+                                            { nameof(item), item },
+                                            { nameof(response.StatusCode), response.StatusCode },
+                                            { nameof(response.ErrorMessage), response.ErrorMessage }
+                                      }
+                                  );
+                              }
+                          }
+                      }));
+                }
+
+                await Task.WhenAll(tasks).ConfigureAwait(false);
+
+                stopwatchService.Stop();
+                insertTelemetryRequest.Duration = stopwatchService.Elapsed;
+                insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.Successful;
+
+                _logger.LogInformationRedacted
+                (
+                    methodIdentifier,
+                    LogGroup.Infrastructure,
+                    new Dictionary<string, object>
+                    {
+                        { nameof(items), items },
+                        { nameof(insertTelemetryRequest.Duration), insertTelemetryRequest.Duration },
+                        { nameof(insertTelemetryRequest.TelemetryResponseState), insertTelemetryRequest.TelemetryResponseState }
+                    }
+                );
+
+                return responseMessages;
+            }
+            catch (Exception exception)
+            {
+                stopwatchService.Stop();
+                insertTelemetryRequest.Duration = stopwatchService.Elapsed;
+                insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.UnhandledException;
+
+                _logger.LogErrorRedacted
+                (
+                    methodIdentifier,
+                    LogGroup.Infrastructure,
+                    exception,
+                    new Dictionary<string, object>
+                    {
+                        { nameof(items), items },
+                        { nameof(insertTelemetryRequest.Duration), insertTelemetryRequest.Duration },
+                        { nameof(insertTelemetryRequest.TelemetryResponseState), insertTelemetryRequest.TelemetryResponseState }
+                    }
+                );
+
+                throw;
+            }
+            finally
+            {
+                _telemetryWriterService.Insert(insertTelemetryRequest);
+            }
+        }
+
+        public async Task<ItemResponse<T>> DeleteAsync<T>(string id, string key) where T : CosmosEntity
         {
             var methodIdentifier = $"{nameof(ICosmosService<U>)}<{typeof(U).Name}>.{nameof(ICosmosService<U>.DeleteAsync)}<{typeof(T).Name}>";
 
@@ -490,13 +592,15 @@ namespace DickinsonBros.Infrastructure.Cosmos
 
                 _logger.LogInformationRedacted
                 (
-                    $"{methodIdentifier}<{nameof(T)}>",
+                    methodIdentifier,
                     LogGroup.Infrastructure,
                     new Dictionary<string, object>
                     {
                         { nameof(id), id },
                         { nameof(key), key },
-                        { nameof(insertTelemetryRequest.Duration), insertTelemetryRequest.Duration }
+                        { nameof(response), response },
+                        { nameof(insertTelemetryRequest.Duration), insertTelemetryRequest.Duration },
+                        { nameof(insertTelemetryRequest.TelemetryResponseState), insertTelemetryRequest.TelemetryResponseState }
                     }
                 );
 
@@ -510,14 +614,15 @@ namespace DickinsonBros.Infrastructure.Cosmos
 
                 _logger.LogErrorRedacted
                 (
-                    $"Unhandled exception {methodIdentifier}<{nameof(T)}>",
+                    methodIdentifier,
                     LogGroup.Infrastructure,
                     exception,
                     new Dictionary<string, object>
                     {
                         { nameof(id), id },
                         { nameof(key), key },
-                        { nameof(insertTelemetryRequest.Duration), insertTelemetryRequest.Duration }
+                        { nameof(insertTelemetryRequest.Duration), insertTelemetryRequest.Duration },
+                        { nameof(insertTelemetryRequest.TelemetryResponseState), insertTelemetryRequest.TelemetryResponseState }
                     }
                 );
 
@@ -528,7 +633,8 @@ namespace DickinsonBros.Infrastructure.Cosmos
                 _telemetryWriterService.Insert(insertTelemetryRequest);
             }
         }
-        public async Task<IEnumerable<ResponseMessage>> DeleteBulkAsync<T>(IEnumerable<string> ids, string key)
+
+        public async Task<IEnumerable<ResponseMessage>> DeleteBulkAsync<T>(IEnumerable<T> items) where T : CosmosEntity
         {
             var methodIdentifier = $"{nameof(ICosmosService<U>)}<{typeof(U).Name}>.{nameof(ICosmosService<U>.DeleteBulkAsync)}<{typeof(T).Name}>";
 
@@ -536,7 +642,7 @@ namespace DickinsonBros.Infrastructure.Cosmos
             {
                 ConnectionName = _cosmosClient.Endpoint.ToString(),
                 DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
-                Request = $"BulkDelete {typeof(T).Name}",
+                Request = $"DeleteBulk {typeof(T).Name}",
                 TelemetryType = TelemetryType.Cosmos,
                 CorrelationId = _correlationService.CorrelationId
             };
@@ -550,10 +656,9 @@ namespace DickinsonBros.Infrastructure.Cosmos
 
                 Dictionary<PartitionKey, Stream> itemsToInsert = new Dictionary<PartitionKey, Stream>();
                 List<Task> tasks = new List<Task>();
-                foreach (var id in ids)
+                foreach (var item in items)
                 {
-                    var partitionKey = new PartitionKey(key);
-                    tasks.Add(_cosmosContainer.DeleteItemStreamAsync(id, new PartitionKey(key))
+                    tasks.Add(_cosmosContainer.DeleteItemStreamAsync(item.Id, new PartitionKey(item.Key))
                       .ContinueWith((Task<ResponseMessage> task) =>
                       {
                           using (ResponseMessage response = task.Result)
@@ -563,13 +668,12 @@ namespace DickinsonBros.Infrastructure.Cosmos
                               {
                                   _logger.LogErrorRedacted
                                   (
-                                      $"Received {methodIdentifier}",
+                                      $"{methodIdentifier} Item Response",
                                       LogGroup.Infrastructure,
                                       null,
                                       new Dictionary<string, object>
                                       {
-                                            { nameof(id), id },
-                                            { nameof(partitionKey), partitionKey },
+                                            { nameof(item), item },
                                             { nameof(response.StatusCode), response.StatusCode },
                                             { nameof(response.ErrorMessage), response.ErrorMessage }
                                       }
@@ -587,13 +691,13 @@ namespace DickinsonBros.Infrastructure.Cosmos
 
                 _logger.LogInformationRedacted
                 (
-                    $"{methodIdentifier}<{nameof(T)}>",
+                    methodIdentifier,
                     LogGroup.Infrastructure,
                     new Dictionary<string, object>
                     {
-                        { nameof(key), key },
-                        { nameof(ids), ids },
-                        { nameof(insertTelemetryRequest.Duration), insertTelemetryRequest.Duration }
+                        { nameof(items), items },
+                        { nameof(insertTelemetryRequest.Duration), insertTelemetryRequest.Duration },
+                        { nameof(insertTelemetryRequest.TelemetryResponseState), insertTelemetryRequest.TelemetryResponseState }
                     }
                 );
 
@@ -607,14 +711,14 @@ namespace DickinsonBros.Infrastructure.Cosmos
 
                 _logger.LogErrorRedacted
                 (
-                    $"Unhandled exception { methodIdentifier}<{nameof(T)}>",
+                    methodIdentifier,
                     LogGroup.Infrastructure,
                     exception,
                     new Dictionary<string, object>
                     {
-                        { nameof(key), key },
-                        { nameof(ids), ids },
-                        { nameof(insertTelemetryRequest.Duration), insertTelemetryRequest.Duration }
+                        { nameof(items), items },
+                        { nameof(insertTelemetryRequest.Duration), insertTelemetryRequest.Duration },
+                        { nameof(insertTelemetryRequest.TelemetryResponseState), insertTelemetryRequest.TelemetryResponseState }
                     }
                 );
 

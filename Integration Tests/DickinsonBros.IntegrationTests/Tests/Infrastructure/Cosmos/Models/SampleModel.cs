@@ -1,4 +1,4 @@
-﻿using DickinsonBros.Infrastructure.Cosmos.Models;
+﻿using DickinsonBros.Infrastructure.Cosmos.Abstractions.Models;
 
 namespace DickinsonBros.IntegrationTests.Tests.Infrastructure.Cosmos.Models
 {
