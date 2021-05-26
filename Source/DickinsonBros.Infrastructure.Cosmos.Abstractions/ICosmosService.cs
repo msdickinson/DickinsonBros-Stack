@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 namespace DickinsonBros.Infrastructure.Cosmos.Abstractions
 {
     public interface ICosmosService<U>
+    where U : CosmosServiceOptionsType
     {
         Task<IEnumerable<T>> QueryAsync<T>(QueryDefinition queryDefinition, QueryRequestOptions queryRequestOptions) where T : CosmosEntity;
         Task<ItemResponse<T>> DeleteAsync<T>(string id, string key) where T : CosmosEntity;

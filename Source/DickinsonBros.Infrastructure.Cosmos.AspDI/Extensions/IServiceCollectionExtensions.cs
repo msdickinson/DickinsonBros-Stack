@@ -1,5 +1,4 @@
 ﻿using DickinsonBros.Encryption.Certificate.Abstractions.Models;
-using DickinsonBros.Infrastructure.AzureTables.Abstractions.Models;
 using DickinsonBros.Infrastructure.Cosmos.Abstractions;
 using DickinsonBros.Infrastructure.Cosmos.Abstractions.Models;
 using DickinsonBros.Infrastructure.Cosmos.AspDI.Configurators;

@@ -1,4 +1,4 @@
-﻿using DickinsonBros.Infrastructure.AzureTables.Abstractions.Models;
+﻿using DickinsonBros.Infrastructure.Cosmos.Abstractions.Models;
 
 namespace DickinsonBros.Infrastructure.AzureTables.Runner.AspDI.Config
 {

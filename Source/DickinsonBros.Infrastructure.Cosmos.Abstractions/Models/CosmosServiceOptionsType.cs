@@ -1,4 +1,4 @@
-﻿namespace DickinsonBros.Infrastructure.AzureTables.Abstractions.Models
+﻿namespace DickinsonBros.Infrastructure.Cosmos.Abstractions.Models
 {
     public abstract class CosmosServiceOptionsType
     {

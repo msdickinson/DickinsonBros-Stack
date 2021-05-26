@@ -5,7 +5,6 @@ using DickinsonBros.Core.Logger.Abstractions.Models;
 using DickinsonBros.Core.Stopwatch.Abstractions;
 using DickinsonBros.Core.Telemetry.Abstractions;
 using DickinsonBros.Core.Telemetry.Abstractions.Models;
-using DickinsonBros.Infrastructure.AzureTables.Abstractions.Models;
 using DickinsonBros.Infrastructure.Cosmos.Abstractions;
 using DickinsonBros.Infrastructure.Cosmos.Abstractions.Models;
 using Microsoft.Azure.Cosmos;
