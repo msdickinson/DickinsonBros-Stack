@@ -6,6 +6,6 @@ namespace DickinsonBros.Infrastructure.SQL.Abstractions.Models
     public class SQLServiceOptions<T> : SQLServiceOptions
     where T : SQLServiceOptionsType
     {
-        public string ConnectionName { get; set; }
+
     }
 }

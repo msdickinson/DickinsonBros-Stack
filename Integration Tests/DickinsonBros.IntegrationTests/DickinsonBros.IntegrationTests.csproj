@@ -35,6 +35,7 @@
     <ProjectReference Include="..\..\Source\DickinsonBros.Encryption.JWT\DickinsonBros.Encryption.JWT.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.AzureTables.AspDI\DickinsonBros.Infrastructure.AzureTables.AspDI.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.Cosmos.AspDI\DickinsonBros.Infrastructure.Cosmos.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.SQL.AspDI\DickinsonBros.Infrastructure.SQL.AspDI.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Sinks.Telemetry.AzureTables.AspDI\DickinsonBros.Sinks.Telemetry.AzureTables.AspDI.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Sinks.Telemetry.Log.Abstractions\DickinsonBros.Sinks.Telemetry.Log.Abstractions.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Sinks.Telemetry.Log.AspDI\DickinsonBros.Sinks.Telemetry.Log.AspDI.csproj" />
@@ -58,12 +59,12 @@
     <Folder Include="Tests\Infrastructure\File\Extensions\" />
     <Folder Include="Tests\Infrastructure\Rest\Extensions\" />
     <Folder Include="Tests\Infrastructure\SMTP\Extensions\" />
-    <Folder Include="Tests\Infrastructure\SQL\Extensions\" />
     <Folder Include="Tests\Middleware\ASP\Extensions\" />
     <Folder Include="Tests\Middleware\Function\Extensions\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="3.1.15" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.*" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.*" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.*" />

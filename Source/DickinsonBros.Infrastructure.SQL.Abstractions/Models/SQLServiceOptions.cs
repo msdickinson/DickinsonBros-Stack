@@ -6,5 +6,6 @@ namespace DickinsonBros.Infrastructure.SQL.Abstractions.Models
     public abstract class SQLServiceOptions
     {
         public string ConnectionString { get; set; }
+        public string ConnectionName { get; set; }
     }
 }

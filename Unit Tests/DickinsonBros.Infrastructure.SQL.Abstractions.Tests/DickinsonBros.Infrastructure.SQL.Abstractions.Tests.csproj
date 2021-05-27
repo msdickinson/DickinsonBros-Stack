@@ -9,12 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Models\**" />
-    <EmbeddedResource Remove="Models\**" />
-    <None Remove="Models\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
     <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
@@ -24,6 +18,10 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.SQL.Abstractions\DickinsonBros.Infrastructure.SQL.Abstractions.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Test.Unit\DickinsonBros.Test.Unit.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>

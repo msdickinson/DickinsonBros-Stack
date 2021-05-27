@@ -16,6 +16,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Source\DickinsonBros.Encryption.Certificate.Abstractions\DickinsonBros.Encryption.Certificate.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.SQL.Abstractions\DickinsonBros.Infrastructure.SQL.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.SQL.AspDI\DickinsonBros.Infrastructure.SQL.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.SQL\DickinsonBros.Infrastructure.SQL.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Test.Unit\DickinsonBros.Test.Unit.csproj" />
   </ItemGroup>
 

@@ -13,6 +13,7 @@ using DickinsonBros.Infrastructure.AzureTables.Abstractions;
 using DickinsonBros.Infrastructure.AzureTables.AspDI.Extensions;
 using DickinsonBros.Infrastructure.Cosmos.Abstractions;
 using DickinsonBros.Infrastructure.Cosmos.AspDI.Extensions;
+using DickinsonBros.Infrastructure.SQL.AspDI.Extensions;
 using DickinsonBros.IntegrationTests.Config;
 using DickinsonBros.IntegrationTests.Tests.Core.Correlation.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Core.DateTime.Extensions;
@@ -28,6 +29,7 @@ using DickinsonBros.IntegrationTests.Tests.Infrastructure.AzureTables.Extensions
 using DickinsonBros.IntegrationTests.Tests.Infrastructure.AzureTables.Models;
 using DickinsonBros.IntegrationTests.Tests.Infrastructure.Cosmos.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Infrastructure.Cosmos.Models;
+using DickinsonBros.IntegrationTests.Tests.Infrastructure.SQL.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Sinks.Telemetry.AzureTables.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Sinks.Telemetry.Log.Extensions;
 using DickinsonBros.Sinks.Telemetry.AzureTables.Abstractions;
@@ -69,7 +71,7 @@ namespace DickinsonBros.IntegrationTests
             var testlog = (string)null;
             try
             {
-                var tests               = integrationTestService.FetchTestsByName("Cosmos");
+                var tests               = integrationTestService.FetchTestsByName("SQL");
                 var testSummary         = await integrationTestService.RunTests(tests).ConfigureAwait(false);
                 testlog                 = integrationTestService.GenerateLog(testSummary, false);
 
@@ -139,6 +141,9 @@ namespace DickinsonBros.IntegrationTests
         }
         private void ConfigureStack(IServiceCollection serviceCollection)
         {
+            //--Misc
+            serviceCollection.AddMemoryCache();
+
             //--Core
             serviceCollection.AddGuidService();
             serviceCollection.AddDateTimeService();
@@ -160,6 +165,7 @@ namespace DickinsonBros.IntegrationTests
             //--Infrastructure
             serviceCollection.AddAzureTablesService<RunnerAzureTableServiceOptionsType, Configuration>();
             serviceCollection.AddCosmosService<RunnerCosmosServiceOptionsType, Configuration>();
+            serviceCollection.AddSQLService<RunnerSQLServiceOptionsType, Configuration>();
 
             //--Middleware
 
@@ -190,7 +196,7 @@ namespace DickinsonBros.IntegrationTests
             //--Infrastructure
             serviceCollection.AddAzureTablesIntegrationTests();
             serviceCollection.AddCosmosIntegrationTests();
-
+            serviceCollection.AddSQLIntegrationTests();
             //--Middleware
 
             //--Application

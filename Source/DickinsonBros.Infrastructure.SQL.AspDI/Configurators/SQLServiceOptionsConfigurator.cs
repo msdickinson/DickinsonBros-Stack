@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace DickinsonBros.Infrastructure.Cosmos.AspDI.Configurators
+namespace DickinsonBros.Infrastructure.SQL.AspDI.Configurators
 {
     public class SQLServiceOptionsConfigurator<T, U> : IConfigureOptions<SQLServiceOptions<T>>
     where T : SQLServiceOptionsType

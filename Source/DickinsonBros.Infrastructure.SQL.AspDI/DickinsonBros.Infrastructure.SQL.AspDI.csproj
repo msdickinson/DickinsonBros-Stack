@@ -15,7 +15,6 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.0" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\DickinsonBros.Encryption.Certificate.Abstractions\DickinsonBros.Encryption.Certificate.Abstractions.csproj" />
     <ProjectReference Include="..\DickinsonBros.Infrastructure.SQL.Abstractions\DickinsonBros.Infrastructure.SQL.Abstractions.csproj" />
