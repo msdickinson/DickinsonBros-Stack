@@ -10,7 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DickinsonBros.IntegrationTests.Tests.Infrastructure.Cosmos
+namespace DickinsonBros.IntegrationTests.Tests.Infrastructure.SQL
 {
     [ExcludeFromCodeCoverage]
     [TestAPIAttribute(Name = "SQL", Group = "Infrastructure")]

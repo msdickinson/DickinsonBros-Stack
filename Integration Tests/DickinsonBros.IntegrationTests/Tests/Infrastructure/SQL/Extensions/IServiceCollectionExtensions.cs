@@ -1,5 +1,4 @@
-﻿using DickinsonBros.IntegrationTests.Tests.Infrastructure.Cosmos;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace DickinsonBros.IntegrationTests.Tests.Infrastructure.SQL.Extensions

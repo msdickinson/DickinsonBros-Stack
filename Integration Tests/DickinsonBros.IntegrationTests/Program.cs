@@ -13,6 +13,7 @@ using DickinsonBros.Infrastructure.AzureTables.Abstractions;
 using DickinsonBros.Infrastructure.AzureTables.AspDI.Extensions;
 using DickinsonBros.Infrastructure.Cosmos.Abstractions;
 using DickinsonBros.Infrastructure.Cosmos.AspDI.Extensions;
+using DickinsonBros.Infrastructure.File.AspDI.Extensions;
 using DickinsonBros.Infrastructure.SQL.AspDI.Extensions;
 using DickinsonBros.IntegrationTests.Config;
 using DickinsonBros.IntegrationTests.Tests.Core.Correlation.Extensions;
@@ -29,6 +30,7 @@ using DickinsonBros.IntegrationTests.Tests.Infrastructure.AzureTables.Extensions
 using DickinsonBros.IntegrationTests.Tests.Infrastructure.AzureTables.Models;
 using DickinsonBros.IntegrationTests.Tests.Infrastructure.Cosmos.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Infrastructure.Cosmos.Models;
+using DickinsonBros.IntegrationTests.Tests.Infrastructure.File.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Infrastructure.SQL.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Sinks.Telemetry.AzureTables.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Sinks.Telemetry.Log.Extensions;
@@ -71,7 +73,7 @@ namespace DickinsonBros.IntegrationTests
             var testlog = (string)null;
             try
             {
-                var tests               = integrationTestService.FetchTestsByName("SQL");
+                var tests               = integrationTestService.FetchTestsByName("File");
                 var testSummary         = await integrationTestService.RunTests(tests).ConfigureAwait(false);
                 testlog                 = integrationTestService.GenerateLog(testSummary, false);
 
@@ -161,6 +163,7 @@ namespace DickinsonBros.IntegrationTests
             serviceCollection.AddAESEncryptionService<RunnerAESEncryptionServiceOptionsType>();
             serviceCollection.AddCertificateEncryptionService<Configuration>();
             serviceCollection.AddJWTEncryptionService<RunnerJWTEncryptionServiceOptionsType, Configuration>();
+            serviceCollection.AddFileService();
 
             //--Infrastructure
             serviceCollection.AddAzureTablesService<RunnerAzureTableServiceOptionsType, Configuration>();
@@ -197,6 +200,7 @@ namespace DickinsonBros.IntegrationTests
             serviceCollection.AddAzureTablesIntegrationTests();
             serviceCollection.AddCosmosIntegrationTests();
             serviceCollection.AddSQLIntegrationTests();
+            serviceCollection.AddFileIntegrationTests();
             //--Middleware
 
             //--Application
