@@ -1958,6 +1958,1001 @@ namespace DickinsonBros.Infrastructure.File.Tests
 
         #endregion
 
+        #region UpsertFileAsync
+
+        [TestMethod]
+        public async Task UpsertFileAsync_Runs_GetDateTimeUTCCalled()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+
+                    //-- Inputs
+                    var path = "SamplePath";
+                    var bytes = new byte[0];
+
+                    var cancellationToken = new CancellationToken();
+
+                    //-- IDateTimeService
+                    var dateTime = new DateTime(2000, 1, 1);
+                    var dateTimeServiceMock = CreateDateTimeServiceMock(serviceProvider, dateTime);
+
+                    //-- IStopwatchService
+                    var stopwatchServiceMock = CreateStopWatchServiceMock(serviceProvider);
+
+                    //-- IStopwatchFactory
+                    var stopwatchFactoryMock = CreateStopWatchFactoryMock(serviceProvider, stopwatchServiceMock.Object);
+
+                    //-- IFile
+                    var fileMock = CreateFileMock(serviceProvider);
+
+                    //-- IFileSystem
+                    var fileSystemMock = CreateFileSystemMock(serviceProvider, fileMock.Object);
+
+                    //-- ILoggerService
+                    var (loggerServiceMock, propertiesObserved) = CreateLoggerService(serviceProvider);
+
+                    //-- ITelemetryServiceWriter
+                    var (telemetryServiceWriterMock, insertTelemetryRequestObserved) = CreateTelemetryWriterServiceMock(serviceProvider);
+
+                    //--UUT
+                    var uut = serviceProvider.GetRequiredService<IFileService>();
+                    var uutConcrete = (FileService)uut;
+
+                    //Act
+                    await uutConcrete.UpsertFileAsync(path, bytes, cancellationToken).ConfigureAwait(false);
+
+                    //Assert
+                    dateTimeServiceMock
+                    .Verify
+                    (
+                        dateTimeService => dateTimeService.GetDateTimeUTC(),
+                        Times.Once()
+                    );
+
+                    await Task.CompletedTask.ConfigureAwait(false);
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            ).ConfigureAwait(false);
+        }
+
+        [TestMethod]
+        public async Task UpsertFileAsync_Runs_NewStopwatchServiceCalled()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+
+                    //-- Inputs
+                    var path = "SamplePath";
+                    var cancellationToken = new CancellationToken();
+                    var bytes = new byte[0];
+
+                    //-- IDateTimeService
+                    var dateTime = new DateTime(2000, 1, 1);
+                    var dateTimeServiceMock = CreateDateTimeServiceMock(serviceProvider, dateTime);
+
+                    //-- IStopwatchService
+                    var stopwatchServiceMock = CreateStopWatchServiceMock(serviceProvider);
+
+                    //-- IStopwatchFactory
+                    var stopwatchFactoryMock = CreateStopWatchFactoryMock(serviceProvider, stopwatchServiceMock.Object);
+
+                    //-- IFile
+                    var fileMock = CreateFileMock(serviceProvider);
+
+                    //-- IFileSystem
+                    var fileSystemMock = CreateFileSystemMock(serviceProvider, fileMock.Object);
+
+                    //-- ILoggerService
+                    var (loggerServiceMock, propertiesObserved) = CreateLoggerService(serviceProvider);
+
+                    //-- ITelemetryServiceWriter
+                    var (telemetryServiceWriterMock, insertTelemetryRequestObserved) = CreateTelemetryWriterServiceMock(serviceProvider);
+
+                    //--UUT
+                    var uut = serviceProvider.GetRequiredService<IFileService>();
+                    var uutConcrete = (FileService)uut;
+
+                    //Act
+                    await uutConcrete.UpsertFileAsync(path, bytes, cancellationToken).ConfigureAwait(false);
+
+                    //Assert
+                    stopwatchFactoryMock
+                    .Verify
+                    (
+                        stopwatchFactory => stopwatchFactory.NewStopwatchService(),
+                        Times.Once()
+                    );
+
+                    await Task.CompletedTask.ConfigureAwait(false);
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            ).ConfigureAwait(false);
+        }
+
+        [TestMethod]
+        public async Task UpsertFileAsync_Runs_StopwatchServiceStartCalled()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+
+                    //-- Inputs
+                    var path = "SamplePath";
+                    var cancellationToken = new CancellationToken();
+                    var bytes = new byte[0];
+
+                    //-- IDateTimeService
+                    var dateTime = new DateTime(2000, 1, 1);
+                    var dateTimeServiceMock = CreateDateTimeServiceMock(serviceProvider, dateTime);
+
+                    //-- IStopwatchService
+                    var stopwatchServiceMock = CreateStopWatchServiceMock(serviceProvider);
+
+                    //-- IStopwatchFactory
+                    var stopwatchFactoryMock = CreateStopWatchFactoryMock(serviceProvider, stopwatchServiceMock.Object);
+
+                    //-- IFile
+                    var fileMock = CreateFileMock(serviceProvider);
+
+                    //-- IFileSystem
+                    var fileSystemMock = CreateFileSystemMock(serviceProvider, fileMock.Object);
+
+                    //-- ILoggerService
+                    var (loggerServiceMock, propertiesObserved) = CreateLoggerService(serviceProvider);
+
+                    //-- ITelemetryServiceWriter
+                    var (telemetryServiceWriterMock, insertTelemetryRequestObserved) = CreateTelemetryWriterServiceMock(serviceProvider);
+
+                    //--UUT
+                    var uut = serviceProvider.GetRequiredService<IFileService>();
+                    var uutConcrete = (FileService)uut;
+
+                    //Act
+                    await uutConcrete.UpsertFileAsync(path, bytes, cancellationToken).ConfigureAwait(false);
+
+                    //Assert
+                    stopwatchServiceMock
+                    .Verify
+                    (
+                        stopwatchService => stopwatchService.Start(),
+                        Times.Once()
+                    );
+
+                    await Task.CompletedTask.ConfigureAwait(false);
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            ).ConfigureAwait(false);
+        }
+
+        [TestMethod]
+        public async Task UpsertFileAsync_Runs_IFileSystemWriteAllBytesAsyncCalled()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+
+                    //-- Inputs
+                    var path = "SamplePath";
+                    var cancellationToken = new CancellationToken();
+                    var bytes = new byte[0];
+
+                    //-- IDateTimeService
+                    var dateTime = new DateTime(2000, 1, 1);
+                    var dateTimeServiceMock = CreateDateTimeServiceMock(serviceProvider, dateTime);
+
+                    //-- IStopwatchService
+                    var stopwatchServiceMock = CreateStopWatchServiceMock(serviceProvider);
+
+                    //-- IStopwatchFactory
+                    var stopwatchFactoryMock = CreateStopWatchFactoryMock(serviceProvider, stopwatchServiceMock.Object);
+
+                    //-- IFile
+                    var fileMock = CreateFileMock(serviceProvider);
+
+                    //-- IFileSystem
+                    var fileSystemMock = CreateFileSystemMock(serviceProvider, fileMock.Object);
+
+                    //-- ILoggerService
+                    var (loggerServiceMock, propertiesObserved) = CreateLoggerService(serviceProvider);
+
+                    //-- ITelemetryServiceWriter
+                    var (telemetryServiceWriterMock, insertTelemetryRequestObserved) = CreateTelemetryWriterServiceMock(serviceProvider);
+
+                    //--UUT
+                    var uut = serviceProvider.GetRequiredService<IFileService>();
+                    var uutConcrete = (FileService)uut;
+
+                    //Act
+                    await uutConcrete.UpsertFileAsync(path, bytes, cancellationToken).ConfigureAwait(false);
+
+                    //Assert
+                    fileSystemMock
+                    .Verify
+                    (
+                        fileSystem => fileSystem.File.WriteAllBytesAsync(path, bytes, cancellationToken),
+                        Times.Once()
+                    );
+
+                    await Task.CompletedTask.ConfigureAwait(false);
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            ).ConfigureAwait(false);
+        }
+
+        [TestMethod]
+        public async Task UpsertFileAsync_Runs_StopwatchServiceStopCalled()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+
+                    //-- Inputs
+                    var path = "SamplePath";
+                    var cancellationToken = new CancellationToken();
+                    var bytes = new byte[0];
+
+                    //-- IDateTimeService
+                    var dateTime = new DateTime(2000, 1, 1);
+                    var dateTimeServiceMock = CreateDateTimeServiceMock(serviceProvider, dateTime);
+
+                    //-- IStopwatchService
+                    var stopwatchServiceMock = CreateStopWatchServiceMock(serviceProvider);
+
+                    //-- IStopwatchFactory
+                    var stopwatchFactoryMock = CreateStopWatchFactoryMock(serviceProvider, stopwatchServiceMock.Object);
+
+                    //-- IFile
+                    var fileMock = CreateFileMock(serviceProvider);
+
+                    //-- IFileSystem
+                    var fileSystemMock = CreateFileSystemMock(serviceProvider, fileMock.Object);
+
+                    //-- ILoggerService
+                    var (loggerServiceMock, propertiesObserved) = CreateLoggerService(serviceProvider);
+
+                    //-- ITelemetryServiceWriter
+                    var (telemetryServiceWriterMock, insertTelemetryRequestObserved) = CreateTelemetryWriterServiceMock(serviceProvider);
+
+                    //--UUT
+                    var uut = serviceProvider.GetRequiredService<IFileService>();
+                    var uutConcrete = (FileService)uut;
+
+                    //Act
+                    await uutConcrete.UpsertFileAsync(path, bytes, cancellationToken).ConfigureAwait(false);
+
+                    //Assert
+                    stopwatchServiceMock
+                    .Verify
+                    (
+                        stopwatchService => stopwatchService.Stop(),
+                        Times.Once()
+                    );
+
+                    await Task.CompletedTask.ConfigureAwait(false);
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            ).ConfigureAwait(false);
+        }
+
+        [TestMethod]
+        public async Task UpsertFileAsync_Runs_LogInformationRedactedCalled()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+
+                    //-- Inputs
+                    var path = "SamplePath";
+                    var cancellationToken = new CancellationToken();
+                    var bytes = new byte[0];
+
+                    //-- IDateTimeService
+                    var dateTime = new DateTime(2000, 1, 1);
+                    var dateTimeServiceMock = CreateDateTimeServiceMock(serviceProvider, dateTime);
+
+                    //-- IStopwatchService
+                    var stopwatchServiceMock = CreateStopWatchServiceMock(serviceProvider);
+
+                    //-- IStopwatchFactory
+                    var stopwatchFactoryMock = CreateStopWatchFactoryMock(serviceProvider, stopwatchServiceMock.Object);
+
+                    //-- IFile
+                    var fileMock = CreateFileMock(serviceProvider);
+
+                    //-- IFileSystem
+                    var fileSystemMock = CreateFileSystemMock(serviceProvider, fileMock.Object);
+
+                    //-- ILoggerService
+                    var (loggerServiceMock, propertiesObserved) = CreateLoggerService(serviceProvider);
+
+                    //-- ITelemetryServiceWriter
+                    var (telemetryServiceWriterMock, insertTelemetryRequestObserved) = CreateTelemetryWriterServiceMock(serviceProvider);
+
+                    //--UUT
+                    var uut = serviceProvider.GetRequiredService<IFileService>();
+                    var uutConcrete = (FileService)uut;
+
+                    //Act
+                    await uutConcrete.UpsertFileAsync(path, bytes, cancellationToken).ConfigureAwait(false);
+
+                    //Assert
+                    loggerServiceMock
+                    .Verify
+                    (
+                        loggerService => loggerService.LogInformationRedacted
+                        (
+                            $"{nameof(IFileService)}.{nameof(IFileService.UpsertFileAsync)}",
+                            LogGroup.Infrastructure,
+                            It.IsAny<IDictionary<string, object>>()
+                        ),
+                        Times.Once
+                    );
+
+                    var pathObserved = (string)propertiesObserved["path"];
+                    var durationObserved = (TimeSpan)propertiesObserved["Duration"];
+                    var telemetryResponseStateObserved = (TelemetryResponseState)propertiesObserved["TelemetryResponseState"];
+
+                    Assert.AreEqual(path, pathObserved);
+                    Assert.AreEqual(0, durationObserved.TotalMilliseconds);
+                    Assert.AreEqual(TelemetryResponseState.Successful, telemetryResponseStateObserved);
+
+                    await Task.CompletedTask.ConfigureAwait(false);
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            ).ConfigureAwait(false);
+        }
+
+        [TestMethod]
+        public async Task UpsertFileAsync_Throws_LogErrorRedactedCalled()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+
+                    //-- Inputs
+                    var path = "SamplePath";
+                    var bytes = new byte[0];
+
+                    //-- IDateTimeService
+                    var dateTime = new DateTime(2000, 1, 1);
+                    var dateTimeServiceMock = CreateDateTimeServiceMock(serviceProvider, dateTime);
+
+                    //-- IStopwatchService
+                    var stopwatchServiceMock = CreateStopWatchServiceMock(serviceProvider);
+
+                    //-- IStopwatchFactory
+                    var stopwatchFactoryMock = CreateStopWatchFactoryMock(serviceProvider, stopwatchServiceMock.Object);
+
+                    //-- IFile
+                    var fileMock = CreateFileMock(serviceProvider);
+
+                    //-- IFileSystem
+                    var fileSystemMock = CreateFileSystemMock(serviceProvider, fileMock.Object, true);
+
+                    //-- ILoggerService
+                    var (loggerServiceMock, propertiesObserved) = CreateLoggerService(serviceProvider);
+
+                    //-- ITelemetryServiceWriter
+                    var (telemetryServiceWriterMock, insertTelemetryRequestObserved) = CreateTelemetryWriterServiceMock(serviceProvider);
+
+                    //--UUT
+                    var uut = serviceProvider.GetRequiredService<IFileService>();
+                    var uutConcrete = (FileService)uut;
+
+                    //Act
+                    await Assert.ThrowsExceptionAsync<Exception>(async () => await uutConcrete.UpsertFileAsync(path, bytes).ConfigureAwait(false)).ConfigureAwait(false);
+
+                    //Assert
+                    loggerServiceMock
+                    .Verify
+                    (
+                        loggerService => loggerService.LogErrorRedacted
+                        (
+                            $"{nameof(IFileService)}.{nameof(IFileService.UpsertFileAsync)}",
+                            LogGroup.Infrastructure,
+                            It.IsAny<Exception>(),
+                            It.IsAny<IDictionary<string, object>>()
+                        ),
+                        Times.Once
+                    );
+
+                    var pathObserved = (string)propertiesObserved["path"];
+                    var durationObserved = (TimeSpan)propertiesObserved["Duration"];
+                    var telemetryResponseStateObserved = (TelemetryResponseState)propertiesObserved["TelemetryResponseState"];
+
+                    Assert.AreEqual(path, pathObserved);
+                    Assert.AreEqual(0, durationObserved.TotalMilliseconds);
+                    Assert.AreEqual(TelemetryResponseState.UnhandledException, telemetryResponseStateObserved);
+
+                    await Task.CompletedTask.ConfigureAwait(false);
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            ).ConfigureAwait(false);
+        }
+
+        [TestMethod]
+        public async Task UpsertFileAsync_Runs_TelemetryWriterServiceCalled()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+
+                    //-- Inputs
+                    var path = "SamplePath";
+                    var bytes = new byte[0];
+
+                    //-- IDateTimeService
+                    var dateTime = new DateTime(2000, 1, 1);
+                    var dateTimeServiceMock = CreateDateTimeServiceMock(serviceProvider, dateTime);
+
+                    //-- IStopwatchService
+                    var stopwatchServiceMock = CreateStopWatchServiceMock(serviceProvider);
+
+                    //-- IStopwatchFactory
+                    var stopwatchFactoryMock = CreateStopWatchFactoryMock(serviceProvider, stopwatchServiceMock.Object);
+
+                    //-- IFile
+                    var fileMock = CreateFileMock(serviceProvider);
+
+                    //-- IFileSystem
+                    var fileSystemMock = CreateFileSystemMock(serviceProvider, fileMock.Object, true);
+
+                    //-- ILoggerService
+                    var (loggerServiceMock, propertiesObserved) = CreateLoggerService(serviceProvider);
+
+                    //-- ITelemetryServiceWriter
+                    var (telemetryServiceWriterMock, insertTelemetryRequestObserved) = CreateTelemetryWriterServiceMock(serviceProvider);
+
+                    //--UUT
+                    var uut = serviceProvider.GetRequiredService<IFileService>();
+                    var uutConcrete = (FileService)uut;
+
+                    //Act
+                    await Assert.ThrowsExceptionAsync<Exception>(async () => await uutConcrete.UpsertFileAsync(path, bytes).ConfigureAwait(false)).ConfigureAwait(false);
+
+                    //Assert
+                    telemetryServiceWriterMock
+                    .Verify
+                    (
+                        telemetryServiceWriter => telemetryServiceWriter.Insert
+                        (
+                            It.IsAny<InsertTelemetryItem>()
+                        ),
+                        Times.Once
+                    );
+
+                    Assert.AreEqual("File System", insertTelemetryRequestObserved.ConnectionName);
+                    Assert.AreEqual(TelemetryType.FileSystem, insertTelemetryRequestObserved.TelemetryType);
+
+
+                    await Task.CompletedTask.ConfigureAwait(false);
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            ).ConfigureAwait(false);
+        }
+
+        #endregion
+
+        #region UpsertFileAsyncString
+
+        [TestMethod]
+        public async Task UpsertFileAsyncString_Runs_GetDateTimeUTCCalled()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+
+                    //-- Inputs
+                    var path = "SamplePath";
+                    var text= "SampleFile";
+                    var encoding = Encoding.UTF8;
+                    var cancellationToken = new CancellationToken();
+
+                    //-- IDateTimeService
+                    var dateTime = new DateTime(2000, 1, 1);
+                    var dateTimeServiceMock = CreateDateTimeServiceMock(serviceProvider, dateTime);
+
+                    //-- IStopwatchService
+                    var stopwatchServiceMock = CreateStopWatchServiceMock(serviceProvider);
+
+                    //-- IStopwatchFactory
+                    var stopwatchFactoryMock = CreateStopWatchFactoryMock(serviceProvider, stopwatchServiceMock.Object);
+
+                    //-- IFile
+                    var fileMock = CreateFileMock(serviceProvider);
+
+                    //-- IFileSystem
+                    var fileSystemMock = CreateFileSystemMock(serviceProvider, fileMock.Object);
+
+                    //-- ILoggerService
+                    var (loggerServiceMock, propertiesObserved) = CreateLoggerService(serviceProvider);
+
+                    //-- ITelemetryServiceWriter
+                    var (telemetryServiceWriterMock, insertTelemetryRequestObserved) = CreateTelemetryWriterServiceMock(serviceProvider);
+
+                    //--UUT
+                    var uut = serviceProvider.GetRequiredService<IFileService>();
+                    var uutConcrete = (FileService)uut;
+
+                    //Act
+                    await uutConcrete.UpsertFileAsync(path, text, encoding, cancellationToken).ConfigureAwait(false);
+
+                    //Assert
+                    dateTimeServiceMock
+                    .Verify
+                    (
+                        dateTimeService => dateTimeService.GetDateTimeUTC(),
+                        Times.Once()
+                    );
+
+                    await Task.CompletedTask.ConfigureAwait(false);
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            ).ConfigureAwait(false);
+        }
+
+        [TestMethod]
+        public async Task UpsertFileAsyncString_Runs_NewStopwatchServiceCalled()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+
+                    //-- Inputs
+                    var path = "SamplePath";
+                    var text = "SampleFile";
+                    var encoding = Encoding.UTF8;
+                    var cancellationToken = new CancellationToken();
+
+                    //-- IDateTimeService
+                    var dateTime = new DateTime(2000, 1, 1);
+                    var dateTimeServiceMock = CreateDateTimeServiceMock(serviceProvider, dateTime);
+
+                    //-- IStopwatchService
+                    var stopwatchServiceMock = CreateStopWatchServiceMock(serviceProvider);
+
+                    //-- IStopwatchFactory
+                    var stopwatchFactoryMock = CreateStopWatchFactoryMock(serviceProvider, stopwatchServiceMock.Object);
+
+                    //-- IFile
+                    var fileMock = CreateFileMock(serviceProvider);
+
+                    //-- IFileSystem
+                    var fileSystemMock = CreateFileSystemMock(serviceProvider, fileMock.Object);
+
+                    //-- ILoggerService
+                    var (loggerServiceMock, propertiesObserved) = CreateLoggerService(serviceProvider);
+
+                    //-- ITelemetryServiceWriter
+                    var (telemetryServiceWriterMock, insertTelemetryRequestObserved) = CreateTelemetryWriterServiceMock(serviceProvider);
+
+                    //--UUT
+                    var uut = serviceProvider.GetRequiredService<IFileService>();
+                    var uutConcrete = (FileService)uut;
+
+                    //Act
+                    await uutConcrete.UpsertFileAsync(path, text, encoding, cancellationToken).ConfigureAwait(false);
+
+                    //Assert
+                    stopwatchFactoryMock
+                    .Verify
+                    (
+                        stopwatchFactory => stopwatchFactory.NewStopwatchService(),
+                        Times.Once()
+                    );
+
+                    await Task.CompletedTask.ConfigureAwait(false);
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            ).ConfigureAwait(false);
+        }
+
+        [TestMethod]
+        public async Task UpsertFileAsyncString_Runs_StopwatchServiceStartCalled()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+
+                    //-- Inputs
+                    var path = "SamplePath";
+                    var text= "SampleFile";
+                    var encoding = Encoding.UTF8;
+                    var cancellationToken = new CancellationToken();
+
+                    //-- IDateTimeService
+                    var dateTime = new DateTime(2000, 1, 1);
+                    var dateTimeServiceMock = CreateDateTimeServiceMock(serviceProvider, dateTime);
+
+                    //-- IStopwatchService
+                    var stopwatchServiceMock = CreateStopWatchServiceMock(serviceProvider);
+
+                    //-- IStopwatchFactory
+                    var stopwatchFactoryMock = CreateStopWatchFactoryMock(serviceProvider, stopwatchServiceMock.Object);
+
+                    //-- IFile
+                    var fileMock = CreateFileMock(serviceProvider);
+
+                    //-- IFileSystem
+                    var fileSystemMock = CreateFileSystemMock(serviceProvider, fileMock.Object);
+
+                    //-- ILoggerService
+                    var (loggerServiceMock, propertiesObserved) = CreateLoggerService(serviceProvider);
+
+                    //-- ITelemetryServiceWriter
+                    var (telemetryServiceWriterMock, insertTelemetryRequestObserved) = CreateTelemetryWriterServiceMock(serviceProvider);
+
+                    //--UUT
+                    var uut = serviceProvider.GetRequiredService<IFileService>();
+                    var uutConcrete = (FileService)uut;
+
+                    //Act
+                    await uutConcrete.UpsertFileAsync(path, text, encoding, cancellationToken).ConfigureAwait(false);
+
+                    //Assert
+                    stopwatchServiceMock
+                    .Verify
+                    (
+                        stopwatchService => stopwatchService.Start(),
+                        Times.Once()
+                    );
+
+                    await Task.CompletedTask.ConfigureAwait(false);
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            ).ConfigureAwait(false);
+        }
+
+        [TestMethod]
+        public async Task UpsertFileAsyncString_Runs_IFileSystemWriteAllTextAsyncCalled()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+
+                    //-- Inputs
+                    var path = "SamplePath";
+                    var text= "SampleFile";
+                    var encoding = Encoding.UTF8;
+                    var cancellationToken = new CancellationToken();
+
+                    //-- IDateTimeService
+                    var dateTime = new DateTime(2000, 1, 1);
+                    var dateTimeServiceMock = CreateDateTimeServiceMock(serviceProvider, dateTime);
+
+                    //-- IStopwatchService
+                    var stopwatchServiceMock = CreateStopWatchServiceMock(serviceProvider);
+
+                    //-- IStopwatchFactory
+                    var stopwatchFactoryMock = CreateStopWatchFactoryMock(serviceProvider, stopwatchServiceMock.Object);
+
+                    //-- IFile
+                    var fileMock = CreateFileMock(serviceProvider);
+
+                    //-- IFileSystem
+                    var fileSystemMock = CreateFileSystemMock(serviceProvider, fileMock.Object);
+
+                    //-- ILoggerService
+                    var (loggerServiceMock, propertiesObserved) = CreateLoggerService(serviceProvider);
+
+                    //-- ITelemetryServiceWriter
+                    var (telemetryServiceWriterMock, insertTelemetryRequestObserved) = CreateTelemetryWriterServiceMock(serviceProvider);
+
+                    //--UUT
+                    var uut = serviceProvider.GetRequiredService<IFileService>();
+                    var uutConcrete = (FileService)uut;
+
+                    //Act
+                    await uutConcrete.UpsertFileAsync(path, text, encoding, cancellationToken).ConfigureAwait(false);
+
+                    //Assert
+                    fileSystemMock
+                    .Verify
+                    (
+                        fileSystem => fileSystem.File.WriteAllTextAsync(path, text, encoding, cancellationToken),
+                        Times.Once()
+                    );
+
+                    await Task.CompletedTask.ConfigureAwait(false);
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            ).ConfigureAwait(false);
+        }
+
+        [TestMethod]
+        public async Task UpsertFileAsyncString_Runs_StopwatchServiceStopCalled()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+
+                    //-- Inputs
+                    var path = "SamplePath";
+                    var text= "SampleFile";
+                    var encoding = Encoding.UTF8;
+                    var cancellationToken = new CancellationToken();
+
+                    //-- IDateTimeService
+                    var dateTime = new DateTime(2000, 1, 1);
+                    var dateTimeServiceMock = CreateDateTimeServiceMock(serviceProvider, dateTime);
+
+                    //-- IStopwatchService
+                    var stopwatchServiceMock = CreateStopWatchServiceMock(serviceProvider);
+
+                    //-- IStopwatchFactory
+                    var stopwatchFactoryMock = CreateStopWatchFactoryMock(serviceProvider, stopwatchServiceMock.Object);
+
+                    //-- IFile
+                    var fileMock = CreateFileMock(serviceProvider);
+
+                    //-- IFileSystem
+                    var fileSystemMock = CreateFileSystemMock(serviceProvider, fileMock.Object);
+
+                    //-- ILoggerService
+                    var (loggerServiceMock, propertiesObserved) = CreateLoggerService(serviceProvider);
+
+                    //-- ITelemetryServiceWriter
+                    var (telemetryServiceWriterMock, insertTelemetryRequestObserved) = CreateTelemetryWriterServiceMock(serviceProvider);
+
+                    //--UUT
+                    var uut = serviceProvider.GetRequiredService<IFileService>();
+                    var uutConcrete = (FileService)uut;
+
+                    //Act
+                    await uutConcrete.UpsertFileAsync(path, text, encoding, cancellationToken).ConfigureAwait(false);
+
+                    //Assert
+                    stopwatchServiceMock
+                    .Verify
+                    (
+                        stopwatchService => stopwatchService.Stop(),
+                        Times.Once()
+                    );
+
+                    await Task.CompletedTask.ConfigureAwait(false);
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            ).ConfigureAwait(false);
+        }
+
+        [TestMethod]
+        public async Task UpsertFileAsyncString_Runs_LogInformationRedactedCalled()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+
+                    //-- Inputs
+                    var path = "SamplePath";
+                    var text= "SampleFile";
+                    var encoding = Encoding.UTF8;
+                    var cancellationToken = new CancellationToken();
+
+                    //-- IDateTimeService
+                    var dateTime = new DateTime(2000, 1, 1);
+                    var dateTimeServiceMock = CreateDateTimeServiceMock(serviceProvider, dateTime);
+
+                    //-- IStopwatchService
+                    var stopwatchServiceMock = CreateStopWatchServiceMock(serviceProvider);
+
+                    //-- IStopwatchFactory
+                    var stopwatchFactoryMock = CreateStopWatchFactoryMock(serviceProvider, stopwatchServiceMock.Object);
+
+                    //-- IFile
+                    var fileMock = CreateFileMock(serviceProvider);
+
+                    //-- IFileSystem
+                    var fileSystemMock = CreateFileSystemMock(serviceProvider, fileMock.Object);
+
+                    //-- ILoggerService
+                    var (loggerServiceMock, propertiesObserved) = CreateLoggerService(serviceProvider);
+
+                    //-- ITelemetryServiceWriter
+                    var (telemetryServiceWriterMock, insertTelemetryRequestObserved) = CreateTelemetryWriterServiceMock(serviceProvider);
+
+                    //--UUT
+                    var uut = serviceProvider.GetRequiredService<IFileService>();
+                    var uutConcrete = (FileService)uut;
+
+                    //Act
+                    await uutConcrete.UpsertFileAsync(path, text, encoding, cancellationToken).ConfigureAwait(false);
+
+                    //Assert
+                    loggerServiceMock
+                    .Verify
+                    (
+                        loggerService => loggerService.LogInformationRedacted
+                        (
+                            $"{nameof(IFileService)}.{nameof(IFileService.UpsertFileAsync)}",
+                            LogGroup.Infrastructure,
+                            It.IsAny<IDictionary<string, object>>()
+                        ),
+                        Times.Once
+                    );
+
+                    var pathObserved = (string)propertiesObserved["path"];
+                    var durationObserved = (TimeSpan)propertiesObserved["Duration"];
+                    var telemetryResponseStateObserved = (TelemetryResponseState)propertiesObserved["TelemetryResponseState"];
+
+                    Assert.AreEqual(path, pathObserved);
+                    Assert.AreEqual(0, durationObserved.TotalMilliseconds);
+                    Assert.AreEqual(TelemetryResponseState.Successful, telemetryResponseStateObserved);
+
+                    await Task.CompletedTask.ConfigureAwait(false);
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            ).ConfigureAwait(false);
+        }
+
+        [TestMethod]
+        public async Task UpsertFileAsyncString_Throws_LogErrorRedactedCalled()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+
+                    //-- Inputs
+                    var path = "SamplePath";
+                    var text= "SampleFile";
+                    var encoding = Encoding.UTF8;
+                    var cancellationToken = new CancellationToken();
+
+                    //-- IDateTimeService
+                    var dateTime = new DateTime(2000, 1, 1);
+                    var dateTimeServiceMock = CreateDateTimeServiceMock(serviceProvider, dateTime);
+
+                    //-- IStopwatchService
+                    var stopwatchServiceMock = CreateStopWatchServiceMock(serviceProvider);
+
+                    //-- IStopwatchFactory
+                    var stopwatchFactoryMock = CreateStopWatchFactoryMock(serviceProvider, stopwatchServiceMock.Object);
+
+                    //-- IFile
+                    var fileMock = CreateFileMock(serviceProvider);
+
+                    //-- IFileSystem
+                    var fileSystemMock = CreateFileSystemMock(serviceProvider, fileMock.Object, true);
+
+                    //-- ILoggerService
+                    var (loggerServiceMock, propertiesObserved) = CreateLoggerService(serviceProvider);
+
+                    //-- ITelemetryServiceWriter
+                    var (telemetryServiceWriterMock, insertTelemetryRequestObserved) = CreateTelemetryWriterServiceMock(serviceProvider);
+
+                    //--UUT
+                    var uut = serviceProvider.GetRequiredService<IFileService>();
+                    var uutConcrete = (FileService)uut;
+
+                    //Act
+                    await Assert.ThrowsExceptionAsync<Exception>(async () => await uutConcrete.UpsertFileAsync(path, text, encoding, cancellationToken).ConfigureAwait(false)).ConfigureAwait(false);
+
+                    //Assert
+                    loggerServiceMock
+                    .Verify
+                    (
+                        loggerService => loggerService.LogErrorRedacted
+                        (
+                            $"{nameof(IFileService)}.{nameof(IFileService.UpsertFileAsync)}",
+                            LogGroup.Infrastructure,
+                            It.IsAny<Exception>(),
+                            It.IsAny<IDictionary<string, object>>()
+                        ),
+                        Times.Once
+                    );
+
+                    var pathObserved = (string)propertiesObserved["path"];
+                    var durationObserved = (TimeSpan)propertiesObserved["Duration"];
+                    var telemetryResponseStateObserved = (TelemetryResponseState)propertiesObserved["TelemetryResponseState"];
+
+                    Assert.AreEqual(path, pathObserved);
+                    Assert.AreEqual(0, durationObserved.TotalMilliseconds);
+                    Assert.AreEqual(TelemetryResponseState.UnhandledException, telemetryResponseStateObserved);
+
+                    await Task.CompletedTask.ConfigureAwait(false);
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            ).ConfigureAwait(false);
+        }
+
+        [TestMethod]
+        public async Task UpsertFileAsyncString_Runs_TelemetryWriterServiceCalled()
+        {
+            await RunDependencyInjectedTestAsync
+            (
+                async (serviceProvider) =>
+                {
+                    //Setup
+
+                    //-- Inputs
+                    var path = "SamplePath";
+                    var text= "SampleFile";
+                    var encoding = Encoding.UTF8;
+                    var cancellationToken = new CancellationToken();
+
+                    //-- IDateTimeService
+                    var dateTime = new DateTime(2000, 1, 1);
+                    var dateTimeServiceMock = CreateDateTimeServiceMock(serviceProvider, dateTime);
+
+                    //-- IStopwatchService
+                    var stopwatchServiceMock = CreateStopWatchServiceMock(serviceProvider);
+
+                    //-- IStopwatchFactory
+                    var stopwatchFactoryMock = CreateStopWatchFactoryMock(serviceProvider, stopwatchServiceMock.Object);
+
+                    //-- IFile
+                    var fileMock = CreateFileMock(serviceProvider);
+
+                    //-- IFileSystem
+                    var fileSystemMock = CreateFileSystemMock(serviceProvider, fileMock.Object, true);
+
+                    //-- ILoggerService
+                    var (loggerServiceMock, propertiesObserved) = CreateLoggerService(serviceProvider);
+
+                    //-- ITelemetryServiceWriter
+                    var (telemetryServiceWriterMock, insertTelemetryRequestObserved) = CreateTelemetryWriterServiceMock(serviceProvider);
+
+                    //--UUT
+                    var uut = serviceProvider.GetRequiredService<IFileService>();
+                    var uutConcrete = (FileService)uut;
+
+                    //Act
+                    await Assert.ThrowsExceptionAsync<Exception>(async () => await uutConcrete.UpsertFileAsync(path, text, encoding, cancellationToken).ConfigureAwait(false)).ConfigureAwait(false);
+
+                    //Assert
+                    telemetryServiceWriterMock
+                    .Verify
+                    (
+                        telemetryServiceWriter => telemetryServiceWriter.Insert
+                        (
+                            It.IsAny<InsertTelemetryItem>()
+                        ),
+                        Times.Once
+                    );
+
+                    Assert.AreEqual("File System", insertTelemetryRequestObserved.ConnectionName);
+                    Assert.AreEqual(TelemetryType.FileSystem, insertTelemetryRequestObserved.TelemetryType);
+
+
+                    await Task.CompletedTask.ConfigureAwait(false);
+                },
+                serviceCollection => ConfigureServices(serviceCollection)
+            ).ConfigureAwait(false);
+        }
+
+        #endregion
+
         #region Helpers
 
         private IServiceCollection ConfigureServices(IServiceCollection serviceCollection)
