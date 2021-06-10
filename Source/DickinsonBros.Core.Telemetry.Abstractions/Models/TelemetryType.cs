@@ -5,7 +5,7 @@
         Application     = 0,
         AzureTable      = 1,
         Cosmos          = 2,
-        Email           = 3,
+        SMTP            = 3,
         FileSystem      = 4,
         Rest            = 5,
         SQL             = 6,

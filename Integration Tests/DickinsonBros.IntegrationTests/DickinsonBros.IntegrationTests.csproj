@@ -36,6 +36,7 @@
     <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.AzureTables.AspDI\DickinsonBros.Infrastructure.AzureTables.AspDI.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.Cosmos.AspDI\DickinsonBros.Infrastructure.Cosmos.AspDI.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.File.AspDI\DickinsonBros.Infrastructure.File.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.SMTP.AspDI\DickinsonBros.Infrastructure.SMTP.AspDI.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.SQL.AspDI\DickinsonBros.Infrastructure.SQL.AspDI.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Sinks.Telemetry.AzureTables.AspDI\DickinsonBros.Sinks.Telemetry.AzureTables.AspDI.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Sinks.Telemetry.Log.Abstractions\DickinsonBros.Sinks.Telemetry.Log.Abstractions.csproj" />
@@ -58,7 +59,6 @@
   <ItemGroup>
     <Folder Include="Tests\Application\Email\" />
     <Folder Include="Tests\Infrastructure\Rest\Extensions\" />
-    <Folder Include="Tests\Infrastructure\SMTP\Extensions\" />
     <Folder Include="Tests\Middleware\ASP\Extensions\" />
     <Folder Include="Tests\Middleware\Function\Extensions\" />
   </ItemGroup>

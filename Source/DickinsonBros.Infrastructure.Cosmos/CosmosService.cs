@@ -30,7 +30,6 @@ namespace DickinsonBros.Infrastructure.Cosmos
 
         public CosmosService
         (
-           
             ICorrelationService correlationService,
             ICosmosFactory cosmosFactory, 
             IDateTimeService dateTimeService,

@@ -14,6 +14,7 @@ using DickinsonBros.Infrastructure.AzureTables.AspDI.Extensions;
 using DickinsonBros.Infrastructure.Cosmos.Abstractions;
 using DickinsonBros.Infrastructure.Cosmos.AspDI.Extensions;
 using DickinsonBros.Infrastructure.File.AspDI.Extensions;
+using DickinsonBros.Infrastructure.SMTP.AspDI.Extensions;
 using DickinsonBros.Infrastructure.SQL.AspDI.Extensions;
 using DickinsonBros.IntegrationTests.Config;
 using DickinsonBros.IntegrationTests.Tests.Core.Correlation.Extensions;
@@ -31,6 +32,7 @@ using DickinsonBros.IntegrationTests.Tests.Infrastructure.AzureTables.Models;
 using DickinsonBros.IntegrationTests.Tests.Infrastructure.Cosmos.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Infrastructure.Cosmos.Models;
 using DickinsonBros.IntegrationTests.Tests.Infrastructure.File.Extensions;
+using DickinsonBros.IntegrationTests.Tests.Infrastructure.SMTP.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Infrastructure.SQL.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Sinks.Telemetry.AzureTables.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Sinks.Telemetry.Log.Extensions;
@@ -43,7 +45,9 @@ using DickinsonBros.Test.Integration.Adapter.AspDI.Extensions;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Table;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -73,7 +77,7 @@ namespace DickinsonBros.IntegrationTests
             var testlog = (string)null;
             try
             {
-                var tests               = integrationTestService.FetchTestsByName("File");
+                var tests               = integrationTestService.FetchTestsByName("SMTP");
                 var testSummary         = await integrationTestService.RunTests(tests).ConfigureAwait(false);
                 testlog                 = integrationTestService.GenerateLog(testSummary, false);
 
@@ -86,7 +90,6 @@ namespace DickinsonBros.IntegrationTests
             finally
             {
                 await CosmosCleanUpAsync(provider).ConfigureAwait(false);
-
 
                 await FlushAzureTablesCleanUpAsync(provider).ConfigureAwait(false);
                 await Task.Delay(1000).ConfigureAwait(false);
@@ -145,6 +148,7 @@ namespace DickinsonBros.IntegrationTests
         {
             //--Misc
             serviceCollection.AddMemoryCache();
+            serviceCollection.TryAddSingleton<IFileSystem, FileSystem>();
 
             //--Core
             serviceCollection.AddGuidService();
@@ -169,6 +173,7 @@ namespace DickinsonBros.IntegrationTests
             serviceCollection.AddAzureTablesService<RunnerAzureTableServiceOptionsType, Configuration>();
             serviceCollection.AddCosmosService<RunnerCosmosServiceOptionsType, Configuration>();
             serviceCollection.AddSQLService<RunnerSQLServiceOptionsType, Configuration>();
+            serviceCollection.AddSMTPService<RunnerSMTPServiceOptionsType, Configuration>();
 
             //--Middleware
 
@@ -201,6 +206,8 @@ namespace DickinsonBros.IntegrationTests
             serviceCollection.AddCosmosIntegrationTests();
             serviceCollection.AddSQLIntegrationTests();
             serviceCollection.AddFileIntegrationTests();
+            serviceCollection.AddSMTPIntegrationTests();
+
             //--Middleware
 
             //--Application

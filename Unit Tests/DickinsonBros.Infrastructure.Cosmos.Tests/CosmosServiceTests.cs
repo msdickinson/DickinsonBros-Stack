@@ -6435,7 +6435,6 @@ namespace DickinsonBros.Infrastructure.Cosmos.Tests
             serviceCollection.AddSingleton(Mock.Of<IStopwatchFactory>());
             serviceCollection.AddSingleton(Mock.Of<IStopwatchService>());
             serviceCollection.AddSingleton(Mock.Of<IDateTimeService>());
-            serviceCollection.AddSingleton(Mock.Of<ICorrelationService>());
             serviceCollection.AddSingleton(Mock.Of<ILoggerService<CosmosService<Test>>>());
             serviceCollection.AddSingleton(Mock.Of<ITelemetryWriterService>());
 
