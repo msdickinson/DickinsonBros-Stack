@@ -9,5 +9,6 @@
         FileSystem      = 4,
         Rest            = 5,
         SQL             = 6,
+        DomainNameServer = 7,
     }
 }

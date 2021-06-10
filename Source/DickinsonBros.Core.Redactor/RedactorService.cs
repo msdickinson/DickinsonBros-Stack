@@ -3,6 +3,7 @@ using DickinsonBros.Core.Redactor.Models;
 using Microsoft.Extensions.Options;
 using MoreLinq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -20,11 +21,13 @@ namespace DickinsonBros.Core.Redactor
         readonly static JsonSerializerSettings _jsonSettings = new JsonSerializerSettings
         {
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-            Formatting = Formatting.Indented
+            Formatting = Formatting.Indented,            
         };
 
         public RedactorService(IOptions<RedactorServiceOptions> options)
         {
+            _jsonSettings.Converters.Add(new StringEnumConverter()); 
+
             _regexValuesToRedact = new List<Regex>
             (
                 (options.Value.RegexValuesToRedact ?? new string[] { }).Select(valueToRedact => new Regex(valueToRedact))

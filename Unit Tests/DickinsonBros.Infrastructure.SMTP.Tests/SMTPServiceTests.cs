@@ -396,14 +396,15 @@ namespace DickinsonBros.Infrastructure.SMTP.Tests
 
                     var hostObserved = (string)propertiesObserved.First()["Host"];
                     var subjectObserved = (string)propertiesObserved.First()["Subject"];
-                    var toObserved = (IEnumerable<string>)propertiesObserved.First()["To"];
-                    var fromObserved = (IEnumerable<string>)propertiesObserved.First()["From"];
+                    var toObserved = (string)propertiesObserved.First()["To"];
+                    var fromObserved = (string)propertiesObserved.First()["From"];
                     var durationObserved = (TimeSpan)propertiesObserved.First()["Duration"];
                     var TelemetryResponseStateObserved = (TelemetryResponseState)propertiesObserved.First()["TelemetryResponseState"];
 
                     Assert.AreEqual(smtpServiceOptions.Value.Host, hostObserved);
                     Assert.AreEqual(mimeMessage.Subject, subjectObserved);
-                    Assert.AreEqual(mimeMessage.To.Count(), toObserved.Count());
+                    Assert.AreEqual(mimeMessage.To.OfType<MailboxAddress>().Select(e => e.Address).First(), toObserved);
+                    Assert.AreEqual(mimeMessage.From.OfType<MailboxAddress>().Select(e => e.Address).First(), fromObserved);
                     Assert.IsNotNull(durationObserved);
                     Assert.AreEqual(TelemetryResponseState.UnhandledException, TelemetryResponseStateObserved);
 
@@ -479,14 +480,15 @@ namespace DickinsonBros.Infrastructure.SMTP.Tests
 
                     var hostObserved = (string)propertiesObserved.First()["Host"];
                     var subjectObserved = (string)propertiesObserved.First()["Subject"];
-                    var toObserved = (IEnumerable<string>)propertiesObserved.First()["To"];
-                    var fromObserved = (IEnumerable<string>)propertiesObserved.First()["From"];
+                    var toObserved = (string)propertiesObserved.First()["To"];
+                    var fromObserved = (string)propertiesObserved.First()["From"];
                     var durationObserved = (TimeSpan)propertiesObserved.First()["Duration"];
                     var TelemetryResponseStateObserved = (TelemetryResponseState)propertiesObserved.First()["TelemetryResponseState"];
 
                     Assert.AreEqual(smtpServiceOptions.Value.Host, hostObserved);
                     Assert.AreEqual(mimeMessage.Subject, subjectObserved);
-                    Assert.AreEqual(mimeMessage.To.Count(), toObserved.Count());
+                    Assert.AreEqual(mimeMessage.To.OfType<MailboxAddress>().Select(e => e.Address).First(), toObserved);
+                    Assert.AreEqual(mimeMessage.From.OfType<MailboxAddress>().Select(e => e.Address).First(), fromObserved);
                     Assert.IsNotNull(durationObserved);
                     Assert.AreEqual(TelemetryResponseState.Successful, TelemetryResponseStateObserved);
 
@@ -629,14 +631,15 @@ namespace DickinsonBros.Infrastructure.SMTP.Tests
 
                     var hostObserved = (string)propertiesObserved.First()["Host"];
                     var subjectObserved = (string)propertiesObserved.First()["Subject"];
-                    var toObserved = (IEnumerable<string>)propertiesObserved.First()["To"];
-                    var fromObserved = (IEnumerable<string>)propertiesObserved.First()["From"];
+                    var toObserved = (string)propertiesObserved.First()["To"];
+                    var fromObserved = (string)propertiesObserved.First()["From"];
                     var durationObserved = (TimeSpan)propertiesObserved.First()["Duration"];
                     var TelemetryResponseStateObserved = (TelemetryResponseState)propertiesObserved.First()["TelemetryResponseState"];
 
                     Assert.AreEqual(smtpServiceOptions.Value.Host, hostObserved);
                     Assert.AreEqual(mimeMessage.Subject, subjectObserved);
-                    Assert.AreEqual(mimeMessage.To.Count(), toObserved.Count());
+                    Assert.AreEqual(mimeMessage.To.OfType<MailboxAddress>().Select(e => e.Address).First(), toObserved);
+                    Assert.AreEqual(mimeMessage.From.OfType<MailboxAddress>().Select(e => e.Address).First(), fromObserved);
                     Assert.IsNotNull(durationObserved);
                     Assert.AreEqual(TelemetryResponseState.UnhandledException, TelemetryResponseStateObserved);
 

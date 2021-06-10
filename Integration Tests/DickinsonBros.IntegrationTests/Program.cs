@@ -13,6 +13,7 @@ using DickinsonBros.Infrastructure.AzureTables.Abstractions;
 using DickinsonBros.Infrastructure.AzureTables.AspDI.Extensions;
 using DickinsonBros.Infrastructure.Cosmos.Abstractions;
 using DickinsonBros.Infrastructure.Cosmos.AspDI.Extensions;
+using DickinsonBros.Infrastructure.DNS.AspDI.Extensions;
 using DickinsonBros.Infrastructure.File.AspDI.Extensions;
 using DickinsonBros.Infrastructure.SMTP.AspDI.Extensions;
 using DickinsonBros.Infrastructure.SQL.AspDI.Extensions;
@@ -31,6 +32,7 @@ using DickinsonBros.IntegrationTests.Tests.Infrastructure.AzureTables.Extensions
 using DickinsonBros.IntegrationTests.Tests.Infrastructure.AzureTables.Models;
 using DickinsonBros.IntegrationTests.Tests.Infrastructure.Cosmos.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Infrastructure.Cosmos.Models;
+using DickinsonBros.IntegrationTests.Tests.Infrastructure.DNS.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Infrastructure.File.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Infrastructure.SMTP.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Infrastructure.SQL.Extensions;
@@ -77,7 +79,7 @@ namespace DickinsonBros.IntegrationTests
             var testlog = (string)null;
             try
             {
-                var tests               = integrationTestService.FetchTestsByName("SMTP");
+                var tests               = integrationTestService.FetchTestsByName("DNS");
                 var testSummary         = await integrationTestService.RunTests(tests).ConfigureAwait(false);
                 testlog                 = integrationTestService.GenerateLog(testSummary, false);
 
@@ -174,6 +176,7 @@ namespace DickinsonBros.IntegrationTests
             serviceCollection.AddCosmosService<RunnerCosmosServiceOptionsType, Configuration>();
             serviceCollection.AddSQLService<RunnerSQLServiceOptionsType, Configuration>();
             serviceCollection.AddSMTPService<RunnerSMTPServiceOptionsType, Configuration>();
+            serviceCollection.AddDNSService();
 
             //--Middleware
 
@@ -207,6 +210,7 @@ namespace DickinsonBros.IntegrationTests
             serviceCollection.AddSQLIntegrationTests();
             serviceCollection.AddFileIntegrationTests();
             serviceCollection.AddSMTPIntegrationTests();
+            serviceCollection.AddDNSIntegrationTests();
 
             //--Middleware
 

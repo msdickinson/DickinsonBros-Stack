@@ -35,6 +35,7 @@
     <ProjectReference Include="..\..\Source\DickinsonBros.Encryption.JWT\DickinsonBros.Encryption.JWT.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.AzureTables.AspDI\DickinsonBros.Infrastructure.AzureTables.AspDI.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.Cosmos.AspDI\DickinsonBros.Infrastructure.Cosmos.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.DNS.AspDI\DickinsonBros.Infrastructure.DNS.AspDI.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.File.AspDI\DickinsonBros.Infrastructure.File.AspDI.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.SMTP.AspDI\DickinsonBros.Infrastructure.SMTP.AspDI.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.SQL.AspDI\DickinsonBros.Infrastructure.SQL.AspDI.csproj" />
