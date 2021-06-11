@@ -43,15 +43,15 @@ namespace DickinsonBros.IntegrationTests.Tests.Infrastructure.File
             Assert.IsTrue(exist, "FileExists Failed");
             successLog.Add($"FileExists Successful.");
 
-            //Load (String)
-            var text = await _fileService.LoadFileAsync(filePath + filename, Encoding.ASCII).ConfigureAwait(false);
-            Assert.AreEqual(fileContent, text, "LoadFile (String) Failed");
-            successLog.Add($"LoadFile (String) Successful.");
-
             //Load (Byte[])
             var byteArray = await _fileService.LoadFileAsync(filePath + filename).ConfigureAwait(false);
             Assert.IsNotNull(byteArray, "LoadFile (Byte Array) Failed");
             successLog.Add($"LoadFile (Byte Array) Successful.");
+
+            //Load (String)
+            var text = await _fileService.LoadFileAsync(filePath + filename, Encoding.ASCII).ConfigureAwait(false);
+            Assert.AreEqual(fileContent + " Edited", text, "LoadFile (String) Failed");
+            successLog.Add($"LoadFile (String) Successful.");
 
             //Delete
             _fileService.DeleteFile(filePath + filename);

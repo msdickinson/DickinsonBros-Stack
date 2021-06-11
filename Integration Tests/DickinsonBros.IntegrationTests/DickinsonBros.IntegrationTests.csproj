@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Source\DickinsonBros.Application.Email.Adapter.AspDI\DickinsonBros.Application.Email.Adapter.AspDI.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Core.Correlation.Adapter.AspDI\DickinsonBros.Core.Correlation.Adapter.AspDI.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Core.Correlation\DickinsonBros.Core.Correlation.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Core.DateTime.Adapter.AspDI\DickinsonBros.Core.DateTime.Adapter.AspDI.csproj" />
@@ -58,7 +59,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Tests\Application\Email\" />
     <Folder Include="Tests\Infrastructure\Rest\Extensions\" />
     <Folder Include="Tests\Middleware\ASP\Extensions\" />
     <Folder Include="Tests\Middleware\Function\Extensions\" />

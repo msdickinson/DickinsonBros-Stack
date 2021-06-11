@@ -1,4 +1,5 @@
 ﻿using Dickinsonbros.Core.Guid.Adapter.AspDI.Extensions;
+using DickinsonBros.Application.Email.Adapter.AspDI.Extensions;
 using DickinsonBros.Core.Correlation.Adapter.AspDI.Extensions;
 using DickinsonBros.Core.DateTime.Adapter.AspDI.Extensions;
 using DickinsonBros.Core.Logger.Adapter.AspDI.Extensions;
@@ -18,6 +19,7 @@ using DickinsonBros.Infrastructure.File.AspDI.Extensions;
 using DickinsonBros.Infrastructure.SMTP.AspDI.Extensions;
 using DickinsonBros.Infrastructure.SQL.AspDI.Extensions;
 using DickinsonBros.IntegrationTests.Config;
+using DickinsonBros.IntegrationTests.Tests.Application.Email.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Core.Correlation.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Core.DateTime.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Core.Guid.Extensions;
@@ -50,11 +52,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.IO.Abstractions;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DickinsonBros.IntegrationTests
 {
+    //TODO: Change Sample Emails to keep subject unquie
+    //
     class Program
     {
         internal const string AZURE_TABLE_NAME = "DickinsonBrosIntegrationTests";
@@ -79,7 +82,7 @@ namespace DickinsonBros.IntegrationTests
             var testlog = (string)null;
             try
             {
-                var tests               = integrationTestService.FetchTestsByName("DNS");
+                var tests               = integrationTestService.FetchTests();
                 var testSummary         = await integrationTestService.RunTests(tests).ConfigureAwait(false);
                 testlog                 = integrationTestService.GenerateLog(testSummary, false);
 
@@ -90,10 +93,12 @@ namespace DickinsonBros.IntegrationTests
                 Console.WriteLine(e);
             }
             finally
-            {
-                await CosmosCleanUpAsync(provider).ConfigureAwait(false);
-
+            {   
+                //Flush
                 await FlushAzureTablesCleanUpAsync(provider).ConfigureAwait(false);
+
+                //Clear
+                await CosmosCleanUpAsync(provider).ConfigureAwait(false);
                 await Task.Delay(1000).ConfigureAwait(false);
                 await AzureTablesCleanUpAsync(provider).ConfigureAwait(false);
                 await Task.Delay(1000).ConfigureAwait(false);
@@ -181,6 +186,7 @@ namespace DickinsonBros.IntegrationTests
             //--Middleware
 
             //--Application
+            serviceCollection.AddEmailService<RunnerSMTPServiceOptionsType>();
 
             //--Sinks
             serviceCollection.AddSinksTelemetryLogServiceService();
@@ -212,9 +218,11 @@ namespace DickinsonBros.IntegrationTests
             serviceCollection.AddSMTPIntegrationTests();
             serviceCollection.AddDNSIntegrationTests();
 
+
             //--Middleware
 
             //--Application
+            serviceCollection.AddEmailIntegrationTests();
 
             //--Sinks
             serviceCollection.AddSinksTelemetryLogIntegrationTests();

@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Configurations>Debug;Release;Local;Local-Release;Local-Debug;Publish-Debug;Publish-Release</Configurations>
+    <VersionPrefix>1.0.0</VersionPrefix>
+    <Authors>Mark Dickinson</Authors>
+    <Company>DickinsonBros</Company>
+    <RepositoryUrl>https://github.com/msdickinson/DickinsonBros</RepositoryUrl>
+    <Description>
+      A correlation service that maintains a string across threads
+    </Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DickinsonBros.Application.Email.Abstractions\DickinsonBros.Application.Email.Abstractions.csproj" />
+    <ProjectReference Include="..\Dickinsonbros.Core.Guid.Abstractions\Dickinsonbros.Core.Guid.Abstractions.csproj" />
+    <ProjectReference Include="..\DickinsonBros.Core.Logger.Abstractions\DickinsonBros.Core.Logger.Abstractions.csproj" />
+    <ProjectReference Include="..\DickinsonBros.Infrastructure.File.Abstractions\DickinsonBros.Infrastructure.File.Abstractions.csproj" />
+    <ProjectReference Include="..\DickinsonBros.Infrastructure.SMTP.Abstractions\DickinsonBros.Infrastructure.SMTP.Abstractions.csproj" />
+  </ItemGroup>
+
+  <Import Project="..\Packaging.targets" />
+  <Import Project="..\CopyPackageToPublishDirectory.targets" />
+  <Import Project="..\FixDistributedLockCoreDependencyVersion.targets" />
+</Project>

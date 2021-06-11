@@ -54,9 +54,6 @@ namespace DickinsonBros.IntegrationTests.Tests.Infrastructure.SMTP
             var results = await Task.WhenAll
             (
                 _smtpService.SendEmailAsync(CreateMessage(counter++)),
-                _smtpService.SendEmailAsync(CreateMessage(counter++)),
-                _smtpService.SendEmailAsync(CreateMessage(counter++)),
-                _smtpService.SendEmailAsync(CreateMessage(counter++)),
                 _smtpService.SendEmailAsync(CreateMessage(counter++))
             );
             var x = results.All(e => e.SendEmailResult == SendEmailResult.Successful);
@@ -73,10 +70,10 @@ namespace DickinsonBros.IntegrationTests.Tests.Infrastructure.SMTP
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress("Test", email));
             message.To.Add(new MailboxAddress("Test", email));
-            message.Subject = $"Integration Tests SendEmailAsync - {_correlationService.CorrelationId} - ({counter})";
+            message.Subject = $"SMTPIntegrationTests";
             message.Body = new TextPart("plain")
             {
-                Text = $@"Test Runner Email Body"
+                Text = $@"Test Runner Email Body {_correlationService.CorrelationId} - ({counter})"
             };
           
             return message;
