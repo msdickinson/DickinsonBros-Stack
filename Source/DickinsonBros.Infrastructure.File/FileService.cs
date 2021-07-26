@@ -52,7 +52,8 @@ namespace DickinsonBros.Infrastructure.File
                 DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
                 Request = $"CreateFile",
                 TelemetryType = TelemetryType.FileSystem,
-                CorrelationId = _correlationService.CorrelationId
+                CorrelationId = _correlationService.CorrelationId,
+                TelemetryResponseState = TelemetryResponseState.Successful
             };
 
             var stopwatchService = _stopwatchFactory.NewStopwatchService();
@@ -63,6 +64,9 @@ namespace DickinsonBros.Infrastructure.File
                 stopwatchService.Start();
                 _fileSystem.File.Delete(path);
                 stopwatchService.Stop();
+
+                insertTelemetryRequest.Duration = stopwatchService.Elapsed;
+                insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.Successful;
 
                 _logger.LogInformationRedacted
                 (
@@ -187,6 +191,9 @@ namespace DickinsonBros.Infrastructure.File
                 var response = await _fileSystem.File.ReadAllTextAsync(path, encoding, cancellationToken).ConfigureAwait(false);
                 stopwatchService.Stop();
 
+                insertTelemetryRequest.Duration = stopwatchService.Elapsed;
+                insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.Successful;
+
                 _logger.LogInformationRedacted
                 (
                     methodIdentifier,
@@ -248,6 +255,9 @@ namespace DickinsonBros.Infrastructure.File
                 stopwatchService.Start();
                 var response = await _fileSystem.File.ReadAllBytesAsync(path, cancellationToken).ConfigureAwait(false);
                 stopwatchService.Stop();
+
+                insertTelemetryRequest.Duration = stopwatchService.Elapsed;
+                insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.Successful;
 
                 _logger.LogInformationRedacted
                 (
@@ -311,6 +321,9 @@ namespace DickinsonBros.Infrastructure.File
                 await _fileSystem.File.WriteAllBytesAsync(path, bytes, cancellationToken).ConfigureAwait(false);
                 stopwatchService.Stop();
 
+                insertTelemetryRequest.Duration = stopwatchService.Elapsed;
+                insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.Successful;
+
                 _logger.LogInformationRedacted
                 (
                     methodIdentifier,
@@ -370,6 +383,9 @@ namespace DickinsonBros.Infrastructure.File
                 stopwatchService.Start();
                 await _fileSystem.File.WriteAllTextAsync(path, file, encoding, cancellationToken).ConfigureAwait(false);
                 stopwatchService.Stop();
+
+                insertTelemetryRequest.Duration = stopwatchService.Elapsed;
+                insertTelemetryRequest.TelemetryResponseState = TelemetryResponseState.Successful;
 
                 _logger.LogInformationRedacted
                 (

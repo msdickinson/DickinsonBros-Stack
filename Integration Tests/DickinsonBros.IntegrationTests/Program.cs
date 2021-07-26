@@ -36,6 +36,7 @@ using DickinsonBros.IntegrationTests.Tests.Infrastructure.Cosmos.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Infrastructure.Cosmos.Models;
 using DickinsonBros.IntegrationTests.Tests.Infrastructure.DNS.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Infrastructure.File.Extensions;
+using DickinsonBros.IntegrationTests.Tests.Infrastructure.Rest.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Infrastructure.SMTP.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Infrastructure.SQL.Extensions;
 using DickinsonBros.IntegrationTests.Tests.Sinks.Telemetry.AzureTables.Extensions;
@@ -82,7 +83,7 @@ namespace DickinsonBros.IntegrationTests
             var testlog = (string)null;
             try
             {
-                var tests               = integrationTestService.FetchTests();
+                var tests               = integrationTestService.FetchTestsByName("Rest");
                 var testSummary         = await integrationTestService.RunTests(tests).ConfigureAwait(false);
                 testlog                 = integrationTestService.GenerateLog(testSummary, false);
 
@@ -181,6 +182,7 @@ namespace DickinsonBros.IntegrationTests
             serviceCollection.AddCosmosService<RunnerCosmosServiceOptionsType, Configuration>();
             serviceCollection.AddSQLService<RunnerSQLServiceOptionsType, Configuration>();
             serviceCollection.AddSMTPService<RunnerSMTPServiceOptionsType, Configuration>();
+            serviceCollection.AddRestService();
             serviceCollection.AddDNSService();
 
             //--Middleware
@@ -217,6 +219,7 @@ namespace DickinsonBros.IntegrationTests
             serviceCollection.AddFileIntegrationTests();
             serviceCollection.AddSMTPIntegrationTests();
             serviceCollection.AddDNSIntegrationTests();
+            serviceCollection.AddRestIntegrationTests();
 
 
             //--Middleware

@@ -38,6 +38,7 @@
     <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.Cosmos.AspDI\DickinsonBros.Infrastructure.Cosmos.AspDI.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.DNS.AspDI\DickinsonBros.Infrastructure.DNS.AspDI.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.File.AspDI\DickinsonBros.Infrastructure.File.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.Rest.AspDI\DickinsonBros.Infrastructure.Rest.AspDI.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.SMTP.AspDI\DickinsonBros.Infrastructure.SMTP.AspDI.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.SQL.AspDI\DickinsonBros.Infrastructure.SQL.AspDI.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Sinks.Telemetry.AzureTables.AspDI\DickinsonBros.Sinks.Telemetry.AzureTables.AspDI.csproj" />
@@ -59,24 +60,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Tests\Infrastructure\Rest\Extensions\" />
     <Folder Include="Tests\Middleware\ASP\Extensions\" />
     <Folder Include="Tests\Middleware\Function\Extensions\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="3.1.15" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.*" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.*" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.*" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.*" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.*" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.*" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.*" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.*" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.*" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="3.*" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.*" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.7" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.7" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.7" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.1.7" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.7" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.7" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.7" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.7" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.7" />
     <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
   </ItemGroup>
 
