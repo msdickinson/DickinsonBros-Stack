@@ -30,8 +30,7 @@ namespace DickinsonBros.Infrastructure.Rest
         internal readonly IStopwatchFactory _stopwatchFactory;
         internal readonly ILoggerService<RestService> _loggingService;
         internal const string CORRELATION_ID = "X-Correlation-ID";
-        internal readonly string DURABLE_REST_MESSAGE_REQUEST = $"{nameof(RestService)} - Request";
-        internal readonly string DURABLE_REST_MESSAGE_RESPONSE = $"{nameof(RestService)} - Response";
+        internal const string RESULT = "RestService.ExecuteAsync - Result";
 
         public RestService
         (
@@ -88,6 +87,11 @@ namespace DickinsonBros.Infrastructure.Rest
             double timeoutInSeconds
         )
         {
+            if(httpRequestMessage == null)
+            {
+                throw (new ArgumentNullException(nameof(httpRequestMessage)));
+            }
+
             var stopwatchService = _stopwatchFactory.NewStopwatchService();
             var attempts = 0;
 
@@ -98,7 +102,7 @@ namespace DickinsonBros.Infrastructure.Rest
                 httpRequestMessage.Headers.Add
                 (
                     CORRELATION_ID,
-                    !string.IsNullOrWhiteSpace(_correlationService.CorrelationId) ? _correlationService.CorrelationId : _guidService.NewGuid().ToString()
+                    _correlationService.CorrelationId
                 );
             }
 
@@ -113,7 +117,6 @@ namespace DickinsonBros.Infrastructure.Rest
                     CorrelationId = _correlationService.CorrelationId
                 };
 
-                await LogRequest(httpRequestMessage, httpClient, attempts).ConfigureAwait(false);
                 var cts = new CancellationTokenSource();
                 cts.CancelAfter(TimeSpan.FromSeconds(timeoutInSeconds));
                 stopwatchService.Start();
@@ -139,7 +142,7 @@ namespace DickinsonBros.Infrastructure.Rest
                 }
 
                 attempts++;
-                await LogResponse(httpRequestMessage, httpResponseMessage, httpClient, attempts, (int)stopwatchService.ElapsedMilliseconds).ConfigureAwait(false);
+                await LogResult(httpRequestMessage, httpResponseMessage, httpClient, attempts, (int)stopwatchService.ElapsedMilliseconds).ConfigureAwait(false);
                 if (httpResponseMessage.IsSuccessStatusCode)
                 {
                     break;
@@ -150,30 +153,7 @@ namespace DickinsonBros.Infrastructure.Rest
             return httpResponseMessage;
         }
 
-        public async Task LogRequest
-        (
-            HttpRequestMessage httpRequestMessage,
-            HttpClient httpClient,
-            int attempts
-        )
-        {
-            var properties = new Dictionary<string, object>
-            {
-                { "Attempts", attempts },
-                { "BaseUrl", httpClient.BaseAddress },
-                { "Resource", httpRequestMessage.RequestUri.OriginalString },
-                { "RequestContent", httpRequestMessage.Content != null ? await httpRequestMessage.Content.ReadAsStringAsync().ConfigureAwait(false) : null },
-            };
-
-            _loggingService.LogInformationRedacted
-            (
-                DURABLE_REST_MESSAGE_REQUEST,
-                LogGroup.Infrastructure,
-                properties
-            );
-        }
-
-        public async Task LogResponse
+        internal async Task LogResult
         (
             HttpRequestMessage httpRequestMessage,
             HttpResponseMessage httpResponseMessage,
@@ -186,18 +166,18 @@ namespace DickinsonBros.Infrastructure.Rest
             {
                 { "Attempts", attempts },
                 { "BaseUrl", httpClient.BaseAddress },
-                { "Resource", httpRequestMessage.RequestUri.LocalPath },
+                { "Resource", httpRequestMessage.RequestUri.OriginalString },
                 { "RequestContent", httpRequestMessage.Content != null ? await httpRequestMessage.Content.ReadAsStringAsync().ConfigureAwait(false) : null },
                 { "ResponseContent", httpResponseMessage?.Content != null ? await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false) : null },
                 { "ElapsedMilliseconds", elapsedMilliseconds },
                 { "StatusCode", httpResponseMessage?.StatusCode }
             };
 
-            if (!httpResponseMessage.IsSuccessStatusCode)
+            if (httpResponseMessage is null || !httpResponseMessage.IsSuccessStatusCode)
             {
                 _loggingService.LogWarningRedacted
                 (
-                    DURABLE_REST_MESSAGE_RESPONSE,
+                    RESULT,
                     LogGroup.Infrastructure,
                     properties
                 );
@@ -206,16 +186,16 @@ namespace DickinsonBros.Infrastructure.Rest
 
             _loggingService.LogInformationRedacted
             (
-                DURABLE_REST_MESSAGE_RESPONSE,
+                RESULT,
                 LogGroup.Infrastructure,
                 properties
             );
 
         }
 
-        public TelemetryResponseState DetermineTelemetryResponseState(int statusCode)
+        internal TelemetryResponseState DetermineTelemetryResponseState(int statusCode)
         {
-            if (statusCode >= 100 && statusCode < 400)
+            if (statusCode >= 200 && statusCode < 300)
             {
                 return TelemetryResponseState.Successful;
             }

@@ -16,7 +16,7 @@ using DickinsonBros.Infrastructure.Rest.Runner.AspDI.Config;
 using DickinsonBros.Infrastructure.Rest.Runner.AspDI.Models.Models;
 using DickinsonBros.Infrastructure.Rest.Runner.AspDI.Services.JsonPlaceHolderProxy;
 using DickinsonBros.Infrastructure.Rest.Runner.AspDI.Services.JsonPlaceHolderProxy.Models;
-using DickinsonBros.Infrastructure.SMTP.AspDI.Extensions;
+using DickinsonBros.Infrastructure.Rest.AspDI.Extensions;
 using DickinsonBros.Sinks.Telemetry.AzureTables.Abstractions;
 using DickinsonBros.Sinks.Telemetry.AzureTables.AspDI.Extensions;
 using DickinsonBros.Sinks.Telemetry.Log.Abstractions;

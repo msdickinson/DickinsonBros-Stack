@@ -16,6 +16,7 @@ using DickinsonBros.Infrastructure.Cosmos.Abstractions;
 using DickinsonBros.Infrastructure.Cosmos.AspDI.Extensions;
 using DickinsonBros.Infrastructure.DNS.AspDI.Extensions;
 using DickinsonBros.Infrastructure.File.AspDI.Extensions;
+using DickinsonBros.Infrastructure.Rest.AspDI.Extensions;
 using DickinsonBros.Infrastructure.SMTP.AspDI.Extensions;
 using DickinsonBros.Infrastructure.SQL.AspDI.Extensions;
 using DickinsonBros.IntegrationTests.Config;

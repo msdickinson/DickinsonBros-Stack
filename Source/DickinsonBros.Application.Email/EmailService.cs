@@ -93,7 +93,6 @@ namespace DickinsonBros.Application.Email
 
             var sendAsyncDescriptor = new SendAsyncDescriptor();
             var smtpTask = (Task<SendEmailDescriptor>)null;
-            var saveFileTask = (Task)null;
 
             var tasks = new List<Task>();
 
@@ -120,7 +119,7 @@ namespace DickinsonBros.Application.Email
 
             await Task.WhenAll(tasks).ConfigureAwait(false);
 
-            sendAsyncDescriptor.SendEmailDescriptor = smtpTask?.Result;
+            sendAsyncDescriptor.SendEmailDescriptor = smtpTask.Result;
 
             return sendAsyncDescriptor;
         }
