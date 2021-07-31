@@ -22,7 +22,7 @@ namespace DickinsonBros.MiddlewareService.ASP
     {
         internal const string CORRELATION_ID = "X-Correlation-ID";
         private readonly RequestDelegate _next;
-        internal readonly IServiceProvider _serviceProvider;
+        internal readonly IStopwatchFactory _stopwatchFactory;
         internal readonly IDateTimeService _dateTimeService;
         internal readonly ITelemetryWriterService _telemetryWriterService;
         internal readonly IGuidService _guidService;
@@ -31,7 +31,7 @@ namespace DickinsonBros.MiddlewareService.ASP
 
         public MiddlewareASPService(
             RequestDelegate next,
-            IServiceProvider serviceProvider,
+            IStopwatchFactory stopwatchFactory,
             IDateTimeService dateTimeService,
             ITelemetryWriterService telemetryWriterService,
             IGuidService guidService,
@@ -43,7 +43,7 @@ namespace DickinsonBros.MiddlewareService.ASP
             _guidService = guidService;
             _loggerService = loggingService;
             _correlationService = correlationService;
-            _serviceProvider = serviceProvider;
+            _stopwatchFactory = stopwatchFactory;
             _dateTimeService = dateTimeService;
             _telemetryWriterService = telemetryWriterService;
         }
@@ -58,8 +58,7 @@ namespace DickinsonBros.MiddlewareService.ASP
                 TelemetryType = TelemetryType.Application
             };
 
-            var stopwatchFactory = _serviceProvider.GetRequiredService<IStopwatchFactory>();
-            var stopwatchService = stopwatchFactory.NewStopwatchService();
+            var stopwatchService = _stopwatchFactory.NewStopwatchService();
             stopwatchService.Start();
             _correlationService.CorrelationId = EnsureCorrelationId(context.Request);
 

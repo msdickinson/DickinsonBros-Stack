@@ -8,7 +8,7 @@ namespace DickinsonBros.Core.Stopwatch.Adapter.AspDI.Extensions
     {
         public static IServiceCollection AddStopwatchService(this IServiceCollection serviceCollection)
         {
-            serviceCollection.TryAddSingleton<IStopwatchService, StopwatchService>();
+            serviceCollection.TryAddTransient<IStopwatchService, StopwatchService>();
             return serviceCollection;
         }
 
