@@ -103,7 +103,7 @@ namespace DickinsonBros.Application.Email
                     message.WriteTo(memory);
                     var byteArray = memory.ToArray();
                     var path = _emailServiceOptions.SaveDirectory + "\\" + _guidService.NewGuid().ToString() + ".eml";
-                    saveFileTask = _fileService.UpsertFileAsync(path, byteArray);
+                    var saveFileTask = _fileService.UpsertFileAsync(path, byteArray);
 
                     sendAsyncDescriptor.SavedEmailToDisk = true;
                     tasks.Add(saveFileTask);
