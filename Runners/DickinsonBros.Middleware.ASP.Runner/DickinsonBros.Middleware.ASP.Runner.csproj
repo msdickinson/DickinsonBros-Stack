@@ -27,7 +27,7 @@
     <ProjectReference Include="..\..\Source\DickinsonBros.Core.Telemetry.Adapter.AspDI\DickinsonBros.Core.Telemetry.Adapter.AspDI.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Encryption.Certificate.Adapter.AspDI\DickinsonBros.Encryption.Certificate.Adapter.AspDI.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.AzureTables.AspDI\DickinsonBros.Infrastructure.AzureTables.AspDI.csproj" />
-    <ProjectReference Include="..\..\Source\DickinsonBros.MiddlewareService.ASP\DickinsonBros.MiddlewareService.ASP.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Middleware.ASP\DickinsonBros.Middleware.ASP.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Sinks.Telemetry.AzureTables.AspDI\DickinsonBros.Sinks.Telemetry.AzureTables.AspDI.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Sinks.Telemetry.Log.AspDI\DickinsonBros.Sinks.Telemetry.Log.AspDI.csproj" />
   </ItemGroup>

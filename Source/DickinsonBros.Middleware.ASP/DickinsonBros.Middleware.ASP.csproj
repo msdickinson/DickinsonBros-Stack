@@ -25,7 +25,7 @@
     <ProjectReference Include="..\DickinsonBros.Core.Logger.Abstractions\DickinsonBros.Core.Logger.Abstractions.csproj" />
     <ProjectReference Include="..\DickinsonBros.Core.Stopwatch.Abstractions\DickinsonBros.Core.Stopwatch.Abstractions.csproj" />
     <ProjectReference Include="..\DickinsonBros.Core.Telemetry.Abstractions\DickinsonBros.Core.Telemetry.Abstractions.csproj" />
-    <ProjectReference Include="..\DickinsonBros.MiddlewareService.ASP.Abstractions\DickinsonBros.MiddlewareService.ASP.Abstractions.csproj" />
+    <ProjectReference Include="..\DickinsonBros.Middleware.ASP.Abstractions\DickinsonBros.Middleware.ASP.Abstractions.csproj" />
   </ItemGroup>
 
   <Import Project="..\Packaging.targets" />

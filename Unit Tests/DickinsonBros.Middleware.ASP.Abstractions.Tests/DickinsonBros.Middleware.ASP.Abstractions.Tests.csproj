@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Source\DickinsonBros.MiddlewareService.ASP.Abstractions\DickinsonBros.MiddlewareService.ASP.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.MiddlewareService.ASP.Abstractions\DickinsonBros.Middleware.ASP.Abstractions.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Test.Unit\DickinsonBros.Test.Unit.csproj" />
   </ItemGroup>
 

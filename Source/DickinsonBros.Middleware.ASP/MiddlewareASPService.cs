@@ -7,7 +7,6 @@ using DickinsonBros.Core.Telemetry.Abstractions;
 using DickinsonBros.Core.Telemetry.Abstractions.Models;
 using DickinsonBros.MiddlewareService.ASP.Abstractions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using MoreLinq;
 using System;
 using System.Collections.Generic;
