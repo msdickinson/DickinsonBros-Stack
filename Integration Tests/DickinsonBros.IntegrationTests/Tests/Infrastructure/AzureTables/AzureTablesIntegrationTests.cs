@@ -19,19 +19,24 @@ namespace DickinsonBros.IntegrationTests.Tests.Infrastructure.AzureTables
     public class AzureTablesIntegrationTests : IAzureTablesIntegrationTests
     {
         public readonly IAzureTableService<RunnerAzureTableServiceOptionsType> _azureTableService;
+        public readonly ITelemetryWriterService _telemetryWriterService;
 
         internal const string TABLE_NAME = "DickinsonBrosIntegrationTests";
 
         public AzureTablesIntegrationTests
         (
+            ITelemetryWriterService telemetryWriterService,
             IAzureTableService<RunnerAzureTableServiceOptionsType> azureTableService
         )
         {
+            _telemetryWriterService = telemetryWriterService;
             _azureTableService = azureTableService;
         }
 
         public async Task InsertAndFetch_Runs_ValuesMatch(List<string> successLog)
         {
+            _telemetryWriterService.ScopedUserStory = "AzureTables";
+
             var sampleEntity = GenerateNewSampleEntity();
 
             var insertAsyncResult = await _azureTableService.InsertAsync(sampleEntity, TABLE_NAME).ConfigureAwait(false);
@@ -44,6 +49,8 @@ namespace DickinsonBros.IntegrationTests.Tests.Infrastructure.AzureTables
 
         public async Task Upsert_Runs_ValuesMatch(List<string> successLog)
         {
+            _telemetryWriterService.ScopedUserStory = "AzureTables";
+
             var sampleEntity = GenerateNewSampleEntity();
 
             //Upsert
@@ -54,6 +61,8 @@ namespace DickinsonBros.IntegrationTests.Tests.Infrastructure.AzureTables
 
         public async Task InsertAndUpsert_Runs_ValuesMatch(List<string> successLog)
         {
+            _telemetryWriterService.ScopedUserStory = "AzureTables";
+
             var sampleEntity = GenerateNewSampleEntity();
 
             //Insert
@@ -70,6 +79,8 @@ namespace DickinsonBros.IntegrationTests.Tests.Infrastructure.AzureTables
 
         public async Task InsertAndDelete_Runs_ValuesMatch(List<string> successLog)
         {
+            _telemetryWriterService.ScopedUserStory = "AzureTables";
+
             var sampleEntity = GenerateNewSampleEntity();
 
             //Insert
@@ -85,6 +96,8 @@ namespace DickinsonBros.IntegrationTests.Tests.Infrastructure.AzureTables
 
         public async Task InsertAndQueryAsync_Runs_ValuesMatch(List<string> successLog)
         {
+            _telemetryWriterService.ScopedUserStory = "AzureTables";
+
             var sampleEntity = GenerateNewSampleEntity();
 
             //Insert
@@ -106,6 +119,8 @@ namespace DickinsonBros.IntegrationTests.Tests.Infrastructure.AzureTables
 
         public async Task InsertBulkAndBulkDelete_Runs_IsSuccessful(List<string> successLog)
         {
+            _telemetryWriterService.ScopedUserStory = "AzureTables";
+
             var sampleEntitys = new List<SampleEntity>();
             for (int i = 0; i < 2; i++)
             {
@@ -125,6 +140,8 @@ namespace DickinsonBros.IntegrationTests.Tests.Infrastructure.AzureTables
 
         public async Task InsertBulkAndUpsertBulkAsync_Runs_IsSuccessful(List<string> successLog)
         {
+            _telemetryWriterService.ScopedUserStory = "AzureTables";
+
             var sampleEntitys = new List<SampleEntity>();
 
             for (int i = 0; i < 2; i++)

@@ -33,6 +33,8 @@ namespace DickinsonBros.IntegrationTests.Tests.Sinks.Telemetry.AzureTables
 
         public async Task InsertAndFlush_Runs_DoesNotThrow(List<string> successLog)
         {
+            _telemetryWriterService.ScopedUserStory = "SinksTelemetryAzureTables";
+
             var insertTelemetryItem = new InsertTelemetryItem()
             {
                 DateTimeUTC = DateTime.UtcNow,

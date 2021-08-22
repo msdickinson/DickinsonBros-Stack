@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AzureFunctionsVersion>v3</AzureFunctionsVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.1.0" />
+    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="3.0.11" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="host.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="local.settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="appsettings.DEBUG.json">
+      <DependentUpon>appsettings.json</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Source\DickinsonBros.Core.Correlation.Adapter.AspDI\DickinsonBros.Core.Correlation.Adapter.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Core.DateTime.Adapter.AspDI\DickinsonBros.Core.DateTime.Adapter.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\Dickinsonbros.Core.Guid.Adapter.AspDI\Dickinsonbros.Core.Guid.Adapter.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Core.Logger.Adapter.AspDI\DickinsonBros.Core.Logger.Adapter.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Core.Redactor.Adapter.AspDI\DickinsonBros.Core.Redactor.Adapter.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Core.Stopwatch.Adapter.AspDI\DickinsonBros.Core.Stopwatch.Adapter.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Core.Telemetry.Adapter.AspDI\DickinsonBros.Core.Telemetry.Adapter.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Encryption.Certificate.Adapter.AspDI\DickinsonBros.Encryption.Certificate.Adapter.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Encryption.JWT.Adapter.AspDI\DickinsonBros.Encryption.JWT.Adapter.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.AzureTables.AspDI\DickinsonBros.Infrastructure.AzureTables.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Middleware.Function.AspDI\DickinsonBros.Middleware.Function.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Sinks.Telemetry.AzureTables.AspDI\DickinsonBros.Sinks.Telemetry.AzureTables.AspDI.csproj" />
+    <ProjectReference Include="..\..\Source\DickinsonBros.Sinks.Telemetry.Log.AspDI\DickinsonBros.Sinks.Telemetry.Log.AspDI.csproj" />
+  </ItemGroup>
+</Project>

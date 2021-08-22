@@ -57,6 +57,8 @@ namespace DickinsonBros.MiddlewareService.ASP
                 TelemetryType = TelemetryType.Application
             };
 
+            _telemetryWriterService.ScopedUserStory = insertTelemetryItem.Request;
+
             var stopwatchService = _stopwatchFactory.NewStopwatchService();
             stopwatchService.Start();
             _correlationService.CorrelationId = EnsureCorrelationId(context.Request);
@@ -119,7 +121,7 @@ namespace DickinsonBros.MiddlewareService.ASP
                 }
                 else
                 {
-                    insertTelemetryItem.TelemetryResponseState = TelemetryResponseState.UnhandledException;
+                    insertTelemetryItem.TelemetryResponseState = TelemetryResponseState.ReciverError;
                 }
                 stopwatchService.Stop();
 

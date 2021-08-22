@@ -27,6 +27,8 @@ namespace DickinsonBros.IntegrationTests.Tests.Sinks.Telemetry.Log
 
         public async Task Insert_Runs_DoesNotThrow(List<string> successLog)
         {
+            _telemetryWriterService.ScopedUserStory = "SinksTelemetryLog";
+
             var insertTelemetryItem = new InsertTelemetryItem()
             {
                 DateTimeUTC = DateTime.UtcNow,

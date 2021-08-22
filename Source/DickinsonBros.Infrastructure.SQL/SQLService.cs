@@ -158,7 +158,7 @@ namespace DickinsonBros.Infrastructure.SQL
             {
                 ConnectionName = _sqlServiceOptions.ConnectionName,
                 DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
-                Request = $"Execute SQL - {sql}",
+                Request = $"Execute - {sql}",
                 TelemetryType = TelemetryType.SQL,
                 CorrelationId = _correlationService.CorrelationId
             };
@@ -228,7 +228,7 @@ namespace DickinsonBros.Infrastructure.SQL
             {
                 ConnectionName = _sqlServiceOptions.ConnectionName,
                 DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
-                Request = $"Query {typeof(T).Name} SQL - {sql}",
+                Request = $"Query {typeof(T).Name} - {sql}",
                 TelemetryType = TelemetryType.SQL,
                 CorrelationId = _correlationService.CorrelationId
             };
@@ -302,7 +302,7 @@ namespace DickinsonBros.Infrastructure.SQL
             {
                 ConnectionName = _sqlServiceOptions.ConnectionName,
                 DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
-                Request = $"QueryFirst {typeof(T).Name} SQL - {sql}",
+                Request = $"QueryFirst {typeof(T).Name} - {sql}",
                 TelemetryType = TelemetryType.SQL,
                 CorrelationId = _correlationService.CorrelationId
             };
@@ -376,7 +376,7 @@ namespace DickinsonBros.Infrastructure.SQL
             {
                 ConnectionName = _sqlServiceOptions.ConnectionName,
                 DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
-                Request = $"QueryFirstOrDefault {typeof(T).Name} SQL - {sql}",
+                Request = $"QueryFirstOrDefault {typeof(T).Name} - {sql}",
                 TelemetryType = TelemetryType.SQL,
                 CorrelationId = _correlationService.CorrelationId
             };

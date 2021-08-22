@@ -76,6 +76,7 @@ namespace DickinsonBros.Sinks.Telemetry.AzureTables
             _queueTelemetryDataEntitys.Enqueue(new TelemetryDataEntity
             {
                 PartitionKey = _options.PartitionKey,
+                UserStory = telemetryItem.UserStory,
                 RowKey = _guidService.NewGuid().ToString(),
                 EventTimestamp = telemetryItem.DateTimeUTC,
                 ElapsedMilliseconds = (int)telemetryItem.Duration.TotalMilliseconds,

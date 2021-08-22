@@ -1,4 +1,5 @@
-﻿using DickinsonBros.Infrastructure.Cosmos.Abstractions;
+﻿using DickinsonBros.Core.Telemetry.Abstractions;
+using DickinsonBros.Infrastructure.Cosmos.Abstractions;
 using DickinsonBros.IntegrationTests.Config;
 using DickinsonBros.IntegrationTests.Tests.Infrastructure.Cosmos.Models;
 using DickinsonBros.Test.Integration.Models;
@@ -18,20 +19,25 @@ namespace DickinsonBros.IntegrationTests.Tests.Infrastructure.Cosmos
     public class CosmosIntegrationTests : ICosmosIntegrationTests
     {
         public readonly ICosmosService<RunnerCosmosServiceOptionsType> _cosmosService;
+        public readonly ITelemetryWriterService _telemetryWriterService;
 
         internal const string KEY = "DickinsonBrosIntegrationTests";
         internal const string KEYBULK = "DickinsonBrosIntegrationTestsBulk";
 
         public CosmosIntegrationTests
         (
+            ITelemetryWriterService telemetryWriterService,
             ICosmosService<RunnerCosmosServiceOptionsType> cosmosService
         )
         {
+            _telemetryWriterService = telemetryWriterService;
             _cosmosService = cosmosService;
         }
 
         public async Task InsertAndUpsertAndFetchAndDelete_Runs_ExpectedStatusCodes(List<string> successLog)
         {
+            _telemetryWriterService.ScopedUserStory = "Cosmos";
+
             var sampleEntity = GenerateNewSampleModel();
 
             var insertAsyncResult = await _cosmosService.InsertAsync(sampleEntity).ConfigureAwait(false);
@@ -55,6 +61,8 @@ namespace DickinsonBros.IntegrationTests.Tests.Infrastructure.Cosmos
 
         public async Task InsertBulkAndQueryAndDeleteBulk_Runs_ValuesMatch(List<string> successLog)
         {
+            _telemetryWriterService.ScopedUserStory = "Cosmos";
+
             //Insert Bulk 
             var sampleModelValues = new List<SampleModel>();
             for (var i = 0; i < 3; i++)

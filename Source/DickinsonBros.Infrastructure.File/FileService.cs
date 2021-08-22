@@ -308,7 +308,7 @@ namespace DickinsonBros.Infrastructure.File
             {
                 ConnectionName = "File System",
                 DateTimeUTC = _dateTimeService.GetDateTimeUTC(),
-                Request = $"UpsertFile",
+                Request = $"UpsertFileAsync",
                 TelemetryType = TelemetryType.FileSystem,
                 CorrelationId = _correlationService.CorrelationId
             };

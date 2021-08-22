@@ -1,4 +1,5 @@
-﻿using DickinsonBros.Infrastructure.SQL.Abstractions;
+﻿using DickinsonBros.Core.Telemetry.Abstractions;
+using DickinsonBros.Infrastructure.SQL.Abstractions;
 using DickinsonBros.IntegrationTests.Config;
 using DickinsonBros.IntegrationTests.Tests.Infrastructure.SQL.Models;
 using DickinsonBros.Test.Integration.Models;
@@ -16,6 +17,7 @@ namespace DickinsonBros.IntegrationTests.Tests.Infrastructure.SQL
     [TestAPIAttribute(Name = "SQL", Group = "Infrastructure")]
     public class SQLIntegrationTests : ISQLIntegrationTests
     {
+        public readonly ITelemetryWriterService _telemetryWriterService;
         public readonly ISQLService<RunnerSQLServiceOptionsType> _sqlService;
 
         internal const string KEY = "DickinsonBrosIntegrationTests";
@@ -23,14 +25,18 @@ namespace DickinsonBros.IntegrationTests.Tests.Infrastructure.SQL
 
         public SQLIntegrationTests
         (
+            ITelemetryWriterService telemetryWriterService,
             ISQLService<RunnerSQLServiceOptionsType> sqlService
         )
         {
             _sqlService = sqlService;
+            _telemetryWriterService = telemetryWriterService;
         }
 
         public async Task ExecuteAndQueryAndBulkInsert_Runs_ExpectedReturnsAndNoThrows(List<string> successLog)
         {
+            _telemetryWriterService.ScopedUserStory = "SQL";
+
             var sampleEntity = new SampleEntity
             {
                 Payload = Guid.NewGuid().ToString()

@@ -1,4 +1,5 @@
 ﻿using DickinsonBros.Core.Correlation.Abstractions;
+using DickinsonBros.Core.Telemetry.Abstractions;
 using DickinsonBros.Infrastructure.DNS.Abstractions;
 using DickinsonBros.Infrastructure.DNS.Abstractions.Models;
 using DickinsonBros.Test.Integration.Models;
@@ -15,20 +16,25 @@ namespace DickinsonBros.IntegrationTests.Tests.Infrastructure.DNS
     {
         public readonly IDNSService _dnsService;
         public readonly ICorrelationService _correlationService;
+        public readonly ITelemetryWriterService _telemetryWriterService;
 
 
         public DNSIntegrationTests
         (
+            ITelemetryWriterService telemetryWriterService,
             IDNSService dnsService,
             ICorrelationService correlationService
         )
         {
+            _telemetryWriterService = telemetryWriterService;
             _dnsService = dnsService;
             _correlationService = correlationService;
         }
 
         public async Task ValidateEmailDomainAsync_VaildEmail_ReturnsVaild(List<string> successLog)
         {
+            _telemetryWriterService.ScopedUserStory = "DNS";
+
             var result = await _dnsService.ValidateEmailDomainAsync("Gmail.com");
             
             Assert.AreEqual(ValidateEmailDomainResult.Vaild, result);
@@ -36,6 +42,8 @@ namespace DickinsonBros.IntegrationTests.Tests.Infrastructure.DNS
         }
         public async Task ValidateEmailDomainAsync_InvaildEmail_ReturnsVaild(List<string> successLog)
         {
+            _telemetryWriterService.ScopedUserStory = "DNS";
+
             var result = await _dnsService.ValidateEmailDomainAsync("NotARealDomainFake.com");
 
             Assert.AreEqual(ValidateEmailDomainResult.Invaild, result);

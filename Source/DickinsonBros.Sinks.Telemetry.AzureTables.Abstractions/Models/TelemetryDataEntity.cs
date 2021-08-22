@@ -8,6 +8,7 @@ namespace DickinsonBros.Sinks.Telemetry.AzureTables.Abstractions.Models
     public class TelemetryDataEntity : TableEntity
     {
         public string Source { get; set; }
+        public string UserStory { get; set; }
         public string TelemetryType { get; set; }
         public string Connection { get; set; }
         public int ElapsedMilliseconds { get; set; }

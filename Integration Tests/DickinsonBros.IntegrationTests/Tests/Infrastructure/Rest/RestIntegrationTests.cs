@@ -1,14 +1,11 @@
-﻿using DickinsonBros.Infrastructure.Cosmos.Abstractions;
+﻿using DickinsonBros.Core.Telemetry.Abstractions;
 using DickinsonBros.Infrastructure.Rest.Abstractions;
-using DickinsonBros.IntegrationTests.Config;
 using DickinsonBros.IntegrationTests.Tests.Infrastructure.Cosmos.Models;
 using DickinsonBros.Test.Integration.Models;
-using Microsoft.Azure.Cosmos;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -21,16 +18,21 @@ namespace DickinsonBros.IntegrationTests.Tests.Infrastructure.Rest
     {
         public readonly IRestService _restService;
 
+        public readonly ITelemetryWriterService _telemetryWriterService;
         public RestIntegrationTests
         (
+            ITelemetryWriterService telemetryWriterService,
             IRestService restService
         )
         {
+            _telemetryWriterService = telemetryWriterService;
             _restService = restService;
         }
 
         public async Task GetTodos_Runs_ExpectedResponse(List<string> successLog)
         {
+            _telemetryWriterService.ScopedUserStory = "Rest";
+
             using var httpClient = new HttpClient
             {
                 BaseAddress = new Uri("https://jsonplaceholder.typicode.com/")

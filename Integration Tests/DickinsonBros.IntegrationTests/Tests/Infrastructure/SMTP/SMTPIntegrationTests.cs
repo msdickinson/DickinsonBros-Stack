@@ -1,4 +1,5 @@
 ﻿using DickinsonBros.Core.Correlation.Abstractions;
+using DickinsonBros.Core.Telemetry.Abstractions;
 using DickinsonBros.Infrastructure.SMTP.Abstractions;
 using DickinsonBros.Infrastructure.SMTP.Abstractions.Models;
 using DickinsonBros.IntegrationTests.Config;
@@ -17,22 +18,27 @@ namespace DickinsonBros.IntegrationTests.Tests.Infrastructure.SMTP
     [TestAPIAttribute(Name = "SMTP", Group = "Infrastructure")]
     public class SMTPIntegrationTests : ISMTPIntegrationTests
     {
+        public readonly ITelemetryWriterService _telemetryWriterService;
         public readonly ISMTPService<RunnerSMTPServiceOptionsType> _smtpService;
         public readonly ICorrelationService _correlationService;
 
 
         public SMTPIntegrationTests
         (
+            ITelemetryWriterService telemetryWriterService,
             ISMTPService<RunnerSMTPServiceOptionsType> smtpService,
             ICorrelationService correlationService
         )
         {
+            _telemetryWriterService = telemetryWriterService;
             _smtpService = smtpService;
             _correlationService = correlationService;
         }
 
         public async Task SendEmailAsync_Runs_ExpectedReturnsAndNoThrows(List<string> successLog)
         {
+            _telemetryWriterService.ScopedUserStory = "SMTP";
+
             //Create Item
             var mimeMessage = CreateMessage(0);
 
@@ -48,6 +54,8 @@ namespace DickinsonBros.IntegrationTests.Tests.Infrastructure.SMTP
 
         public async Task SendEmailAsync_BulkSend_ExpectedReturnsAndNoThrows(List<string> successLog)
         {
+            _telemetryWriterService.ScopedUserStory = "SMTP";
+
             int counter = 1;
 
             //Add To Queue

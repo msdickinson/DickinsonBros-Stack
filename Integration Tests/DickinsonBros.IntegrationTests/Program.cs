@@ -84,7 +84,7 @@ namespace DickinsonBros.IntegrationTests
             var testlog = (string)null;
             try
             {
-                var tests               = integrationTestService.FetchTestsByName("Rest");
+                var tests               = integrationTestService.FetchTests();
                 var testSummary         = await integrationTestService.RunTests(tests).ConfigureAwait(false);
                 testlog                 = integrationTestService.GenerateLog(testSummary, false);
 
@@ -102,8 +102,8 @@ namespace DickinsonBros.IntegrationTests
                 //Clear
                 await CosmosCleanUpAsync(provider).ConfigureAwait(false);
                 await Task.Delay(1000).ConfigureAwait(false);
-                await AzureTablesCleanUpAsync(provider).ConfigureAwait(false);
-                await Task.Delay(1000).ConfigureAwait(false);
+                //await AzureTablesCleanUpAsync(provider).ConfigureAwait(false);
+                //await Task.Delay(1000).ConfigureAwait(false);
                 Console.WriteLine(testlog);
             }
         }

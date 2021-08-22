@@ -2,6 +2,7 @@
 using DickinsonBros.Application.Email.Abstractions;
 using DickinsonBros.Application.Email.Abstractions.Models;
 using DickinsonBros.Core.Correlation.Abstractions;
+using DickinsonBros.Core.Telemetry.Abstractions;
 using DickinsonBros.Infrastructure.SMTP.Abstractions.Models;
 using DickinsonBros.IntegrationTests.Config;
 using DickinsonBros.Test.Integration.Models;
@@ -18,6 +19,7 @@ namespace DickinsonBros.IntegrationTests.Tests.Application.Email
     [TestAPIAttribute(Name = "Email", Group = "Application")]
     public class EmailIntegrationTests : IEmailIntegrationTests
     {
+        public readonly ITelemetryWriterService _telemetryWriterService;
         public readonly IEmailService<RunnerSMTPServiceOptionsType> _emailService;
         public readonly IOptions<EmailServiceOptions<RunnerSMTPServiceOptionsType>> _emailServiceOptions;
         public readonly ICorrelationService _correlationService;
@@ -27,16 +29,20 @@ namespace DickinsonBros.IntegrationTests.Tests.Application.Email
         (
             IEmailService<RunnerSMTPServiceOptionsType> emailService,
             IOptions<EmailServiceOptions<RunnerSMTPServiceOptionsType>> emailServiceOptions,
-            ICorrelationService correlationService
+            ICorrelationService correlationService,
+            ITelemetryWriterService telemetryWriterService
         )
         {
             _emailService = emailService;
             _emailServiceOptions = emailServiceOptions;
             _correlationService = correlationService;
+            _telemetryWriterService = telemetryWriterService;
         }
 
         public async Task SendEmailAsync_Runs_FileSavedAndSMTPSuccessful(List<string> successLog)
         {
+            _telemetryWriterService.ScopedUserStory = "Telemetry";
+
             //Create Item
             var mimeMessage = CreateMessage(0);
 

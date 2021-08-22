@@ -1,4 +1,5 @@
-﻿using DickinsonBros.Infrastructure.File.Abstractions;
+﻿using DickinsonBros.Core.Telemetry.Abstractions;
+using DickinsonBros.Infrastructure.File.Abstractions;
 using DickinsonBros.Test.Integration.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -14,17 +15,22 @@ namespace DickinsonBros.IntegrationTests.Tests.Infrastructure.File
     public class FileIntegrationTests : IFileIntegrationTests
     {
         public readonly IFileService _fileService;
+        public readonly ITelemetryWriterService _telemetryWriterService;
 
         public FileIntegrationTests
         (
+            ITelemetryWriterService telemetryWriterService,
             IFileService fileService
         )
         {
+            _telemetryWriterService = telemetryWriterService;
             _fileService = fileService;
         }
 
         public async Task UpsertAndExistsAndLoadAndDelete_Runs_ExpectedReturnsAndNoThrows(List<string> successLog)
         {
+            _telemetryWriterService.ScopedUserStory = "File";
+
             var filePath = "./";
             var filename = Guid.NewGuid().ToString() + ".txt";
             var fileContent = "Sample File";

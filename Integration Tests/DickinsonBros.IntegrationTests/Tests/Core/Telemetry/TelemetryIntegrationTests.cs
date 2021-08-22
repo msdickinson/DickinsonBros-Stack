@@ -25,6 +25,8 @@ namespace DickinsonBros.IntegrationTests.Tests.Core.Logger
 
         public async Task Insert_Runs_TelemetryNewEventFired(List<string> successLog)
         {
+            _telemetryWriterService.ScopedUserStory = "Telemetry";
+
             var telemetryItems = new List<TelemetryItem>();
             var telemetryItem = new InsertTelemetryItem()
             {
