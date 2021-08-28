@@ -2,7 +2,6 @@
 using DickinsonBros.Middleware.Function.Abstractions.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
@@ -12,14 +11,17 @@ namespace DickinsonBros.Middleware.Function
 {
     public class FunctionHelperService : IFunctionHelperService
     {
-        internal readonly JsonSerializerOptions _jsonSerializerOptions;
-
+        internal readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+            WriteIndented = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
         public FunctionHelperService
         (
-            IOptions<JsonSerializerOptions> jsonSerializerOptions
         )
         {
-            _jsonSerializerOptions = jsonSerializerOptions.Value;
+
         }
 
         public ContentResult StatusCode(int statusCode)

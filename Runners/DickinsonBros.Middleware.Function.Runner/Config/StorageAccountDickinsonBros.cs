@@ -2,7 +2,7 @@
 
 namespace DickinsonBros.Middleware.Function.Runner.Config
 {
-    public class RunnerAzureTableServiceOptionsType : AzureTableServiceOptionsType
+    public class StorageAccountDickinsonBros : AzureTableServiceOptionsType
     {
     }
 }

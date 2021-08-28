@@ -5,7 +5,6 @@ using DickinsonBros.Middleware.Function.Abstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.Text.Json;
 
 namespace Dickinsonbros.Middleware.Function.Extensions
 {
@@ -17,7 +16,6 @@ namespace Dickinsonbros.Middleware.Function.Extensions
         {
             serviceCollection.TryAddSingleton(typeof(IMiddlewareFunctionService), typeof(MiddlewareFunctionService<T, U>));
             serviceCollection.TryAddSingleton<IFunctionHelperService, FunctionHelperService>();
-            serviceCollection.Configure<JsonSerializerOptions>(configuration.GetSection(nameof(JsonSerializerOptions)));
 
             return serviceCollection;
         }

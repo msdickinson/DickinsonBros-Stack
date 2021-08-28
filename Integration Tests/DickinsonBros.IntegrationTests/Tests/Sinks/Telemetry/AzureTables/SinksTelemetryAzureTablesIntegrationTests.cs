@@ -18,12 +18,12 @@ namespace DickinsonBros.IntegrationTests.Tests.Sinks.Telemetry.AzureTables
     {
         private readonly ITelemetryWriterService _telemetryWriterService;
         private readonly ICorrelationService _correlationService;
-        private readonly ISinksTelemetryAzureTablesService<RunnerAzureTableServiceOptionsType> _sinksTelemetryAzureTablesService;
+        private readonly ISinksTelemetryAzureTablesService<StorageAccountDickinsonBros> _sinksTelemetryAzureTablesService;
         public SinksTelemetryAzureTablesIntegrationTests
         (
             ITelemetryWriterService telemetryWriterService,
             ICorrelationService correlationService,
-            ISinksTelemetryAzureTablesService<RunnerAzureTableServiceOptionsType> sinksTelemetryAzureTablesService
+            ISinksTelemetryAzureTablesService<StorageAccountDickinsonBros> sinksTelemetryAzureTablesService
         )
         {
             _telemetryWriterService = telemetryWriterService;

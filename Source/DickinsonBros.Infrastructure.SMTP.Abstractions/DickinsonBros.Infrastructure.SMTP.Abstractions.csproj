@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <Configurations>Debug;Release;Local;Local-Release;Local-Debug;Publish-Debug;Publish-Release</Configurations>
     <VersionPrefix>1.0.0</VersionPrefix>
     <Authors>Mark Dickinson</Authors>
@@ -15,8 +15,8 @@
   <Import Project="..\Packaging.targets" />
   <Import Project="..\CopyPackageToPublishDirectory.targets" />
   <ItemGroup>
-    <PackageReference Include="MailKit" Version="2.12.0" />
-    <PackageReference Include="MimeKit" Version="2.12.0" />
+    <PackageReference Include="MailKit" Version="2.15.0" />
+    <PackageReference Include="MimeKit" Version="2.15.0" />
   </ItemGroup>
 
 </Project>

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <Configurations>Debug;Release;Local;Local-Release;Local-Debug;Publish-Debug;Publish-Release</Configurations>
     <VersionPrefix>1.0.0</VersionPrefix>
     <Authors>Mark Dickinson</Authors>
@@ -16,8 +16,9 @@
   <Import Project="..\CopyPackageToPublishDirectory.targets" />
   <Import Project="..\FixDistributedLockCoreDependencyVersion.targets" />
   <ItemGroup>
-    <PackageReference Include="DnsClient" Version="1.4.0" />
-    <PackageReference Include="System.IO.Abstractions" Version="13.2.33" />
+    <PackageReference Include="DnsClient" Version="1.5.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+    <PackageReference Include="System.IO.Abstractions" Version="13.2.47" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DickinsonBros.Core.Correlation.Abstractions\DickinsonBros.Core.Correlation.Abstractions.csproj" />

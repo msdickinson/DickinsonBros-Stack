@@ -21,12 +21,12 @@ namespace DickinsonBros.Core.Redactor
         readonly static JsonSerializerSettings _jsonSettings = new JsonSerializerSettings
         {
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-            Formatting = Formatting.Indented,            
+            Formatting = Formatting.Indented,
         };
 
         public RedactorService(IOptions<RedactorServiceOptions> options)
         {
-            _jsonSettings.Converters.Add(new StringEnumConverter()); 
+            _jsonSettings.Converters.Add(new StringEnumConverter());
 
             _regexValuesToRedact = new List<Regex>
             (

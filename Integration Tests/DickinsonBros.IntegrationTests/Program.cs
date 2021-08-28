@@ -63,7 +63,7 @@ namespace DickinsonBros.IntegrationTests
     class Program
     {
         internal const string AZURE_TABLE_NAME = "DickinsonBrosIntegrationTests";
-        internal const string AZURE_TABLE_NAME_TELEMETRY = "DickinsonBrosIntegrationTestsTelemetry";
+        internal const string AZURE_TABLE_NAME_TELEMETRY = "Telemetry";
         internal const string COSMOS_KEY = "DickinsonBrosIntegrationTests";
         async static Task Main()
         {
@@ -77,7 +77,7 @@ namespace DickinsonBros.IntegrationTests
 
 
             //These have to pulled here to ensure there constuctor is called. 
-            var sinksTelemetryAzureTablesService = provider.GetRequiredService<ISinksTelemetryAzureTablesService<RunnerAzureTableServiceOptionsType>>();
+            var sinksTelemetryAzureTablesService = provider.GetRequiredService<ISinksTelemetryAzureTablesService<StorageAccountDickinsonBros>>();
             var sinksTelemetryLogService = provider.GetRequiredService<ISinksTelemetryLogService>();
 
             var integrationTestService = provider.GetRequiredService<IIntegrationTestService>();
@@ -102,26 +102,22 @@ namespace DickinsonBros.IntegrationTests
                 //Clear
                 await CosmosCleanUpAsync(provider).ConfigureAwait(false);
                 await Task.Delay(1000).ConfigureAwait(false);
-                //await AzureTablesCleanUpAsync(provider).ConfigureAwait(false);
-                //await Task.Delay(1000).ConfigureAwait(false);
+                await AzureTablesCleanUpAsync(provider).ConfigureAwait(false);
+                await Task.Delay(1000).ConfigureAwait(false);
                 Console.WriteLine(testlog);
             }
         }
         private async Task FlushAzureTablesCleanUpAsync(ServiceProvider provider)
         {
-            var sinksTelemetryAzureTablesService = provider.GetRequiredService<ISinksTelemetryAzureTablesService<RunnerAzureTableServiceOptionsType>>();
+            var sinksTelemetryAzureTablesService = provider.GetRequiredService<ISinksTelemetryAzureTablesService<StorageAccountDickinsonBros>>();
             await sinksTelemetryAzureTablesService.FlushAsync().ConfigureAwait(false);
         }
         private async Task AzureTablesCleanUpAsync(ServiceProvider provider)
         {
-            var azureTableService = provider.GetRequiredService<IAzureTableService<RunnerAzureTableServiceOptionsType>>();
+            var azureTableService = provider.GetRequiredService<IAzureTableService<StorageAccountDickinsonBros>>();
             var tableQuery = new TableQuery<SampleEntity>();
             var items = await azureTableService.QueryAsync(AZURE_TABLE_NAME, tableQuery, false).ConfigureAwait(false);
             await azureTableService.DeleteBulkAsync(items, AZURE_TABLE_NAME, false).ConfigureAwait(false);
-
-            var tableQueryTelemetry = new TableQuery<SampleEntity>();
-            var itemsTelemetry = await azureTableService.QueryAsync(AZURE_TABLE_NAME_TELEMETRY, tableQueryTelemetry, false).ConfigureAwait(false);
-            await azureTableService.DeleteBulkAsync(itemsTelemetry, AZURE_TABLE_NAME_TELEMETRY, false).ConfigureAwait(false);
         }
         private async Task CosmosCleanUpAsync(ServiceProvider provider)
         {
@@ -179,7 +175,7 @@ namespace DickinsonBros.IntegrationTests
             serviceCollection.AddFileService();
 
             //--Infrastructure
-            serviceCollection.AddAzureTablesService<RunnerAzureTableServiceOptionsType, Configuration>();
+            serviceCollection.AddAzureTablesService<StorageAccountDickinsonBros, Configuration>();
             serviceCollection.AddCosmosService<RunnerCosmosServiceOptionsType, Configuration>();
             serviceCollection.AddSQLService<RunnerSQLServiceOptionsType, Configuration>();
             serviceCollection.AddSMTPService<RunnerSMTPServiceOptionsType, Configuration>();
@@ -193,7 +189,7 @@ namespace DickinsonBros.IntegrationTests
 
             //--Sinks
             serviceCollection.AddSinksTelemetryLogServiceService();
-            serviceCollection.AddSinksTelemetryAzureTablesService<RunnerAzureTableServiceOptionsType>();
+            serviceCollection.AddSinksTelemetryAzureTablesService<StorageAccountDickinsonBros>();
         }
         private void ConfigureIntegreationTests(IServiceCollection serviceCollection)
         {

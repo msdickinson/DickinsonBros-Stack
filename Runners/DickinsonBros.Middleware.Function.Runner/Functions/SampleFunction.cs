@@ -4,7 +4,10 @@ using DickinsonBros.Encryption.Certificate.Abstractions.Models;
 using DickinsonBros.Encryption.JWT.Abstractions;
 using DickinsonBros.Encryption.JWT.Abstractions.Models;
 using DickinsonBros.Middleware.Function.Abstractions;
+using DickinsonBros.Middleware.Function.Runner.Config;
 using DickinsonBros.Middleware.Function.Runner.Models;
+using DickinsonBros.Sinks.Telemetry.AzureTables.Abstractions;
+using DickinsonBros.Sinks.Telemetry.Log.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -41,7 +44,9 @@ namespace Dickinsonbros.Middleware.Function.Runner.Functions
             ILoggerService<SampleFunction> loggingService,
             IDateTimeService dateTimeService,
             IMiddlewareFunctionService middlewareService,
-            IJWTEncryptionService<DickinsonBros.Middleware.Function.Runner.Config.Runner, Configuration> jwtEncryptionService
+            IJWTEncryptionService<DickinsonBros.Middleware.Function.Runner.Config.Runner, Configuration> jwtEncryptionService,
+            ISinksTelemetryLogService sinksTelemetryLogService,
+            ISinksTelemetryAzureTablesService<StorageAccountDickinsonBros> sinksTelemetryAzureTablesService
         )
         {
             _loggingService = loggingService;

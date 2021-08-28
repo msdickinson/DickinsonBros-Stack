@@ -86,6 +86,8 @@ namespace Dickinsonbros.Middleware.Function
             stopwatchService.Start();
 
             _correlationService.CorrelationId = EnsureCorrelationId(context.Request);
+            insertTelemetryItem.CorrelationId = _correlationService.CorrelationId;
+            _telemetryWriterService.ScopedUserStory = insertTelemetryItem.Request;
 
             var requestBody = await FormatRequestAsync(context.Request);
 
@@ -229,7 +231,6 @@ namespace Dickinsonbros.Middleware.Function
                         }
                     );
                 }
-
                 _telemetryWriterService.Insert(insertTelemetryItem);
             }
         }

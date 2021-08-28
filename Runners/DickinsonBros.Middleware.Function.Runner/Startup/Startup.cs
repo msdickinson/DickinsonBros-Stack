@@ -11,7 +11,9 @@ using DickinsonBros.Encryption.Certificate.Adapter.AspDI.Extensions;
 using DickinsonBros.Encryption.JWT.Adapter.AspDI.Extensions;
 using DickinsonBros.Infrastructure.AzureTables.AspDI.Extensions;
 using DickinsonBros.Middleware.Function.Runner.Config;
+using DickinsonBros.Sinks.Telemetry.AzureTables.Abstractions;
 using DickinsonBros.Sinks.Telemetry.AzureTables.AspDI.Extensions;
+using DickinsonBros.Sinks.Telemetry.Log.Abstractions;
 using DickinsonBros.Sinks.Telemetry.Log.AspDI.Extensions;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Azure.WebJobs.Hosting;
@@ -73,14 +75,15 @@ namespace Dickinsonbros.Middleware.Function.Runner.Startup
             services.AddJWTEncryptionService<DickinsonBros.Middleware.Function.Runner.Config.Runner, Configuration>();
 
             //--Infrastructure
-            services.AddAzureTablesService<RunnerAzureTableServiceOptionsType, Configuration>();
+            services.AddAzureTablesService<StorageAccountDickinsonBros, Configuration>();
 
             //--Sinks
-            services.AddSinksTelemetryAzureTablesService<RunnerAzureTableServiceOptionsType>();
+            services.AddSinksTelemetryAzureTablesService<StorageAccountDickinsonBros>();
             services.AddSinksTelemetryLogServiceService();
 
-            //#Local Packages
+            //--Middleware
             services.AddMiddlwareFunctionService<DickinsonBros.Middleware.Function.Runner.Config.Runner, Configuration>(configuration);
+          
         }
 
     }

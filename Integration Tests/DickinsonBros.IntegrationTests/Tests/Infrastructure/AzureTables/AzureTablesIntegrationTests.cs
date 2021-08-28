@@ -18,7 +18,7 @@ namespace DickinsonBros.IntegrationTests.Tests.Infrastructure.AzureTables
     [TestAPIAttribute(Name = "AzureTables", Group = "Infrastructure")]
     public class AzureTablesIntegrationTests : IAzureTablesIntegrationTests
     {
-        public readonly IAzureTableService<RunnerAzureTableServiceOptionsType> _azureTableService;
+        public readonly IAzureTableService<StorageAccountDickinsonBros> _azureTableService;
         public readonly ITelemetryWriterService _telemetryWriterService;
 
         internal const string TABLE_NAME = "DickinsonBrosIntegrationTests";
@@ -26,7 +26,7 @@ namespace DickinsonBros.IntegrationTests.Tests.Infrastructure.AzureTables
         public AzureTablesIntegrationTests
         (
             ITelemetryWriterService telemetryWriterService,
-            IAzureTableService<RunnerAzureTableServiceOptionsType> azureTableService
+            IAzureTableService<StorageAccountDickinsonBros> azureTableService
         )
         {
             _telemetryWriterService = telemetryWriterService;

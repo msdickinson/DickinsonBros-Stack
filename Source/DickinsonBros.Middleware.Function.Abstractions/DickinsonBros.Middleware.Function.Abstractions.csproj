@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -16,8 +16,8 @@
   <Import Project="..\CopyPackageToPublishDirectory.targets" />
   <ItemGroup>
     <ProjectReference Include="..\DickinsonBros.Encryption.JWT.Abstractions\DickinsonBros.Encryption.JWT.Abstractions.csproj" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="[2.2.0, 3.0.0]" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="[2.2.0, 3.0.0)" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
   </ItemGroup>
 
 </Project>

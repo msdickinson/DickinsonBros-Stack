@@ -12,7 +12,7 @@
     <ProjectReference Include="..\DickinsonBros.Core.Stopwatch.Abstractions\DickinsonBros.Core.Stopwatch.Abstractions.csproj" />
     <ProjectReference Include="..\DickinsonBros.Core.Telemetry.Abstractions\DickinsonBros.Core.Telemetry.Abstractions.csproj" />
     <ProjectReference Include="..\DickinsonBros.Middleware.Function.Abstractions\DickinsonBros.Middleware.Function.Abstractions.csproj" />
-    <PackageReference Include="morelinq" Version="[3.3.2, 4.0.0)" />
+    <PackageReference Include="morelinq" Version="3.3.2" />
   </ItemGroup>
 
 

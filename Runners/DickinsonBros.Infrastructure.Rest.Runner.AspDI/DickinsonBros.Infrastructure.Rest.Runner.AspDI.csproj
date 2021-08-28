@@ -23,7 +23,7 @@
     <ProjectReference Include="..\..\Source\DickinsonBros.Sinks.Telemetry.Log.Abstractions\DickinsonBros.Sinks.Telemetry.Log.Abstractions.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Sinks.Telemetry.Log.AspDI\DickinsonBros.Sinks.Telemetry.Log.AspDI.csproj" />
     <ProjectReference Include="..\BaseRunner\BaseRunner.csproj" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.18" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,7 +37,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.7" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.18" />
   </ItemGroup>
 
 </Project>

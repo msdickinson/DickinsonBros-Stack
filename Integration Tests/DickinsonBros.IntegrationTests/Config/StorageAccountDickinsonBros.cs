@@ -2,7 +2,7 @@
 
 namespace DickinsonBros.IntegrationTests.Config
 {
-    public class RunnerAzureTableServiceOptionsType : AzureTableServiceOptionsType
+    public class StorageAccountDickinsonBros : AzureTableServiceOptionsType
     {
     }
 }

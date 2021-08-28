@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <Configurations>Debug;Release;Local;Local-Release;Local-Debug;Publish-Debug;Publish-Release</Configurations>
     <VersionPrefix>1.0.0</VersionPrefix>
     <Authors>Mark Dickinson</Authors>
@@ -20,6 +20,6 @@
 
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Azure.Cosmos" Version="[3.14.0,4.0.0)" />
+    <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.20.1" />
   </ItemGroup>
 </Project>
