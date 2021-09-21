@@ -119,7 +119,7 @@ namespace DickinsonBros.Application.Email
 
             await Task.WhenAll(tasks).ConfigureAwait(false);
 
-            sendAsyncDescriptor.SendEmailDescriptor = smtpTask.Result;
+            sendAsyncDescriptor.SendEmailDescriptor = smtpTask?.Result;
 
             return sendAsyncDescriptor;
         }

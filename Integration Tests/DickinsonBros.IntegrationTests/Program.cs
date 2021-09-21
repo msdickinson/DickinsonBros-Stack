@@ -75,7 +75,6 @@ namespace DickinsonBros.IntegrationTests
             using var provider = serviceCollection.BuildServiceProvider();
             provider.ConfigureAwait(true);
 
-
             //These have to pulled here to ensure there constuctor is called. 
             var sinksTelemetryAzureTablesService = provider.GetRequiredService<ISinksTelemetryAzureTablesService<StorageAccountDickinsonBros>>();
             var sinksTelemetryLogService = provider.GetRequiredService<ISinksTelemetryLogService>();

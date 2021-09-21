@@ -32,7 +32,6 @@ namespace Dickinsonbros.Middleware.Function
 
         internal readonly IServiceProvider _serviceProvider;
         internal readonly IDateTimeService _dateTimeService;
-        internal readonly IStopwatchService _stopwatchService;
         internal readonly ITelemetryWriterService _telemetryWriterService;
         internal readonly IGuidService _guidService;
         internal readonly ILoggerService<MiddlewareFunctionService<T, U>> _loggingService;

@@ -8,16 +8,12 @@
     <Company>DickinsonBros</Company>
     <RepositoryUrl>https://github.com/msdickinson/DickinsonBros</RepositoryUrl>
     <Description>
-      A correlation service that maintains a string across threads
+     DNS
     </Description>
   </PropertyGroup>
 
-  <Import Project="..\Packaging.targets" />
-  <Import Project="..\CopyPackageToPublishDirectory.targets" />
-  <Import Project="..\FixDistributedLockCoreDependencyVersion.targets" />
   <ItemGroup>
     <PackageReference Include="DnsClient" Version="1.5.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
     <PackageReference Include="System.IO.Abstractions" Version="13.2.47" />
   </ItemGroup>
   <ItemGroup>
@@ -28,4 +24,8 @@
     <ProjectReference Include="..\DickinsonBros.Core.Telemetry.Abstractions\DickinsonBros.Core.Telemetry.Abstractions.csproj" />
     <ProjectReference Include="..\DickinsonBros.Infrastructure.DNS.Abstractions\DickinsonBros.Infrastructure.DNS.Abstractions.csproj" />
   </ItemGroup>
+
+  <Import Project="..\Packaging.targets" />
+  <Import Project="..\CopyPackageToPublishDirectory.targets" />
+  <Import Project="..\FixDistributedLockCoreDependencyVersion.targets" />
 </Project>

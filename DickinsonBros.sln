@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30804.86
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31612.314
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. Abstractions", "1. Abstractions", "{98A92311-5BA8-4BF3-A4CE-1C35649308EA}"
 EndProject
@@ -388,8 +388,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DickinsonBros.Infrastructur
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DickinsonBros.Infrastructure.SMTP", "Source\DickinsonBros.Infrastructure.SMTP\DickinsonBros.Infrastructure.SMTP.csproj", "{73FEE140-89F4-4928-A10C-001E4D7651D0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DickinsonBros.Infrastructure.DNS", "Source\DickinsonBros.Infrastructure.DNS\DickinsonBros.Infrastructure.DNS.csproj", "{B769883C-8B24-420C-927B-6CD4B5EFCE72}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DickinsonBros.Infrastructure.SMTP.AspDI", "Source\DickinsonBros.Infrastructure.SMTP.AspDI\DickinsonBros.Infrastructure.SMTP.AspDI.csproj", "{222FBA47-78CC-4AA6-8D10-AF04EC2A6F2D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DickinsonBros.Infrastructure.SMTP.Runner.AspDI", "Runners\DickinsonBros.Infrastructure.SMTP.Runner.AspDI\DickinsonBros.Infrastructure.SMTP.Runner.AspDI.csproj", "{DF1A7705-3E4B-4FB5-924C-B5D63215D731}"
@@ -487,6 +485,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DickinsonBros.Middleware.Function.AspDI", "Source\DickinsonBros.Middleware.Function.AspDI\DickinsonBros.Middleware.Function.AspDI.csproj", "{7C904358-2947-4A39-9957-FBC9B3937A73}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DickinsonBros.Middleware.Function.AspDI.Tests", "Unit Tests\DickinsonBros.Middleware.Function.AspDI.Tests\DickinsonBros.Middleware.Function.AspDI.Tests.csproj", "{6099F24D-F320-42FE-8415-74D333BF6E0C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DickinsonBros.Infrastructure.DNS", "Source\DickinsonBros.Infrastructure.DNS\DickinsonBros.Infrastructure.DNS.csproj", "{D002B5A0-0B75-4D3B-9B1F-23087DB011B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -2277,20 +2277,6 @@ Global
 		{73FEE140-89F4-4928-A10C-001E4D7651D0}.Publish-Release|Any CPU.Build.0 = Release|Any CPU
 		{73FEE140-89F4-4928-A10C-001E4D7651D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{73FEE140-89F4-4928-A10C-001E4D7651D0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B769883C-8B24-420C-927B-6CD4B5EFCE72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B769883C-8B24-420C-927B-6CD4B5EFCE72}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B769883C-8B24-420C-927B-6CD4B5EFCE72}.Local|Any CPU.ActiveCfg = Debug|Any CPU
-		{B769883C-8B24-420C-927B-6CD4B5EFCE72}.Local|Any CPU.Build.0 = Debug|Any CPU
-		{B769883C-8B24-420C-927B-6CD4B5EFCE72}.Local-Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B769883C-8B24-420C-927B-6CD4B5EFCE72}.Local-Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B769883C-8B24-420C-927B-6CD4B5EFCE72}.Local-Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B769883C-8B24-420C-927B-6CD4B5EFCE72}.Local-Release|Any CPU.Build.0 = Release|Any CPU
-		{B769883C-8B24-420C-927B-6CD4B5EFCE72}.Publish-Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B769883C-8B24-420C-927B-6CD4B5EFCE72}.Publish-Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B769883C-8B24-420C-927B-6CD4B5EFCE72}.Publish-Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B769883C-8B24-420C-927B-6CD4B5EFCE72}.Publish-Release|Any CPU.Build.0 = Release|Any CPU
-		{B769883C-8B24-420C-927B-6CD4B5EFCE72}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B769883C-8B24-420C-927B-6CD4B5EFCE72}.Release|Any CPU.Build.0 = Release|Any CPU
 		{222FBA47-78CC-4AA6-8D10-AF04EC2A6F2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{222FBA47-78CC-4AA6-8D10-AF04EC2A6F2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{222FBA47-78CC-4AA6-8D10-AF04EC2A6F2D}.Local|Any CPU.ActiveCfg = Debug|Any CPU
@@ -2795,6 +2781,20 @@ Global
 		{6099F24D-F320-42FE-8415-74D333BF6E0C}.Publish-Release|Any CPU.Build.0 = Release|Any CPU
 		{6099F24D-F320-42FE-8415-74D333BF6E0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6099F24D-F320-42FE-8415-74D333BF6E0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D002B5A0-0B75-4D3B-9B1F-23087DB011B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D002B5A0-0B75-4D3B-9B1F-23087DB011B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D002B5A0-0B75-4D3B-9B1F-23087DB011B0}.Local|Any CPU.ActiveCfg = Local|Any CPU
+		{D002B5A0-0B75-4D3B-9B1F-23087DB011B0}.Local|Any CPU.Build.0 = Local|Any CPU
+		{D002B5A0-0B75-4D3B-9B1F-23087DB011B0}.Local-Debug|Any CPU.ActiveCfg = Local-Debug|Any CPU
+		{D002B5A0-0B75-4D3B-9B1F-23087DB011B0}.Local-Debug|Any CPU.Build.0 = Local-Debug|Any CPU
+		{D002B5A0-0B75-4D3B-9B1F-23087DB011B0}.Local-Release|Any CPU.ActiveCfg = Local-Release|Any CPU
+		{D002B5A0-0B75-4D3B-9B1F-23087DB011B0}.Local-Release|Any CPU.Build.0 = Local-Release|Any CPU
+		{D002B5A0-0B75-4D3B-9B1F-23087DB011B0}.Publish-Debug|Any CPU.ActiveCfg = Publish-Debug|Any CPU
+		{D002B5A0-0B75-4D3B-9B1F-23087DB011B0}.Publish-Debug|Any CPU.Build.0 = Publish-Debug|Any CPU
+		{D002B5A0-0B75-4D3B-9B1F-23087DB011B0}.Publish-Release|Any CPU.ActiveCfg = Publish-Release|Any CPU
+		{D002B5A0-0B75-4D3B-9B1F-23087DB011B0}.Publish-Release|Any CPU.Build.0 = Publish-Release|Any CPU
+		{D002B5A0-0B75-4D3B-9B1F-23087DB011B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D002B5A0-0B75-4D3B-9B1F-23087DB011B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -2981,7 +2981,6 @@ Global
 		{FC03D567-3B91-4EE5-B2C4-FC73F28DF2DB} = {7BF6B421-540B-4711-9FA9-3115C8B014AE}
 		{A96F541A-CDC6-45DB-9CEE-50782FA4C7F1} = {7BF6B421-540B-4711-9FA9-3115C8B014AE}
 		{73FEE140-89F4-4928-A10C-001E4D7651D0} = {B06F6ED2-0CC4-4044-ADAE-3D9F443961EF}
-		{B769883C-8B24-420C-927B-6CD4B5EFCE72} = {B06F6ED2-0CC4-4044-ADAE-3D9F443961EF}
 		{222FBA47-78CC-4AA6-8D10-AF04EC2A6F2D} = {BC45FD81-553F-477B-885D-0BBAE9468912}
 		{DF1A7705-3E4B-4FB5-924C-B5D63215D731} = {1A89E237-F691-4262-B815-99A61F34953F}
 		{19277584-67F4-45A3-9E75-17366D64CF16} = {E26E3C46-2BB4-4E1A-8005-BCFA3A23A77A}
@@ -3031,6 +3030,7 @@ Global
 		{8C29CE83-86BB-470E-8198-D324A34ADDB5} = {052A7246-DFB4-486F-BE9B-FC285D706BA8}
 		{7C904358-2947-4A39-9957-FBC9B3937A73} = {6B922B29-68B0-4A28-83B4-0305FCDBDC86}
 		{6099F24D-F320-42FE-8415-74D333BF6E0C} = {F31A7D1B-9EAC-4C17-B538-32D988AD3216}
+		{D002B5A0-0B75-4D3B-9B1F-23087DB011B0} = {B06F6ED2-0CC4-4044-ADAE-3D9F443961EF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {83C1CE5F-7AB3-4BE6-8680-379E46664ACD}

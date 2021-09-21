@@ -10,6 +10,7 @@ using DickinsonBros.Encryption.Certificate.Abstractions.Models;
 using DickinsonBros.Encryption.Certificate.Adapter.AspDI.Extensions;
 using DickinsonBros.Encryption.JWT.Adapter.AspDI.Extensions;
 using DickinsonBros.Infrastructure.AzureTables.AspDI.Extensions;
+using DickinsonBros.Infrastructure.DNS.AspDI.Extensions;
 using DickinsonBros.Middleware.Function.Runner.Config;
 using DickinsonBros.Sinks.Telemetry.AzureTables.Abstractions;
 using DickinsonBros.Sinks.Telemetry.AzureTables.AspDI.Extensions;
@@ -73,6 +74,7 @@ namespace Dickinsonbros.Middleware.Function.Runner.Startup
             //--Encryption
             services.AddCertificateEncryptionService<Configuration>();
             services.AddJWTEncryptionService<DickinsonBros.Middleware.Function.Runner.Config.Runner, Configuration>();
+            services.AddDNSService();
 
             //--Infrastructure
             services.AddAzureTablesService<StorageAccountDickinsonBros, Configuration>();
