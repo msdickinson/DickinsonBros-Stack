@@ -19,8 +19,4 @@
   <ItemGroup>
     <ProjectReference Include="..\DickinsonBros.Application.Email\DickinsonBros.Application.Email.csproj" />
   </ItemGroup>
-
-  <Import Project="..\Packaging.targets" />
-  <Import Project="..\CopyPackageToPublishDirectory.targets" />
-  <Import Project="..\FixDistributedLockCoreDependencyVersion.targets" />
 </Project>

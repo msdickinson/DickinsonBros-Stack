@@ -11,10 +11,6 @@
       A correlation service that maintains a string across threads
     </Description>
   </PropertyGroup>
-
-  <Import Project="..\Packaging.targets" />
-  <Import Project="..\CopyPackageToPublishDirectory.targets" />
-  <Import Project="..\FixDistributedLockCoreDependencyVersion.targets" />
   <ItemGroup>
     <PackageReference Include="System.IO.Abstractions" Version="13.2.47" />
     <PackageReference Include="System.Text.Json" Version="5.0.2" />

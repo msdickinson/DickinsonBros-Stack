@@ -11,9 +11,6 @@
     <Description>
     </Description>
   </PropertyGroup>
-
-  <Import Project="..\Packaging.targets" />
-  <Import Project="..\CopyPackageToPublishDirectory.targets" />
   <ItemGroup>
     <PackageReference Include="MailKit" Version="2.15.0" />
     <PackageReference Include="MimeKit" Version="2.15.0" />

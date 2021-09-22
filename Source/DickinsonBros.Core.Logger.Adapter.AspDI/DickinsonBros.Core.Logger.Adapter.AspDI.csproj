@@ -17,8 +17,4 @@
     <ProjectReference Include="..\DickinsonBros.Core.Logger.Abstractions\DickinsonBros.Core.Logger.Abstractions.csproj" />
     <ProjectReference Include="..\DickinsonBros.Core.Logger\DickinsonBros.Core.Logger.csproj" />
   </ItemGroup>
-
-  <Import Project="..\Packaging.targets" />
-  <Import Project="..\CopyPackageToPublishDirectory.targets" />
-  <Import Project="..\FixDistributedLockCoreDependencyVersion.targets" />
 </Project>

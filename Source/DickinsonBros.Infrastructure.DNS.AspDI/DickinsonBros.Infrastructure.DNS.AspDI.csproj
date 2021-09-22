@@ -16,8 +16,4 @@
     <ProjectReference Include="..\DickinsonBros.Infrastructure.DNS.Abstractions\DickinsonBros.Infrastructure.DNS.Abstractions.csproj" />
     <ProjectReference Include="..\DickinsonBros.Infrastructure.DNS\DickinsonBros.Infrastructure.DNS.csproj" />
   </ItemGroup>
-
-  <Import Project="..\Packaging.targets" />
-  <Import Project="..\CopyPackageToPublishDirectory.targets" />
-  <Import Project="..\FixDistributedLockCoreDependencyVersion.targets" />
 </Project>

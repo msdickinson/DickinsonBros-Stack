@@ -23,8 +23,4 @@
     <ProjectReference Include="..\DickinsonBros.Encryption.Certificate\DickinsonBros.Encryption.Certificate.csproj" />
     <ProjectReference Include="..\DickinsonBros.Encryption.JWT.Abstractions\DickinsonBros.Encryption.JWT.Abstractions.csproj" />
   </ItemGroup>
-
-  <Import Project="..\Packaging.targets" />
-  <Import Project="..\CopyPackageToPublishDirectory.targets" />
-  <Import Project="..\FixDistributedLockCoreDependencyVersion.targets" />
 </Project>

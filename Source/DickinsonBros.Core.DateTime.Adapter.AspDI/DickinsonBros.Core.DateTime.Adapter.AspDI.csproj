@@ -16,8 +16,4 @@
   <ItemGroup>
     <ProjectReference Include="..\DickinsonBros.Core.DateTime\DickinsonBros.Core.DateTime.csproj" />
   </ItemGroup>
-
-  <Import Project="..\Packaging.targets" />
-  <Import Project="..\CopyPackageToPublishDirectory.targets" />
-  <Import Project="..\FixDistributedLockCoreDependencyVersion.targets" />
 </Project>

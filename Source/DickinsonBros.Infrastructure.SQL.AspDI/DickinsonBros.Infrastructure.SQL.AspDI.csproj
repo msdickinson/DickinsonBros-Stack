@@ -20,8 +20,4 @@
     <ProjectReference Include="..\DickinsonBros.Infrastructure.SQL.Abstractions\DickinsonBros.Infrastructure.SQL.Abstractions.csproj" />
     <ProjectReference Include="..\DickinsonBros.Infrastructure.SQL\DickinsonBros.Infrastructure.SQL.csproj" />
   </ItemGroup>
-
-  <Import Project="..\Packaging.targets" />
-  <Import Project="..\CopyPackageToPublishDirectory.targets" />
-  <Import Project="..\FixDistributedLockCoreDependencyVersion.targets" />
 </Project>

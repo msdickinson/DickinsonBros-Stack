@@ -1,5 +1,4 @@
 # Inputs
-$dickinsonBrosPath = "D:\Source\Repos\DickinsonBros\DickinsonBros.sln"
 $dickinsonBrosSourcePath = "D:\Source\Repos\DickinsonBros\Source"
 $packgeOutputPath = "C:\Packages"
 
@@ -8,10 +7,7 @@ $dateTime = [datetime]::UtcNow.ToString("yyyyMMdd-HHmmss")
 $versionSuffix = "-alpha" + $dateTime
 $files = Get-ChildItem -Directory -Path $sourcePath
 
-# Build solution
-dotnet build $dickinsonBrosPath --configuration Release
-
 # Pack source projects
 foreach ($file in $files) {
-   dotnet pack $dickinsonBrosSourcePath\$file\$file.csproj -c Release --version-suffix $VersionSuffix --output $packgeOutputPath
+   dotnet pack $dickinsonBrosSourcePath\$file\$file.csproj --include-symbols -c debug --version-suffix $VersionSuffix --output $packgeOutputPath
 }

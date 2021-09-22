@@ -11,9 +11,6 @@
     <Description>
     </Description>
   </PropertyGroup>
-
-  <Import Project="..\Packaging.targets" />
-  <Import Project="..\CopyPackageToPublishDirectory.targets" />
   <ItemGroup>
     <ProjectReference Include="..\DickinsonBros.Core.Stopwatch.Abstractions\DickinsonBros.Core.Stopwatch.Abstractions.csproj" />
   </ItemGroup>

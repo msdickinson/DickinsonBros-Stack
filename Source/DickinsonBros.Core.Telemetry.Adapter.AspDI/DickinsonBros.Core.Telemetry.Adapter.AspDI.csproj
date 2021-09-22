@@ -19,8 +19,4 @@
   <ItemGroup>
     <ProjectReference Include="..\DickinsonBros.Core.Telemetry\DickinsonBros.Core.Telemetry.csproj" />
   </ItemGroup>
-
-  <Import Project="..\Packaging.targets" />
-  <Import Project="..\CopyPackageToPublishDirectory.targets" />
-  <Import Project="..\FixDistributedLockCoreDependencyVersion.targets" />
 </Project>

@@ -11,9 +11,6 @@
     <Description>
     </Description>
   </PropertyGroup>
-
-  <Import Project="..\Packaging.targets" />
-  <Import Project="..\CopyPackageToPublishDirectory.targets" />
   <ItemGroup>
     <ProjectReference Include="..\DickinsonBros.Encryption.JWT.Abstractions\DickinsonBros.Encryption.JWT.Abstractions.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />

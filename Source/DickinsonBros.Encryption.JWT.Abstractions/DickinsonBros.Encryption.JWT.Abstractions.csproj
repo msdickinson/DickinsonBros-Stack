@@ -11,9 +11,6 @@
     <Description>
     </Description>
   </PropertyGroup>
-
-  <Import Project="..\Packaging.targets" />
-  <Import Project="..\CopyPackageToPublishDirectory.targets" />
   <ItemGroup>
     <ProjectReference Include="..\DickinsonBros.Encryption.Certificate.Abstractions\DickinsonBros.Encryption.Certificate.Abstractions.csproj" />
   </ItemGroup>

@@ -15,8 +15,4 @@
   <ItemGroup>
     <ProjectReference Include="..\DickinsonBros.Infrastructure.Rest\DickinsonBros.Infrastructure.Rest.csproj" />
   </ItemGroup>
-
-  <Import Project="..\Packaging.targets" />
-  <Import Project="..\CopyPackageToPublishDirectory.targets" />
-  <Import Project="..\FixDistributedLockCoreDependencyVersion.targets" />
 </Project>

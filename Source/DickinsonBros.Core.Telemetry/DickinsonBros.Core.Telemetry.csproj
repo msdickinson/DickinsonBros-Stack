@@ -21,8 +21,4 @@
     <ProjectReference Include="..\DickinsonBros.Core.Telemetry.Abstractions\DickinsonBros.Core.Telemetry.Abstractions.csproj" />
   </ItemGroup>
 
-  <Import Project="..\Packaging.targets" />
-  <Import Project="..\CopyPackageToPublishDirectory.targets" />
-  <Import Project="..\FixDistributedLockCoreDependencyVersion.targets" />
-
 </Project>

@@ -17,8 +17,4 @@
   <ItemGroup>
     <ProjectReference Include="..\DickinsonBros.Encryption.AES\DickinsonBros.Encryption.AES.csproj" />
   </ItemGroup>
-
-  <Import Project="..\Packaging.targets" />
-  <Import Project="..\CopyPackageToPublishDirectory.targets" />
-  <Import Project="..\FixDistributedLockCoreDependencyVersion.targets" />
 </Project>

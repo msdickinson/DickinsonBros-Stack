@@ -17,8 +17,4 @@
   <ItemGroup>
     <ProjectReference Include="..\DickinsonBros.Encryption.Certificate\DickinsonBros.Encryption.Certificate.csproj" />
   </ItemGroup>
-
-  <Import Project="..\Packaging.targets" />
-  <Import Project="..\CopyPackageToPublishDirectory.targets" />
-  <Import Project="..\FixDistributedLockCoreDependencyVersion.targets" />
 </Project>

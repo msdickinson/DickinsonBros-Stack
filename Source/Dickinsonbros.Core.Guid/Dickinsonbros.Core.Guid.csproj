@@ -15,8 +15,4 @@
   <ItemGroup>
     <ProjectReference Include="..\Dickinsonbros.Core.Guid.Abstractions\Dickinsonbros.Core.Guid.Abstractions.csproj" />
   </ItemGroup>
-
-  <Import Project="..\Packaging.targets" />
-  <Import Project="..\CopyPackageToPublishDirectory.targets" />
-  <Import Project="..\FixDistributedLockCoreDependencyVersion.targets" />
 </Project>

@@ -20,8 +20,4 @@
     <ProjectReference Include="..\DickinsonBros.Infrastructure.AzureTables.Abstractions\DickinsonBros.Infrastructure.AzureTables.Abstractions.csproj" />
     <ProjectReference Include="..\DickinsonBros.Infrastructure.AzureTables\DickinsonBros.Infrastructure.AzureTables.csproj" />
   </ItemGroup>
-
-  <Import Project="..\Packaging.targets" />
-  <Import Project="..\CopyPackageToPublishDirectory.targets" />
-  <Import Project="..\FixDistributedLockCoreDependencyVersion.targets" />
 </Project>

@@ -20,8 +20,4 @@
     <ProjectReference Include="..\DickinsonBros.Infrastructure.Cosmos.Abstractions\DickinsonBros.Infrastructure.Cosmos.Abstractions.csproj" />
     <ProjectReference Include="..\DickinsonBros.Infrastructure.Cosmos\DickinsonBros.Infrastructure.Cosmos.csproj" />
   </ItemGroup>
-
-  <Import Project="..\Packaging.targets" />
-  <Import Project="..\CopyPackageToPublishDirectory.targets" />
-  <Import Project="..\FixDistributedLockCoreDependencyVersion.targets" />
 </Project>

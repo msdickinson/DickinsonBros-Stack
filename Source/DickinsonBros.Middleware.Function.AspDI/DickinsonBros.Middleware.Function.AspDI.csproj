@@ -20,8 +20,4 @@
   <ItemGroup>
     <ProjectReference Include="..\DickinsonBros.Middleware.Function\DickinsonBros.Middleware.Function.csproj" />
   </ItemGroup>
-
-  <Import Project="..\Packaging.targets" />
-  <Import Project="..\CopyPackageToPublishDirectory.targets" />
-  <Import Project="..\FixDistributedLockCoreDependencyVersion.targets" />
 </Project>

@@ -20,8 +20,4 @@
     <ProjectReference Include="..\DickinsonBros.Infrastructure.SMTP.Abstractions\DickinsonBros.Infrastructure.SMTP.Abstractions.csproj" />
     <ProjectReference Include="..\DickinsonBros.Infrastructure.SMTP\DickinsonBros.Infrastructure.SMTP.csproj" />
   </ItemGroup>
-
-  <Import Project="..\Packaging.targets" />
-  <Import Project="..\CopyPackageToPublishDirectory.targets" />
-  <Import Project="..\FixDistributedLockCoreDependencyVersion.targets" />
 </Project>

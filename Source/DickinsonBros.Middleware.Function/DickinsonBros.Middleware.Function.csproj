@@ -14,6 +14,4 @@
     <ProjectReference Include="..\DickinsonBros.Middleware.Function.Abstractions\DickinsonBros.Middleware.Function.Abstractions.csproj" />
     <PackageReference Include="morelinq" Version="3.3.2" />
   </ItemGroup>
-
-
 </Project>

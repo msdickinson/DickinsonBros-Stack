@@ -13,8 +13,4 @@
   <ItemGroup>
     <ProjectReference Include="..\DickinsonBros.Core.Redactor\DickinsonBros.Core.Redactor.csproj" />
   </ItemGroup>
-
-  <Import Project="..\Packaging.targets" />
-  <Import Project="..\CopyPackageToPublishDirectory.targets" />
-  <Import Project="..\FixDistributedLockCoreDependencyVersion.targets" />
 </Project>
