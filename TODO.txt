@@ -1,0 +1,9 @@
+1. Fix Unit tests
+2. Create DEV Build - Deploys Alpha
+3. Create Master Build - Deploys
+4. Create in intergreation runner build, That runs on DEV - It should all pass (can disable if it ends up being unstable)
+5. Fix any existing packages that reuse the same verison. or find a way to deal with that.
+
+SQL Unit testing
+- How do you unit test SQL, Learn before Emily walks away
+- 

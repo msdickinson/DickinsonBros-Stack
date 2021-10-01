@@ -1,13 +1,16 @@
 # Inputs
-$dickinsonBrosSourcePath = "D:\Source\Repos\DickinsonBros\Source"
-$packgeOutputPath = "C:\Packages"
+$sourceFolder = "D:\Source\Repos\DickinsonBros\Source"
 
-# Consents
+
+# Vars
 $dateTime = [datetime]::UtcNow.ToString("yyyyMMdd-HHmmss")
 $versionSuffix = "-alpha" + $dateTime
-$files = Get-ChildItem -Directory -Path $sourcePath
+$files = Get-ChildItem -Directory -Path $sourceFolder
+$packgeOutputPath = C:\Packages\$versionSuffix 
 
 # Pack source projects
 foreach ($file in $files) {
-   dotnet pack $dickinsonBrosSourcePath\$file\$file.csproj --include-symbols -c debug --version-suffix $VersionSuffix --output $packgeOutputPath
+    dotnet pack $sourceFolder\$file\$file.csproj -p:EmbedAllSources=true -p:DebugSymbols=true -p:DebugType=embedded  -c release --version-suffix $versionSuffix --output $packgeOutputPath
 }
+
+# Push packa

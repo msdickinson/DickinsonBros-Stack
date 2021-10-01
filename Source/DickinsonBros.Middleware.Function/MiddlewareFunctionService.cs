@@ -22,7 +22,7 @@ using System.Threading.Tasks;
 
 namespace Dickinsonbros.Middleware.Function
 {
-
+    //
     public class MiddlewareFunctionService<T, U> : IMiddlewareFunctionService
     where T : JWTEncryptionServiceOptionsType
     where U : CertificateEncryptionServiceOptionsType
