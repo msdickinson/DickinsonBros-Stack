@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Source\Dickinsonbros.Core.Guid.Abstractions\Dickinsonbros.Core.Guid.Abstractions.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Infrastructure.SQL\DickinsonBros.Infrastructure.SQL.csproj" />
     <ProjectReference Include="..\..\Source\DickinsonBros.Test.Unit\DickinsonBros.Test.Unit.csproj" />
   </ItemGroup>

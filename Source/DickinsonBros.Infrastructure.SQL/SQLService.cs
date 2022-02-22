@@ -3,17 +3,16 @@ using DickinsonBros.Core.Correlation.Abstractions;
 using DickinsonBros.Core.DateTime.Abstractions;
 using DickinsonBros.Core.Logger.Abstractions;
 using DickinsonBros.Core.Logger.Abstractions.Models;
-using DickinsonBros.Core.Redactor.Abstractions;
 using DickinsonBros.Core.Stopwatch.Abstractions;
 using DickinsonBros.Core.Telemetry.Abstractions;
 using DickinsonBros.Core.Telemetry.Abstractions.Models;
 using DickinsonBros.Infrastructure.SQL.Abstractions;
 using DickinsonBros.Infrastructure.SQL.Abstractions.Models;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
@@ -21,43 +20,48 @@ using System.Threading.Tasks;
 
 namespace DickinsonBros.Infrastructure.SQL
 {
-    [ExcludeFromCodeCoverage]
+    //TODO: Add Unit Testing
+    //TODO: Make attempt at unit testing BULK
+
     public class SQLService<U> : ISQLService<U>
     where U : SQLServiceOptionsType
     {
-        internal readonly ILoggerService<SQLService<U>> _logger;
         internal readonly TimeSpan DefaultBulkCopyTimeout = TimeSpan.FromMinutes(5);
         internal readonly int DefaultBatchSize = 10000;
+
+        internal readonly ILoggerService<SQLService<U>> _logger;
         internal readonly ITelemetryWriterService _telemetryWriterService;
         internal readonly IDateTimeService _dateTimeService;
-        internal readonly IRedactorService _redactorService;
         internal readonly ICorrelationService _correlationService;
-        internal readonly SQLServiceOptions<U> _sqlServiceOptions;
         internal readonly IStopwatchFactory _stopwatchFactory;
         internal readonly IDataTableService _dataTableService;
+        internal readonly IDbConnectionService<U> _dbConnectionService;
+
+        internal readonly SQLServiceOptions<U> _sqlServiceOptions;
 
         public SQLService
         (
             ILoggerService<SQLService<U>> logger,
-            IRedactorService redactorService,
             ITelemetryWriterService telemetryWriterService,
             IDateTimeService dateTimeService,
             IStopwatchFactory stopwatchFactory,
             ICorrelationService correlationService,
-            IOptions<SQLServiceOptions<U>> options,
-            IDataTableService dataTableService
+            IDataTableService dataTableService,
+            IDbConnectionService<U> dbConnectionService,
+            IOptions<SQLServiceOptions<U>> options
         )
         {
             _logger = logger;
             _telemetryWriterService = telemetryWriterService;
-            _redactorService = redactorService;
             _correlationService = correlationService;
             _dateTimeService = dateTimeService;
             _sqlServiceOptions = options.Value;
             _stopwatchFactory = stopwatchFactory;
             _dataTableService = dataTableService;
+            _dbConnectionService = dbConnectionService;
         }
 
+        [ExcludeFromCodeCoverage]
         public async Task BulkCopyAsync(DataTable dataTable, string tableName, int? batchSize, TimeSpan? timeout, CancellationToken? token)
         {
             var methodIdentifier = $"{nameof(SQLService<U>)}<{typeof(U).Name}>.{nameof(SQLService<U>.ExecuteAsync)}";
@@ -144,6 +148,7 @@ namespace DickinsonBros.Infrastructure.SQL
             }
         }
 
+        [ExcludeFromCodeCoverage]
         public async Task BulkCopyAsync<T>(IEnumerable<T> enumerable, string tableName, int? batchSize, TimeSpan? timeout, CancellationToken? token)
         {
             var dataTable = _dataTableService.ToDataTable(enumerable, tableName);
@@ -167,7 +172,7 @@ namespace DickinsonBros.Infrastructure.SQL
             try
             {
                 stopwatchService.Start();
-                using SqlConnection connection = new SqlConnection(_sqlServiceOptions.ConnectionString);
+                using DbConnection connection = _dbConnectionService.Create();
                 await connection.OpenAsync().ConfigureAwait(false);
                 await connection.ExecuteAsync(
                     sql,
@@ -237,7 +242,7 @@ namespace DickinsonBros.Infrastructure.SQL
             try
             {
                 stopwatchService.Start();
-                using SqlConnection connection = new SqlConnection(_sqlServiceOptions.ConnectionString);
+                using DbConnection connection = _dbConnectionService.Create();
                 await connection.OpenAsync().ConfigureAwait(false);
 
                 var response = await connection.QueryAsync<T>(
@@ -311,7 +316,7 @@ namespace DickinsonBros.Infrastructure.SQL
             try
             {
                 stopwatchService.Start();
-                using SqlConnection connection = new SqlConnection(_sqlServiceOptions.ConnectionString);
+                using DbConnection connection = _dbConnectionService.Create();
                 await connection.OpenAsync().ConfigureAwait(false);
 
                 var response = await connection.QueryFirstAsync<T>(
@@ -385,7 +390,7 @@ namespace DickinsonBros.Infrastructure.SQL
             try
             {
                 stopwatchService.Start();
-                using SqlConnection connection = new SqlConnection(_sqlServiceOptions.ConnectionString);
+                using DbConnection connection = _dbConnectionService.Create();
                 await connection.OpenAsync().ConfigureAwait(false);
 
                 var response = await connection.QueryFirstOrDefaultAsync<T>(

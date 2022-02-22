@@ -8,7 +8,6 @@ using DickinsonBros.Infrastructure.AzureTables.Abstractions.Models;
 using DickinsonBros.Sinks.Telemetry.AzureTables.Abstractions;
 using DickinsonBros.Sinks.Telemetry.AzureTables.Abstractions.Models;
 using DickinsonBros.Sinks.Telemetry.AzureTables.Models;
-using Microsoft.Azure.Cosmos.Table;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using System;

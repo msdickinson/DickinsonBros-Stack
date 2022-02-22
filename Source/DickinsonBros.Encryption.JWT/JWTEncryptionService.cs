@@ -17,6 +17,12 @@ using System.Security.Claims;
 
 namespace DickinsonBros.Encryption.JWT
 {
+    //TODO: This can be unit tested, 
+    //https://dotnetcoretutorials.com/2020/11/18/generating-self-signed-certificates-for-unit-testing-in-c/
+    //https://stackoverflow.com/questions/13806299/how-can-i-create-a-self-signed-certificate-using-c
+    //Basicly it explains that You can shove in a cert into the code it self
+    //Would require a Custom mock of ICertificateEncryptionService and have its FetchX509Certificate2 return a hard coded CERT
+
     [ExcludeFromCodeCoverage]
     public class JWTEncryptionService<T, U> : IJWTEncryptionService<T, U>
     where T : JWTEncryptionServiceOptionsType

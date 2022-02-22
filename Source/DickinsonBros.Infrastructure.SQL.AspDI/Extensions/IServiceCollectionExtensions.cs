@@ -15,6 +15,7 @@ namespace DickinsonBros.Infrastructure.SQL.AspDI.Extensions
         where U : CertificateEncryptionServiceOptionsType
         {
             serviceCollection.TryAddSingleton<ISQLService<T>, SQLService<T>>();
+            serviceCollection.TryAddSingleton<IDbConnectionService<T>, SQLConnectionService<T>>();
             serviceCollection.TryAddSingleton<IConfigureOptions<SQLServiceOptions<T>>, SQLServiceOptionsConfigurator<T, U>>();
             serviceCollection.TryAddSingleton<IDataTableService, DataTableService>();
             return serviceCollection;

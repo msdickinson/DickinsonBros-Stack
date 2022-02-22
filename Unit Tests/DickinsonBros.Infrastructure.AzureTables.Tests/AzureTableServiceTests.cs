@@ -8681,6 +8681,8 @@ namespace DickinsonBros.Infrastructure.AzureTables.Tests
             serviceCollection.AddSingleton(Mock.Of<IDateTimeService>());
             serviceCollection.AddSingleton(Mock.Of<ICorrelationService>());
             serviceCollection.AddSingleton(Mock.Of<ILoggerService<Test>>());
+            
+            serviceCollection.TryAddSingleton<IConfigureOptions<SQLServiceOptions<T>>, SQLServiceOptionsConfigurator<T, U>>();
             serviceCollection.AddSingleton(Mock.Of<ITelemetryWriterService>());
             
             serviceCollection.AddOptions();

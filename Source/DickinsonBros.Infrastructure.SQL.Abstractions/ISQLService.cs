@@ -10,7 +10,7 @@ namespace DickinsonBros.Infrastructure.SQL.Abstractions
     public interface ISQLService<U>
     where U : SQLServiceOptionsType
     {
-        Task BulkCopyAsync(System.Data.DataTable table, string tableName, int? batchSize = null, TimeSpan? timeout = null, CancellationToken? token = null);
+        Task BulkCopyAsync(DataTable table, string tableName, int? batchSize = null, TimeSpan? timeout = null, CancellationToken? token = null);
         Task BulkCopyAsync<T>(IEnumerable<T> enumerable, string tableName, int? batchSize = null, TimeSpan? timeout = null, CancellationToken? token = null);
         Task ExecuteAsync(string sql, CommandType commandType, object param = null);
         Task<IEnumerable<T>> QueryAsync<T>(string sql, CommandType commandType, object param = null);
